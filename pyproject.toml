@@ -1,0 +1,26 @@
+[project]
+name = "cp-server"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Benoit Roux", email = "benoit.roux@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "cellpose>=3.1.0",
+    "fastapi>=0.115.6",
+]
+
+[project.scripts]
+cp-server = "cp_server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "flask>=3.1.0",
+    "pytest>=8.3.4",
+]
