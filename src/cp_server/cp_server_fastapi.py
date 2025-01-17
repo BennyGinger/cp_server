@@ -3,7 +3,8 @@ from fastapi import FastAPI
 import logging
 from cellpose.denoise import CellposeDenoiseModel
 import numpy as np
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
+from dataclasses import field
 
 # Default cellpose settings
 MODEL_SETTINGS = {'gpu':True,
@@ -23,11 +24,13 @@ logging.basicConfig(
         logging.StreamHandler(),  # Also output logs to the console
     ])
 
+
 class CellposeModel():
-    model: CellposeDenoiseModel = Field(default=None)
+    """Encapsulates the Cellpose model and provides methods to run segmentation"""
     
+    model: CellposeDenoiseModel = field(init=False)
     
-    def __init__(self)-> None:
+    def __post_init__(self)-> None:
         # Determine model settings
         model_settings = self.init_model(MODEL_SETTINGS)
         
@@ -50,20 +53,26 @@ class CellposeModel():
                 model_settings['restore_type'] = "denoise_cyto2"
         return model_settings
       
-    def segment(self, image: np.ndarray | list[np.ndarray], cp_settings: dict)-> np.ndarray | list[np.ndarray]:
+    def segment(self, image: np.ndarray, cp_settings: dict)-> list[np.ndarray]:
         # Run segmentation
-        return self.model.eval(image, **cp_settings)[0]
-
+        mask: list[np.ndarray] = self.model.eval(image, **cp_settings)[0]
+        logging.info(f"Image segmented successfully: {len(mask)} masks created")
+        
+        return mask
+        
 class SegmentedMask(BaseModel):
-    mask: np.ndarray | list[np.ndarray]
+    """Encapsulates the segmented mask and target path"""
+    mask: list[list]
     target_path: Path
     
     class Config:
         arbitrary_types_allowed = True
 
+
 # Initialize model
 model = CellposeModel()
-
+# Log model creation
+logging.info("Model created successfully")
 
 # Check for Server Availability
 @app.get("/health")
@@ -78,24 +87,28 @@ async def create_model(settings: dict)-> dict:
     # Initialize model
     model.init_model(settings)
     
-    # Log model creation
-    logging.info("Model created successfully")
+    # Log model update
+    logging.info("Model updated successfully")
     
     return {"status": "Model created successfully"}
 
 
 # Segment an image
 @app.post("/segment/")
-async def segment(image: np.ndarray | list[np.ndarray], settings: dict, target_path: Path)-> dict:
+async def segment(img_lst: list[list], settings: dict, target_path: Path)-> dict:
     """Expects a JSON payload with the following fields:
-    - image: Base64 encoded image data
+    - image: list of lists representing the image
     - settings: Model and Cellpose settings to define the model and run the segmentation
     - target_path: Path where the processed image should be saved"""
     
-    # Run segmentation
-    mask = model.segment(image, settings)
+    # Convert image to numpy array
+    img_arr = np.array(img_lst)
     
-    # Log segmentation
+    # Run segmentation
+    mask = model.segment(img_arr, settings)
+    
+    # Convert mask to list of lists
+    mask = [m.tolist() for m in mask]
     logging.info("Image segmented successfully")
     return SegmentedMask(mask=mask, target_path=target_path)
 

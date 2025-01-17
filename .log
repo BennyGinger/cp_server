@@ -108,3 +108,4 @@
 2025-01-17 16:29:41,024 - cellpose.core - INFO - >>>> using GPU (CUDA)
 2025-01-17 16:29:41,062 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
 2025-01-17 16:29:41,102 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 23:35:47,826 - root - INFO - Model created successfully
