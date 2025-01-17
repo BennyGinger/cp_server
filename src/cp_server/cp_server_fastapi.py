@@ -1,40 +1,18 @@
+from pathlib import Path
 from fastapi import FastAPI
 import logging
 from cellpose.denoise import CellposeDenoiseModel
 import numpy as np
-from pydantic import BaseModel
-from dataclasses import field
+from pydantic import BaseModel, Field
 
 # Default cellpose settings
 MODEL_SETTINGS = {'gpu':True,
                   'model_type': 'cyto2',
-                  'pretrained_model':False,
-                  'diam_mean':30.}
+                  'pretrained_model':False}
 
-CELLPOSE_EVAL = {'batch_size':8,
-                 'resample':True,
-                 'channels':[0,0],
-                 'channel_axis':None,
-                 'z_axis':None,
-                 'normalize':True,
-                 'invert':False,
-                 'rescale':None,
-                 'diameter':60.,
-                 'flow_threshold':0.4,
-                 'cellprob_threshold':0.,
-                 'do_3D':False,
-                 'anisotropy':None,
-                 'stitch_threshold':0.,
-                 'min_size':15,
-                 'niter':None,
-                 'augment':False,
-                 'tile':True,
-                 'tile_overlap':0.1,
-                 'bsize':224,
-                 'interp':True,
-                 'compute_masks':True,
-                 'progress':None}
 
+# Initialize FastAPI app
+app = FastAPI()
 
 # Configure logging
 logging.basicConfig(
@@ -45,55 +23,79 @@ logging.basicConfig(
         logging.StreamHandler(),  # Also output logs to the console
     ])
 
-class CellposeModel(BaseModel):
-    model_settings: dict
-    model: CellposeDenoiseModel = field(init=False)
-    cp_settings: dict = field(init=False)
+class CellposeModel():
+    model: CellposeDenoiseModel = Field(default=None)
     
     
-    def __post_init__(self, model_settings: dict)-> None:
-        self.model_settings = MODEL_SETTINGS
+    def __init__(self)-> None:
+        # Determine model settings
+        model_settings = self.init_model(MODEL_SETTINGS)
         
+        # Initialize model
+        self.model = CellposeDenoiseModel(**model_settings)
+    
+    def init_model(self, model_settings)-> dict:
         # Update model settings
         for k, v in model_settings.items():
             if k in MODEL_SETTINGS:
-                self.model_settings[k] = v
+                model_settings[k] = v
         
         # Set restore type
-        match self.model_settings['model_type']:
+        match model_settings['model_type']:
             case "cyto2":
-                self.model_settings['restore_type'] = "denoise_cyto2"
+                model_settings['restore_type'] = "denoise_cyto2"
             case "cyto3":
-                self.model_settings['restore_type'] = "denoise_cyto3"
+                model_settings['restore_type'] = "denoise_cyto3"
             case _:
-                self.model_settings['restore_type'] = "denoise_cyto2"
-        
-        # Initialize model
-        self.model = CellposeDenoiseModel(**self.model_settings)
-        
+                model_settings['restore_type'] = "denoise_cyto2"
+        return model_settings
+      
     def segment(self, image: np.ndarray | list[np.ndarray], cp_settings: dict)-> np.ndarray | list[np.ndarray]:
-        # Update settings
-        for k, v in cp_settings.items():
-            if k in CELLPOSE_EVAL:
-                self.cp_settings[k] = v
-        
         # Run segmentation
-        return self.model.eval(image, **self.cp_settings)[0]
+        return self.model.eval(image, **cp_settings)[0]
 
-# Initialize FastAPI app
-app = FastAPI()
+class SegmentedMask(BaseModel):
+    mask: np.ndarray | list[np.ndarray]
+    target_path: Path
     
+    class Config:
+        arbitrary_types_allowed = True
+
+# Initialize model
+model = CellposeModel()
+
+
 # Check for Server Availability
 @app.get("/health")
-async def health():
+async def health()-> dict:
     return {"status": "ok"}
 
+@app.post("/model/")
+async def create_model(settings: dict)-> dict:
+    """Expects a JSON payload with the following fields:
+    - settings: Model settings to define the cellpose model"""
+    
+    # Initialize model
+    model.init_model(settings)
+    
+    # Log model creation
+    logging.info("Model created successfully")
+    
+    return {"status": "Model created successfully"}
+
+
 # Segment an image
-@app.post("/segment")
-async def segment(image: np.ndarray | list[np.ndarray], model_settings: dict, cp_settings: dict, target_path: str)-> dict:
+@app.post("/segment/")
+async def segment(image: np.ndarray | list[np.ndarray], settings: dict, target_path: Path)-> dict:
     """Expects a JSON payload with the following fields:
     - image: Base64 encoded image data
-    - model_settings: Model settings to define the model
-    - cp_settings: Cellpose settings, to run the segmentation
+    - settings: Model and Cellpose settings to define the model and run the segmentation
     - target_path: Path where the processed image should be saved"""
-    pass
+    
+    # Run segmentation
+    mask = model.segment(image, settings)
+    
+    # Log segmentation
+    logging.info("Image segmented successfully")
+    return SegmentedMask(mask=mask, target_path=target_path)
+

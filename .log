@@ -1,0 +1,110 @@
+2025-01-17 16:16:54,997 - cellpose.models - INFO - Downloading: "https://www.cellpose.org/models/denoise_cyto2" to /home/ben/.cellpose/models/denoise_cyto2
+
+2025-01-17 16:16:59,441 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-01-17 16:16:59,544 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:16:59,544 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:16:59,630 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:16:59,630 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-01-17 16:16:59,630 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:16:59,630 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:16:59,674 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-01-17 16:16:59,737 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:17:18,074 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-01-17 16:17:18,160 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:17:18,161 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:17:18,255 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:17:18,255 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-01-17 16:17:18,256 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:17:18,256 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:17:18,295 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-01-17 16:17:18,338 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:17:22,234 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-01-17 16:17:22,319 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:17:22,319 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:17:22,411 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:17:22,411 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-01-17 16:17:22,411 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:17:22,411 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:17:22,452 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-01-17 16:17:22,493 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:18:17,995 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-01-17 16:18:18,085 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:18:18,085 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:18:18,180 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:18:18,180 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-01-17 16:18:18,180 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:18:18,180 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:18:18,219 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-01-17 16:18:18,270 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:18:42,887 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-01-17 16:18:42,969 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:18:42,969 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:18:43,060 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:18:43,060 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-01-17 16:18:43,060 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:18:43,060 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:18:43,101 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-01-17 16:18:43,141 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:20:10,730 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-01-17 16:20:10,818 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:20:10,818 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:20:10,905 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:20:10,905 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-01-17 16:20:10,905 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:20:10,905 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:20:10,945 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-01-17 16:20:10,986 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:21:40,506 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-01-17 16:21:40,591 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:21:40,591 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:21:40,679 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:21:40,679 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-01-17 16:21:40,680 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:21:40,680 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:21:40,716 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-01-17 16:21:40,760 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:24:38,945 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-01-17 16:24:39,035 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:24:39,036 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:24:39,129 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:24:39,129 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-01-17 16:24:39,129 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:24:39,129 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:24:39,166 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-01-17 16:24:39,211 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:27:20,786 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-01-17 16:27:20,878 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:27:20,878 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:27:20,962 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:27:20,963 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-01-17 16:27:20,963 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:27:20,963 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:27:21,010 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-01-17 16:27:21,060 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:27:58,128 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-01-17 16:27:58,209 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:27:58,209 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:27:58,295 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:27:58,296 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-01-17 16:27:58,296 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:27:58,296 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:27:58,340 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-01-17 16:27:58,376 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:29:36,910 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-01-17 16:29:36,997 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:29:36,997 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:29:37,086 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:29:37,086 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-01-17 16:29:37,086 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:29:37,086 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:29:37,123 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-01-17 16:29:37,165 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:29:40,850 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-01-17 16:29:40,935 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:29:40,935 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:29:41,023 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-01-17 16:29:41,023 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-01-17 16:29:41,023 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-01-17 16:29:41,024 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-01-17 16:29:41,062 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-01-17 16:29:41,102 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)

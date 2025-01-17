@@ -9,7 +9,7 @@ authors = [
 requires-python = ">=3.12"
 dependencies = [
     "cellpose[gui]>=3.1.0",
-    "fastapi>=0.115.6",
+    "fastapi[all]>=0.115.6",
 ]
 
 [project.scripts]
