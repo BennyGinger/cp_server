@@ -171,3 +171,25 @@
 2025-01-19 15:17:56,361 - root - INFO - Model created successfully
 2025-01-19 15:18:59,717 - root - INFO - Model created successfully
 2025-01-19 15:19:10,501 - root - INFO - Model created successfully
+2025-01-19 21:13:20,229 - root - INFO - Model updated successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
+2025-01-19 21:14:29,630 - root - INFO - Model updated successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
+2025-01-19 21:15:45,898 - root - INFO - Model created successfully
+2025-01-19 21:18:20,146 - root - INFO - Model created successfully
+2025-01-19 21:18:23,445 - root - INFO - Model created successfully
+2025-01-19 21:18:26,609 - root - INFO - Model created successfully
+2025-01-19 21:18:41,962 - root - INFO - Model created successfully
+2025-01-19 21:18:50,125 - root - INFO - Model created successfully
+2025-01-19 21:18:57,944 - root - INFO - Model created successfully
+2025-01-19 21:19:04,155 - root - INFO - Model created successfully
+2025-01-19 21:20:22,131 - root - INFO - Model created successfully
+2025-01-19 21:20:25,487 - root - INFO - Model created successfully
+2025-01-19 21:20:28,700 - root - INFO - Model created successfully
+2025-01-19 21:20:44,471 - root - INFO - Model created successfully
+2025-01-19 21:21:26,446 - root - INFO - Model updated successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
+2025-01-19 21:21:56,198 - root - INFO - Model updated successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
+2025-01-19 21:22:48,767 - root - INFO - Model created successfully
+2025-01-19 21:22:49,004 - root - INFO - Model updated successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
+2025-01-19 21:26:06,554 - root - INFO - Model created successfully
+2025-01-19 21:26:06,884 - root - INFO - Model updated successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
+2025-01-19 21:26:38,692 - root - INFO - Model created successfully
+2025-01-19 21:26:38,807 - root - INFO - Model updated successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
