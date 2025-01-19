@@ -109,3 +109,65 @@
 2025-01-17 16:29:41,062 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
 2025-01-17 16:29:41,102 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
 2025-01-17 23:35:47,826 - root - INFO - Model created successfully
+2025-01-19 14:45:15,250 - root - INFO - Model created successfully
+2025-01-19 14:45:25,396 - root - INFO - Model updated successfully with Field(name=None,type=None,default=<dataclasses._MISSING_TYPE object at 0x7b56209b8380>,default_factory=<dataclasses._MISSING_TYPE object at 0x7b56209b8380>,init=False,repr=True,hash=None,compare=True,metadata=mappingproxy({}),kw_only=<dataclasses._MISSING_TYPE object at 0x7b56209b8380>,_field_type=None)
+2025-01-19 14:48:23,669 - root - INFO - Model created successfully
+2025-01-19 14:48:30,881 - root - INFO - Model created successfully
+2025-01-19 14:50:55,933 - root - INFO - Model created successfully
+2025-01-19 14:51:19,172 - root - INFO - Model created successfully
+2025-01-19 14:51:59,877 - root - INFO - Model created successfully
+2025-01-19 14:52:02,822 - root - INFO - Model created successfully
+2025-01-19 14:52:08,642 - root - INFO - Model created successfully
+2025-01-19 14:52:21,388 - root - INFO - Model updated successfully
+2025-01-19 14:54:20,065 - root - INFO - Model updated successfully
+2025-01-19 14:54:51,065 - root - INFO - Model created successfully
+2025-01-19 14:57:23,570 - root - INFO - Model created successfully
+2025-01-19 14:57:45,566 - root - INFO - Model created successfully
+2025-01-19 14:57:55,226 - root - INFO - Model created successfully
+2025-01-19 14:57:58,397 - root - INFO - Model created successfully
+2025-01-19 14:58:01,396 - root - INFO - Model created successfully
+2025-01-19 14:58:04,281 - root - INFO - Model created successfully
+2025-01-19 14:58:59,694 - root - INFO - Model updated successfully
+2025-01-19 15:01:47,284 - root - INFO - Model created successfully
+2025-01-19 15:01:50,967 - root - INFO - Model created successfully
+2025-01-19 15:01:54,340 - root - INFO - Model created successfully
+2025-01-19 15:01:57,731 - root - INFO - Model created successfully
+2025-01-19 15:02:41,034 - root - INFO - Model updated successfully
+2025-01-19 15:02:52,518 - root - INFO - Model updated successfully
+2025-01-19 15:03:15,472 - root - INFO - Model created successfully
+2025-01-19 15:03:18,828 - root - INFO - Model created successfully
+2025-01-19 15:03:22,036 - root - INFO - Model created successfully
+2025-01-19 15:03:34,078 - root - INFO - Model updated successfully with settings: {'gpu': True, 'model_type': 'cyto2', 'pretrained_model': False, 'restore_type': 'denoise_cyto2'}
+2025-01-19 15:04:57,790 - root - INFO - Model created successfully
+2025-01-19 15:04:57,794 - root - INFO - Model updated successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
+2025-01-19 15:06:07,179 - root - INFO - Model created successfully
+2025-01-19 15:07:03,917 - root - INFO - Model created successfully
+2025-01-19 15:07:10,200 - root - INFO - Model created successfully
+2025-01-19 15:07:17,954 - root - INFO - Model created successfully
+2025-01-19 15:07:18,032 - httpcore.connection - DEBUG - connect_tcp.started host='127.0.0.1' port=8000 local_address=None timeout=5.0 socket_options=None
+2025-01-19 15:07:18,033 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x758718e893a0>
+2025-01-19 15:07:18,034 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-01-19 15:07:18,034 - httpcore.http11 - DEBUG - send_request_headers.complete
+2025-01-19 15:07:18,034 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-01-19 15:07:18,034 - httpcore.http11 - DEBUG - send_request_body.complete
+2025-01-19 15:07:18,034 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-01-19 15:07:18,034 - root - INFO - Model updated successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
+2025-01-19 15:07:18,035 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Sun, 19 Jan 2025 14:07:17 GMT'), (b'server', b'uvicorn'), (b'content-length', b'39'), (b'content-type', b'application/json')])
+2025-01-19 15:07:18,035 - httpx - INFO - HTTP Request: POST http://127.0.0.1:8000/model/ "HTTP/1.1 200 OK"
+2025-01-19 15:07:18,035 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-01-19 15:07:18,035 - httpcore.http11 - DEBUG - receive_response_body.complete
+2025-01-19 15:07:18,035 - httpcore.http11 - DEBUG - response_closed.started
+2025-01-19 15:07:18,035 - httpcore.http11 - DEBUG - response_closed.complete
+2025-01-19 15:07:18,035 - httpcore.connection - DEBUG - close.started
+2025-01-19 15:07:18,036 - httpcore.connection - DEBUG - close.complete
+2025-01-19 15:09:43,445 - root - INFO - Model created successfully
+2025-01-19 15:09:46,672 - root - INFO - Model created successfully
+2025-01-19 15:10:18,482 - root - INFO - Model created successfully
+2025-01-19 15:14:08,463 - root - INFO - Model created successfully
+2025-01-19 15:14:51,885 - root - INFO - Model updated successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
+2025-01-19 15:14:52,192 - root - INFO - Model created successfully
+2025-01-19 15:16:03,330 - root - INFO - Model updated successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
+2025-01-19 15:16:42,840 - root - INFO - Model updated successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
+2025-01-19 15:17:56,361 - root - INFO - Model created successfully
+2025-01-19 15:18:59,717 - root - INFO - Model created successfully
+2025-01-19 15:19:10,501 - root - INFO - Model created successfully

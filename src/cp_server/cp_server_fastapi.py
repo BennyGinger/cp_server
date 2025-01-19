@@ -3,7 +3,7 @@ from fastapi import FastAPI
 import logging
 from cellpose.denoise import CellposeDenoiseModel
 import numpy as np
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from dataclasses import field
 
 # Default cellpose settings
@@ -65,8 +65,7 @@ class SegmentedMask(BaseModel):
     mask: list[list]
     target_path: Path
     
-    class Config:
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
 # Initialize model
@@ -85,10 +84,10 @@ async def create_model(settings: dict)-> dict:
     - settings: Model settings to define the cellpose model"""
     
     # Initialize model
-    model.init_model(settings)
+    settings = model.init_model(settings)
     
     # Log model update
-    logging.info("Model updated successfully")
+    logging.info(f"Model updated successfully with settings: {settings}")
     
     return {"status": "Model created successfully"}
 
@@ -112,3 +111,19 @@ async def segment(img_lst: list[list], settings: dict, target_path: Path)-> dict
     logging.info("Image segmented successfully")
     return SegmentedMask(mask=mask, target_path=target_path)
 
+if __name__ == "__main__":
+    import httpx
+
+    # Define the payload
+    payload = {
+        "gpu": True,
+        "model_type": "cyto3",
+        "pretrained_model": False
+    }
+
+    # Make a POST request to the /model/ endpoint
+    response = httpx.post("http://127.0.0.1:8000/model/", json=payload)
+
+    # Print the response
+    print(response.status_code)
+    print(response.json())
