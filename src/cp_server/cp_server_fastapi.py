@@ -1,6 +1,7 @@
 import json
 import os
 import signal
+import cv2
 from fastapi import FastAPI, UploadFile, File, Query
 import logging
 from cellpose.denoise import CellposeDenoiseModel
@@ -114,7 +115,13 @@ async def segment(settings: str = Query(...), target_path: str = Query(...), img
     
     # Convert bytes to numpy array
     img_arr = np.reshape(np.frombuffer(img_bytes, dtype=np.uint8), (256, 256))
-    print(f"Image shape: {img_arr.shape}")
+    print(f"Image shape1: {img_arr.shape}")
+    
+    # TODO: Check if the image is in the correct format
+    img_arr = np.frombuffer(img_bytes, dtype=np.uint8)
+    img_arr = cv2.imdecode(img_arr, cv2.IMREAD_UNCHANGED)
+    print(f"Image shape2: {img_arr.shape}")
+    
     # Parse settings
     settings = json.loads(settings)
     

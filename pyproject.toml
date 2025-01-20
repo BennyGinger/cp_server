@@ -1,10 +1,11 @@
 [project]
 name = "cp-server"
 version = "0.1.0"
-description = "Add your description here"
+description = "A FastAPI-based server for running Cellpose segmentation models. This server allows users to upload images, configure model settings, and receive segmented images as output. It supports GPU acceleration and various Cellpose model types."
 readme = "README.md"
 authors = [
-    { name = "Benoit Roux", email = "benoit.roux@gmail.com" }
+    { name = "Benoit Roux", email = "benoit.roux@gmail.com" },
+    { name = "Raphael Feurstein", email = "raphael.feurstein@gmail.com" }
 ]
 requires-python = ">=3.12"
 dependencies = [
