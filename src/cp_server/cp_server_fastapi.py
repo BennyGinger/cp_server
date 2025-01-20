@@ -1,10 +1,12 @@
-from pathlib import Path
-from fastapi import FastAPI
+import json
+import os
+import signal
+from fastapi import FastAPI, UploadFile, File, Query
 import logging
 from cellpose.denoise import CellposeDenoiseModel
+from fastapi.responses import JSONResponse
 import numpy as np
-from pydantic import BaseModel, ConfigDict
-from dataclasses import field
+from dataclasses import field, dataclass
 
 # Default cellpose settings
 MODEL_SETTINGS = {'gpu':True,
@@ -24,7 +26,7 @@ logging.basicConfig(
         logging.StreamHandler(),  # Also output logs to the console
     ])
 
-
+@dataclass
 class CellposeModel():
     """Encapsulates the Cellpose model and provides methods to run segmentation"""
     
@@ -54,24 +56,25 @@ class CellposeModel():
         return model_settings
       
     def segment(self, image: np.ndarray, cp_settings: dict)-> list[np.ndarray]:
+        # Denoise image has a bug and it requires channels list (even if default is set to None)
+        if "channels" not in cp_settings:
+            cp_settings['channels'] = [0, 0]
+        
+        elif cp_settings['channels'] is None:
+            cp_settings['channels'] = [0, 0]
+        
         # Run segmentation
         mask: list[np.ndarray] = self.model.eval(image, **cp_settings)[0]
         logging.info(f"Image segmented successfully: {len(mask)} masks created")
         
         return mask
         
-class SegmentedMask(BaseModel):
-    """Encapsulates the segmented mask and target path"""
-    mask: list[list]
-    target_path: Path
-    
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-
 
 # Initialize model
-model = CellposeModel()
+init_model = CellposeModel()
+
 # Log model creation
-logging.info("Model created successfully")
+logging.info("Default model created successfully")
 
 # Check for Server Availability
 @app.get("/health")
@@ -84,32 +87,46 @@ async def create_model(settings: dict)-> dict:
     - settings: Model settings to define the cellpose model"""
     
     # Initialize model
-    settings = model.init_model(settings)
+    settings = init_model.init_model(settings)
     
     # Log model update
     logging.info(f"Model updated successfully with settings: {settings}")
     
     return {"status": "Model created successfully"}
 
+@app.post("/shutdown")
+async def shutdown():
+    def kill_server():
+        os.kill(os.getpid(), signal.SIGINT)
+    kill_server()
+    return JSONResponse(content={"message": "Server shutting down..."})
 
 # Segment an image
 @app.post("/segment/")
-async def segment(img_lst: list[list], settings: dict, target_path: Path)-> dict:
+async def segment(settings: str = Query(...), target_path: str = Query(...), img_file: UploadFile = File(...))-> dict:
     """Expects a JSON payload with the following fields:
     - image: list of lists representing the image
     - settings: Model and Cellpose settings to define the model and run the segmentation
     - target_path: Path where the processed image should be saved"""
     
-    # Convert image to numpy array
-    img_arr = np.array(img_lst)
+    # Read image bytes
+    img_bytes = await img_file.read()
+    
+    # Convert bytes to numpy array
+    img_arr = np.reshape(np.frombuffer(img_bytes, dtype=np.uint8), (256, 256))
+    print(f"Image shape: {img_arr.shape}")
+    # Parse settings
+    settings = json.loads(settings)
     
     # Run segmentation
-    mask = model.segment(img_arr, settings)
+    mask = init_model.segment(img_arr, settings)
+    print(f"Mask shape: {mask.shape}")
+    # Convert mask to bytes
+    mask_bytes = mask.tobytes()
     
-    # Convert mask to list of lists
-    mask = [m.tolist() for m in mask]
     logging.info("Image segmented successfully")
-    return SegmentedMask(mask=mask, target_path=target_path)
+    return {"mask": mask_bytes, "target_path":target_path}
+
 
 if __name__ == "__main__":
     import httpx
