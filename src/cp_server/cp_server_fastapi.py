@@ -54,7 +54,7 @@ class CellposeModel():
             case _:
                 model_settings['restore_type'] = "denoise_cyto2"
         return model_settings
-      
+    
     def segment(self, image: np.ndarray, cp_settings: dict)-> list[np.ndarray]:
         # Denoise image has a bug and it requires channels list (even if default is set to None)
         if "channels" not in cp_settings:
