@@ -52,7 +52,7 @@ class CellposeModel():
             case _:
                 model_settings['restore_type'] = "denoise_cyto2"
         return model_settings
-      
+    
     def segment(self, image: np.ndarray, cp_settings: dict)-> list[np.ndarray]:
         # Run segmentation
         mask: list[np.ndarray] = self.model.eval(image, **cp_settings)[0]
