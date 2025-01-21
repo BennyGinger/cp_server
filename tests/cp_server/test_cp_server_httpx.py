@@ -7,7 +7,7 @@ import atexit
 import numpy as np
 
 # Start the FastAPI server using uvicorn in a subprocess
-server_process = subprocess.Popen(["uvicorn", "cp_server.cp_server_fastapi:app", "--reload"])
+server_process = subprocess.Popen(["uvicorn", "cp_server.cp_server:app", "--reload"])
 
 # Ensure the server process is terminated on exit
 atexit.register(server_process.terminate)
@@ -38,7 +38,7 @@ payload = {"gpu": True,
            "pretrained_model": False}
 
 # Make a POST request to the /model/ endpoint
-response = httpx.post("http://127.0.0.1:8000/model/", json=payload)
+response = httpx.post("http://127.0.0.1:8000/model", json=payload, timeout=180.0)
 
 # Print the response
 print(response.status_code)
@@ -47,16 +47,18 @@ print(response.json())
 # Create a mock image byte array
 img_arr = np.random.randint(0, 256, (256, 256), dtype=np.uint8)
 img_bytes = img_arr.tobytes()
+img_shape = img_arr.shape
 
 # File input
 files = {"img_file": ("test_image.png", img_bytes, "image/png")}
 
-response = httpx.post("http://127.0.0.1:8000/segment/", 
+response = httpx.post("http://127.0.0.1:8000/segment", 
                       files=files,
                       params={"settings": json.dumps({'diameter':60.,
                                                       'flow_threshold':0.4,
                                                       'cellprob_threshold':0.,}),
-                              "target_path": "path/to/save"})
+                              "target_path": "path/to/save",
+                              "img_shape": json.dumps(img_shape)},)
 
 print(response.status_code)
 print(response.json()['target_path'])
