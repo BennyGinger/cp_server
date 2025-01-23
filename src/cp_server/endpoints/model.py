@@ -25,9 +25,15 @@ async def create_cp_model(request: Request, settings: dict)-> dict:
         logging.info(f"Model {cp_model} was created successfully with settings: {model_settings}")
         
         return {"status": "Model created successfully"}
+    
     except TimeoutError as t:
         logging.error(f"Failed to download the model {t}")
         raise HTTPException(status_code=504, detail=f"Model download failed: {t}")
+    
+    except ValueError as v:
+        logging.error(f"Failed to create model: {v}")
+        raise HTTPException(status_code=400, detail=f"Model creation failed: {v}")
+    
     except Exception as e:
         logging.error(f"Failed to create model: {e}")
         raise HTTPException(status_code=500, detail=f"Model creation failed: {e}")

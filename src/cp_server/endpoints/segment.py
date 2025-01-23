@@ -1,4 +1,5 @@
 
+import base64
 import logging
 from cellpose.denoise import CellposeDenoiseModel
 from fastapi import APIRouter, HTTPException, Query, Request, UploadFile, File
@@ -25,7 +26,7 @@ async def segment(request: Request, settings: str = Query(...), img_shape: str =
         
         # Convert bytes to numpy array
         img_arr = decode_image(img_bytes, img_shape)
-        
+        print(f"Image shape: {img_arr.shape}")
         # Log image reading
         logging.info(f"Image read successfully with shape {img_arr.shape}")
         
@@ -46,8 +47,11 @@ async def segment(request: Request, settings: str = Query(...), img_shape: str =
         # Convert mask to bytes
         mask_bytes = mask.tobytes()
         
+        # Encode mask bytes to base64 string
+        mask_base64 = base64.b64encode(mask_bytes).decode('utf-8')
+        
         logging.info(f"Image segmented successfully with mask shape {mask.shape}")
-        return {"mask": mask_bytes, "target_path":target_path}
+        return {"mask": mask_base64, "target_path":target_path}
     except Exception as e:
         logging.error(f"Failed to segment image: {e}")
         raise HTTPException(status_code=500, detail=f"Segment image failed: {e}")

@@ -42,7 +42,7 @@ def decode_image(img_bytes: bytes, img_shape: str = Query(...))-> np.ndarray:
     shape = tuple(json.loads(img_shape))
     
     # Convert bytes to numpy array
-    img_arr = np.frombuffer(img_bytes, dtype=np.uint8).reshape(shape)
+    img_arr = np.frombuffer(img_bytes, dtype=np.uint16).reshape(shape)
     # # TODO: Check if the image is in the correct format
     # img_arr = np.frombuffer(img_bytes, dtype=np.uint8)
     # img_arr = cv2.imdecode(img_arr, cv2.IMREAD_UNCHANGED)

@@ -11,3 +11,7 @@ wheels/
 .vscode
 .ruff_cache
 .pytest_cache
+
+# Development file trial
+play.py
+Image_tests/

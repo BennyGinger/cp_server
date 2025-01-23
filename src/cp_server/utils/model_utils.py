@@ -28,6 +28,10 @@ def unpack_settings(model_settings: dict)-> dict:
         if k in MODEL_SETTINGS:
             model_settings[k] = v
     
+    # Check if model type is valid
+    if model_settings['model_type'] is not None and model_settings['model_type'] not in MODEL_TO_FILE_NAMES:
+        raise ValueError(f"Invalid model type: {model_settings['model_type']}")
+    
     # Set restore type
     if model_settings['model_type'] in RESTORE_MODELS:
         model_settings['restore_type'] = RESTORE_MODELS[model_settings['model_type']]
