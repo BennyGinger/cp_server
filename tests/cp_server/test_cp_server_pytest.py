@@ -3,7 +3,7 @@ import os
 import pytest
 from fastapi.testclient import TestClient
 import numpy as np
-from cp_server.cp_server import app
+from cp_server.main import app
 
 
 client = TestClient(app)

@@ -1,906 +1,120 @@
-2025-01-21 13:00:00,246 - root - INFO - The app is ready to accept requests
-2025-01-21 13:00:00,456 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
-2025-01-21 13:00:00,551 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 13:00:00,551 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 13:00:00,641 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 13:00:00,641 - cellpose.models - INFO - >> cyto2 << model set to be used
-2025-01-21 13:00:00,641 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 13:00:00,641 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 13:00:00,678 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
-2025-01-21 13:00:00,719 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 13:00:00,719 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x71a9b1b04cb0> was created successfully with settings: {'gpu': True, 'model_type': 'cyto2', 'pretrained_model': False, 'restore_type': 'denoise_cyto2'}
-2025-01-21 13:00:00,756 - root - INFO - Image read successfully with shape (256, 256)
-2025-01-21 13:00:02,090 - root - INFO - Image segmented successfully with mask shape (256, 256)
-2025-01-21 13:09:19,117 - root - INFO - The app is ready to accept requests
-2025-01-21 13:09:19,343 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
-2025-01-21 13:09:19,435 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 13:09:19,435 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 13:09:19,515 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 13:09:19,515 - cellpose.models - INFO - >> cyto2 << model set to be used
-2025-01-21 13:09:19,515 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 13:09:19,515 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 13:09:19,557 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
-2025-01-21 13:09:19,592 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 13:09:19,592 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7608d521ccb0> was created successfully with settings: {'gpu': True, 'model_type': 'cyto2', 'pretrained_model': False, 'restore_type': 'denoise_cyto2'}
-2025-01-21 13:09:19,625 - root - INFO - Image read successfully with shape (256, 256)
-2025-01-21 13:09:19,984 - root - INFO - Image segmented successfully with mask shape (256, 256)
-2025-01-21 13:10:38,765 - root - INFO - The app is ready to accept requests
-2025-01-21 13:10:38,983 - cellpose.models - INFO - Downloading: "https://www.cellpose.org/models/denoise_cyto3" to /home/ben/.cellpose/models/denoise_cyto3
+2025-01-29 12:03:45,017 - celery.utils.functional - DEBUG - 
+def xstarmap(task, it):
+    return 1
 
-2025-01-21 13:12:49,225 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-21 13:12:49,330 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 13:12:49,330 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 13:12:49,431 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 13:12:49,431 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-21 13:12:49,431 - cellpose.models - INFO - Downloading: "https://www.cellpose.org/models/cyto3" to /home/ben/.cellpose/models/cyto3
+2025-01-29 12:03:45,017 - celery.utils.functional - DEBUG - 
+def accumulate(self, *args, **kwargs):
+    return 1
 
-2025-01-21 13:15:01,639 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 13:15:01,639 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 13:15:01,684 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-21 13:15:01,685 - root - ERROR - Failed to create model: PytorchStreamReader failed reading zip archive: failed finding central directory
-2025-01-21 14:36:11,352 - root - INFO - The app is ready to accept requests
-2025-01-21 14:36:11,543 - root - ERROR - Failed to create model: cellpose.denoise.CellposeDenoiseModel() argument after ** must be a mapping, not NoneType
-2025-01-21 14:44:04,518 - root - INFO - The app is ready to accept requests
-2025-01-21 14:44:04,716 - cellpose.models - INFO - Downloading: "https://www.cellpose.org/models/denoise_cyto3" to /home/ben/.cellpose/models/denoise_cyto3
+2025-01-29 12:03:45,017 - celery.utils.functional - DEBUG - 
+def process_images(self, src_dir, dst_dir, settings, image_name):
+    return 1
 
-2025-01-21 14:45:07,799 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-21 14:45:07,893 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 14:45:07,893 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 14:45:07,983 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 14:45:07,983 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-21 14:45:07,984 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 14:45:07,984 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 14:45:08,024 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-21 14:45:08,066 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 14:45:08,066 - root - ERROR - Failed to download the model Model download timed out
-2025-01-21 14:46:22,600 - root - INFO - The app is ready to accept requests
-2025-01-21 14:46:22,778 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-21 14:46:22,869 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 14:46:22,869 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 14:46:22,956 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 14:46:22,956 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-21 14:46:22,956 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 14:46:22,956 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 14:46:22,993 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-21 14:46:23,034 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 14:46:23,034 - root - ERROR - Failed to download the model Model download timed out
-2025-01-21 14:48:39,583 - root - INFO - The app is ready to accept requests
-2025-01-21 14:48:39,733 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-21 14:48:39,818 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 14:48:39,819 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 14:48:39,902 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 14:48:39,902 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-21 14:48:39,902 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 14:48:39,902 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 14:48:39,944 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-21 14:48:39,980 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 14:48:39,980 - root - ERROR - Failed to download the model Model download timed out
-2025-01-21 14:48:40,017 - root - INFO - Image read successfully with shape (256, 256)
-2025-01-21 14:51:38,948 - root - INFO - The app is ready to accept requests
-2025-01-21 14:51:39,148 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-21 14:51:39,257 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 14:51:39,257 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 14:51:39,343 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 14:51:39,344 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-21 14:51:39,344 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 14:51:39,344 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 14:51:39,382 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-21 14:51:39,419 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 14:51:39,419 - root - ERROR - Failed to download the model Model download timed out
-2025-01-21 14:51:39,446 - root - INFO - Image read successfully with shape (256, 256)
-2025-01-21 14:56:23,951 - root - INFO - The app is ready to accept requests
-2025-01-21 14:56:24,106 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-21 14:56:24,192 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 14:56:24,192 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 14:56:24,274 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 14:56:24,274 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-21 14:56:24,275 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 14:56:24,275 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 14:56:24,317 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-21 14:56:24,352 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 14:56:24,352 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x761d9301caa0> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-21 14:56:24,384 - root - INFO - Image read successfully with shape (256, 256)
-2025-01-21 14:56:24,634 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-21 14:56:24,638 - root - INFO - Image segmented successfully with mask shape (256, 256)
-2025-01-21 15:01:13,120 - root - INFO - The app is ready to accept requests
-2025-01-21 15:01:13,282 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-21 15:01:13,378 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 15:01:13,378 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 15:01:13,478 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 15:01:13,478 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-21 15:01:13,479 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 15:01:13,479 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 15:01:13,524 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-21 15:01:13,571 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 15:03:49,611 - root - INFO - The app is ready to accept requests
-2025-01-21 15:03:49,803 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-21 15:03:49,905 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 15:03:49,905 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 15:03:49,990 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 15:03:49,991 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-21 15:03:49,991 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 15:03:49,991 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 15:03:50,029 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-21 15:03:50,070 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 15:06:01,924 - root - INFO - The app is ready to accept requests
-2025-01-21 15:06:02,160 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-21 15:06:02,258 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 15:06:02,258 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 15:06:02,347 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 15:06:02,347 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-21 15:06:02,347 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 15:06:02,348 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 15:06:02,385 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-21 15:06:02,426 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 15:08:20,656 - root - INFO - The app is ready to accept requests
-2025-01-21 15:08:20,813 - cellpose.models - INFO - Downloading: "https://www.cellpose.org/models/denoise_cyto3" to /home/ben/.cellpose/models/denoise_cyto3
+2025-01-29 12:03:45,017 - celery.utils.functional - DEBUG - 
+def chord(self, header, body, partial_args=0, interval=1, countdown=2, max_retries=3, eager=4, **kwargs):
+    return 1
 
-2025-01-21 15:09:40,921 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-21 15:09:41,026 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 15:09:41,027 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 15:09:41,116 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 15:09:41,116 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-21 15:09:41,116 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 15:09:41,116 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 15:09:41,155 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-21 15:09:41,197 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 15:09:41,197 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7cf3aa218980> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-21 15:09:41,230 - root - INFO - Image read successfully with shape (256, 256)
-2025-01-21 15:09:41,481 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-21 15:09:41,485 - root - INFO - Image segmented successfully with mask shape (256, 256)
-2025-01-21 15:34:01,300 - root - INFO - The app is ready to accept requests
-2025-01-21 15:34:01,503 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-21 15:34:01,590 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 15:34:01,590 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 15:34:01,670 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 15:34:01,670 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-21 15:34:01,670 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 15:34:01,670 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 15:34:01,711 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-21 15:34:01,745 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 15:34:01,745 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7c1eb5210ad0> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-21 15:34:01,771 - root - INFO - Image read successfully with shape (256, 256)
-2025-01-21 15:34:03,111 - root - INFO - Image segmented successfully with mask shape (256, 256)
-2025-01-21 15:43:04,967 - root - INFO - The app is ready to accept requests
-2025-01-21 15:43:05,204 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-21 15:43:05,297 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 15:43:05,297 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 15:43:05,384 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 15:43:05,384 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-21 15:43:05,384 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 15:43:05,384 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 15:43:05,420 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-21 15:43:05,461 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 15:43:05,461 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7f83f515cb30> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-21 15:43:05,487 - root - ERROR - Failed to read image: not a TIFF file b'\xea\x8d?\xdb'
-2025-01-21 15:50:03,400 - root - INFO - The app is ready to accept requests
-2025-01-21 15:50:03,590 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-21 15:50:03,693 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 15:50:03,694 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 15:50:03,780 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 15:50:03,780 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-21 15:50:03,780 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 15:50:03,780 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 15:50:03,817 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-21 15:50:03,859 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 15:50:03,859 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7bf156d1afc0> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-21 15:50:03,920 - PIL.Image - DEBUG - Importing BlpImagePlugin
-2025-01-21 15:50:03,923 - PIL.Image - DEBUG - Importing BmpImagePlugin
-2025-01-21 15:50:03,923 - PIL.Image - DEBUG - Importing BufrStubImagePlugin
-2025-01-21 15:50:03,924 - PIL.Image - DEBUG - Importing CurImagePlugin
-2025-01-21 15:50:03,924 - PIL.Image - DEBUG - Importing DcxImagePlugin
-2025-01-21 15:50:03,926 - PIL.Image - DEBUG - Importing DdsImagePlugin
-2025-01-21 15:50:03,930 - PIL.Image - DEBUG - Importing EpsImagePlugin
-2025-01-21 15:50:03,932 - PIL.Image - DEBUG - Importing FitsImagePlugin
-2025-01-21 15:50:03,933 - PIL.Image - DEBUG - Importing FliImagePlugin
-2025-01-21 15:50:03,934 - PIL.Image - DEBUG - Importing FpxImagePlugin
-2025-01-21 15:50:03,935 - PIL.Image - DEBUG - Image: failed to import FpxImagePlugin: No module named 'olefile'
-2025-01-21 15:50:03,935 - PIL.Image - DEBUG - Importing FtexImagePlugin
-2025-01-21 15:50:03,936 - PIL.Image - DEBUG - Importing GbrImagePlugin
-2025-01-21 15:50:03,936 - PIL.Image - DEBUG - Importing GifImagePlugin
-2025-01-21 15:50:03,936 - PIL.Image - DEBUG - Importing GribStubImagePlugin
-2025-01-21 15:50:03,937 - PIL.Image - DEBUG - Importing Hdf5StubImagePlugin
-2025-01-21 15:50:03,937 - PIL.Image - DEBUG - Importing IcnsImagePlugin
-2025-01-21 15:50:03,943 - PIL.Image - DEBUG - Importing IcoImagePlugin
-2025-01-21 15:50:03,945 - PIL.Image - DEBUG - Importing ImImagePlugin
-2025-01-21 15:50:03,947 - PIL.Image - DEBUG - Importing ImtImagePlugin
-2025-01-21 15:50:03,948 - PIL.Image - DEBUG - Importing IptcImagePlugin
-2025-01-21 15:50:03,949 - PIL.Image - DEBUG - Importing JpegImagePlugin
-2025-01-21 15:50:03,949 - PIL.Image - DEBUG - Importing Jpeg2KImagePlugin
-2025-01-21 15:50:03,949 - PIL.Image - DEBUG - Importing McIdasImagePlugin
-2025-01-21 15:50:03,949 - PIL.Image - DEBUG - Importing MicImagePlugin
-2025-01-21 15:50:03,950 - PIL.Image - DEBUG - Image: failed to import MicImagePlugin: No module named 'olefile'
-2025-01-21 15:50:03,950 - PIL.Image - DEBUG - Importing MpegImagePlugin
-2025-01-21 15:50:03,951 - PIL.Image - DEBUG - Importing MpoImagePlugin
-2025-01-21 15:50:03,964 - PIL.Image - DEBUG - Importing MspImagePlugin
-2025-01-21 15:50:03,965 - PIL.Image - DEBUG - Importing PalmImagePlugin
-2025-01-21 15:50:03,967 - PIL.Image - DEBUG - Importing PcdImagePlugin
-2025-01-21 15:50:03,968 - PIL.Image - DEBUG - Importing PcxImagePlugin
-2025-01-21 15:50:03,968 - PIL.Image - DEBUG - Importing PdfImagePlugin
-2025-01-21 15:50:03,976 - PIL.Image - DEBUG - Importing PixarImagePlugin
-2025-01-21 15:50:03,977 - PIL.Image - DEBUG - Importing PngImagePlugin
-2025-01-21 15:50:03,977 - PIL.Image - DEBUG - Importing PpmImagePlugin
-2025-01-21 15:50:03,977 - PIL.Image - DEBUG - Importing PsdImagePlugin
-2025-01-21 15:50:03,979 - PIL.Image - DEBUG - Importing QoiImagePlugin
-2025-01-21 15:50:03,979 - PIL.Image - DEBUG - Importing SgiImagePlugin
-2025-01-21 15:50:03,981 - PIL.Image - DEBUG - Importing SpiderImagePlugin
-2025-01-21 15:50:03,982 - PIL.Image - DEBUG - Importing SunImagePlugin
-2025-01-21 15:50:03,983 - PIL.Image - DEBUG - Importing TgaImagePlugin
-2025-01-21 15:50:03,984 - PIL.Image - DEBUG - Importing TiffImagePlugin
-2025-01-21 15:50:03,984 - PIL.Image - DEBUG - Importing WebPImagePlugin
-2025-01-21 15:50:03,986 - PIL.Image - DEBUG - Importing WmfImagePlugin
-2025-01-21 15:50:03,987 - PIL.Image - DEBUG - Importing XbmImagePlugin
-2025-01-21 15:50:03,988 - PIL.Image - DEBUG - Importing XpmImagePlugin
-2025-01-21 15:50:03,989 - PIL.Image - DEBUG - Importing XVThumbImagePlugin
-2025-01-21 15:50:03,990 - root - ERROR - Failed to read image: cannot identify image file <_io.BytesIO object at 0x7bf156cd62a0>
-2025-01-21 15:57:01,911 - root - INFO - The app is ready to accept requests
-2025-01-21 15:57:02,094 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-21 15:57:02,182 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 15:57:02,182 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 15:57:02,267 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 15:57:02,267 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-21 15:57:02,267 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 15:57:02,267 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 15:57:02,303 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-21 15:57:02,340 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 15:57:02,340 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7f5727562870> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-21 15:57:02,374 - root - ERROR - Failed to read image: 'str' object cannot be interpreted as an integer
-2025-01-21 15:59:07,623 - root - INFO - The app is ready to accept requests
-2025-01-21 15:59:07,822 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-21 15:59:07,922 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 15:59:07,922 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 15:59:08,011 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 15:59:08,011 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-21 15:59:08,011 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 15:59:08,012 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 15:59:08,049 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-21 15:59:08,089 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 15:59:08,089 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x79ab1a20a870> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-21 15:59:08,122 - root - INFO - Image read successfully with shape (256, 256)
-2025-01-21 15:59:08,364 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-21 15:59:08,368 - root - INFO - Image segmented successfully with mask shape (256, 256)
-2025-01-21 15:59:27,090 - root - INFO - The app is ready to accept requests
-2025-01-21 15:59:27,204 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-21 15:59:27,275 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 15:59:27,275 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 15:59:27,365 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 15:59:27,366 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-21 15:59:27,366 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 15:59:27,366 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 15:59:27,408 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-21 15:59:27,446 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 15:59:27,447 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7e3efd16e6f0> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-21 15:59:27,472 - root - INFO - Image read successfully with shape (500, 256)
-2025-01-21 15:59:27,732 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-21 15:59:27,739 - root - INFO - Image segmented successfully with mask shape (500, 256)
-2025-01-21 16:07:11,102 - root - INFO - The app is ready to accept requests
-2025-01-21 16:07:11,176 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-21 16:07:11,263 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 16:07:11,263 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 16:07:11,348 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 16:07:11,348 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-21 16:07:11,348 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-21 16:07:11,348 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-21 16:07:11,392 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-21 16:07:11,429 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-21 16:07:11,429 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x77db30576870> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-21 16:07:11,463 - root - INFO - Image read successfully with shape (256, 256)
-2025-01-21 16:07:12,784 - root - INFO - Image segmented successfully with mask shape (256, 256)
-2025-01-22 10:24:03,417 - root - INFO - The app is ready to accept requests
-2025-01-22 10:24:40,359 - root - INFO - The app is ready to accept requests
-2025-01-22 10:25:12,638 - root - INFO - The app is ready to accept requests
-2025-01-22 10:26:21,785 - root - INFO - The app is ready to accept requests
-2025-01-22 10:28:04,663 - root - INFO - The app is ready to accept requests
-2025-01-22 10:33:39,586 - root - INFO - The app is ready to accept requests
-2025-01-22 10:38:58,590 - root - INFO - The app is ready to accept requests
-2025-01-22 10:49:07,241 - root - INFO - The app is ready to accept requests
-2025-01-22 11:03:08,730 - root - INFO - The app is ready to accept requests
-2025-01-22 11:03:08,926 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 11:03:09,028 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 11:03:09,028 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 11:03:09,114 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 11:03:09,114 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 11:03:09,114 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 11:03:09,114 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 11:03:09,151 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 11:03:09,188 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 11:03:09,188 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7212e48aa780> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 11:04:33,991 - root - INFO - The app is ready to accept requests
-2025-01-22 11:04:34,036 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
-2025-01-22 11:04:34,125 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 11:04:34,125 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 11:04:34,214 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 11:04:34,215 - cellpose.models - WARNING - model_type does not exist, using default model
-2025-01-22 11:04:34,215 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 11:04:34,215 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 11:04:34,260 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 11:04:34,295 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 11:04:34,296 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7bbdfe3a26f0> was created successfully with settings: {'gpu': True, 'model_type': 'bcyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto2'}
-2025-01-22 11:26:29,849 - root - INFO - The app is ready to accept requests
-2025-01-22 11:26:30,061 - root - ERROR - Failed to create model: Invalid model type: bcyto3
-2025-01-22 11:44:08,153 - root - INFO - The app is ready to accept requests
-2025-01-22 11:44:08,375 - root - ERROR - Failed to create model: Invalid model type: bcyto3
-2025-01-22 11:46:50,871 - root - INFO - The app is ready to accept requests
-2025-01-22 11:46:51,104 - root - ERROR - Failed to create model: Invalid model type: bcyto3
-2025-01-22 12:49:05,531 - root - INFO - The app is ready to accept requests
-2025-01-22 12:49:05,703 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 12:49:05,784 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 12:49:05,784 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 12:49:05,873 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 12:49:05,873 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 12:49:05,873 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 12:49:05,873 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 12:49:05,910 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 12:49:05,951 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 12:49:05,951 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7e221bbb2750> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 12:49:05,981 - root - INFO - Image read successfully with shape (256, 256)
-2025-01-22 12:49:07,353 - root - INFO - Image segmented successfully with mask shape (256, 256)
-2025-01-22 12:49:31,640 - root - INFO - The app is ready to accept requests
-2025-01-22 12:49:31,881 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 12:49:31,957 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 12:49:31,957 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 12:49:32,046 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 12:49:32,047 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 12:49:32,047 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 12:49:32,047 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 12:49:32,085 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 12:49:32,126 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 12:49:32,126 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x74b5da7b27e0> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 12:49:32,155 - root - INFO - Image read successfully with shape (256, 256)
-2025-01-22 12:49:33,536 - root - INFO - Image segmented successfully with mask shape (256, 256)
-2025-01-22 12:50:15,212 - root - INFO - The app is ready to accept requests
-2025-01-22 12:50:15,326 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 12:50:15,401 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 12:50:15,402 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 12:50:15,491 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 12:50:15,491 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 12:50:15,491 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 12:50:15,491 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 12:50:15,533 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 12:50:15,572 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 12:50:15,573 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x78c2dfda24e0> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 12:50:15,603 - root - INFO - Image read successfully with shape (256, 256)
-2025-01-22 12:50:15,847 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 12:50:15,851 - root - INFO - Image segmented successfully with mask shape (256, 256)
-2025-01-22 12:55:33,680 - httpcore.connection - DEBUG - connect_tcp.started host='127.0.0.1' port=8000 local_address=None timeout=5.0 socket_options=None
-2025-01-22 12:55:33,681 - httpcore.connection - DEBUG - connect_tcp.failed exception=ConnectError(ConnectionRefusedError(111, 'Connection refused'))
-2025-01-22 12:55:34,196 - httpcore.connection - DEBUG - connect_tcp.started host='127.0.0.1' port=8000 local_address=None timeout=5.0 socket_options=None
-2025-01-22 12:55:34,197 - httpcore.connection - DEBUG - connect_tcp.failed exception=ConnectError(ConnectionRefusedError(111, 'Connection refused'))
-2025-01-22 12:55:34,712 - httpcore.connection - DEBUG - connect_tcp.started host='127.0.0.1' port=8000 local_address=None timeout=5.0 socket_options=None
-2025-01-22 12:55:34,712 - httpcore.connection - DEBUG - connect_tcp.failed exception=ConnectError(ConnectionRefusedError(111, 'Connection refused'))
-2025-01-22 12:55:35,227 - httpcore.connection - DEBUG - connect_tcp.started host='127.0.0.1' port=8000 local_address=None timeout=5.0 socket_options=None
-2025-01-22 12:55:35,227 - httpcore.connection - DEBUG - connect_tcp.failed exception=ConnectError(ConnectionRefusedError(111, 'Connection refused'))
-2025-01-22 12:55:35,742 - httpcore.connection - DEBUG - connect_tcp.started host='127.0.0.1' port=8000 local_address=None timeout=5.0 socket_options=None
-2025-01-22 12:55:35,742 - httpcore.connection - DEBUG - connect_tcp.failed exception=ConnectError(ConnectionRefusedError(111, 'Connection refused'))
-2025-01-22 12:55:36,258 - httpcore.connection - DEBUG - connect_tcp.started host='127.0.0.1' port=8000 local_address=None timeout=5.0 socket_options=None
-2025-01-22 12:55:36,258 - httpcore.connection - DEBUG - connect_tcp.failed exception=ConnectError(ConnectionRefusedError(111, 'Connection refused'))
-2025-01-22 12:55:36,774 - httpcore.connection - DEBUG - connect_tcp.started host='127.0.0.1' port=8000 local_address=None timeout=5.0 socket_options=None
-2025-01-22 12:55:36,774 - httpcore.connection - DEBUG - connect_tcp.failed exception=ConnectError(ConnectionRefusedError(111, 'Connection refused'))
-2025-01-22 12:55:37,162 - root - INFO - The app is ready to accept requests
-2025-01-22 12:55:37,289 - httpcore.connection - DEBUG - connect_tcp.started host='127.0.0.1' port=8000 local_address=None timeout=5.0 socket_options=None
-2025-01-22 12:55:37,289 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7497381e5e50>
-2025-01-22 12:55:37,289 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'GET']>
-2025-01-22 12:55:37,289 - httpcore.http11 - DEBUG - send_request_headers.complete
-2025-01-22 12:55:37,289 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'GET']>
-2025-01-22 12:55:37,289 - httpcore.http11 - DEBUG - send_request_body.complete
-2025-01-22 12:55:37,289 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'GET']>
-2025-01-22 12:55:37,290 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Wed, 22 Jan 2025 11:55:37 GMT'), (b'server', b'uvicorn'), (b'content-length', b'15'), (b'content-type', b'application/json')])
-2025-01-22 12:55:37,294 - httpx - INFO - HTTP Request: GET http://127.0.0.1:8000/health "HTTP/1.1 200 OK"
-2025-01-22 12:55:37,294 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'GET']>
-2025-01-22 12:55:37,295 - httpcore.http11 - DEBUG - receive_response_body.complete
-2025-01-22 12:55:37,295 - httpcore.http11 - DEBUG - response_closed.started
-2025-01-22 12:55:37,295 - httpcore.http11 - DEBUG - response_closed.complete
-2025-01-22 12:55:37,295 - httpcore.connection - DEBUG - close.started
-2025-01-22 12:55:37,295 - httpcore.connection - DEBUG - close.complete
-2025-01-22 12:55:37,309 - httpcore.connection - DEBUG - connect_tcp.started host='127.0.0.1' port=8000 local_address=None timeout=180.0 socket_options=None
-2025-01-22 12:55:37,309 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7497381b37d0>
-2025-01-22 12:55:37,309 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
-2025-01-22 12:55:37,309 - httpcore.http11 - DEBUG - send_request_headers.complete
-2025-01-22 12:55:37,309 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
-2025-01-22 12:55:37,309 - httpcore.http11 - DEBUG - send_request_body.complete
-2025-01-22 12:55:37,309 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
-2025-01-22 12:55:37,309 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 12:55:37,389 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 12:55:37,389 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 12:55:37,479 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 12:55:37,480 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 12:55:37,480 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 12:55:37,480 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 12:55:37,517 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 12:55:37,553 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 12:55:37,553 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7a6a4259e2d0> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 12:55:37,554 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Wed, 22 Jan 2025 11:55:37 GMT'), (b'server', b'uvicorn'), (b'content-length', b'39'), (b'content-type', b'application/json')])
-2025-01-22 12:55:37,554 - httpx - INFO - HTTP Request: POST http://127.0.0.1:8000/model "HTTP/1.1 200 OK"
-2025-01-22 12:55:37,554 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
-2025-01-22 12:55:37,554 - httpcore.http11 - DEBUG - receive_response_body.complete
-2025-01-22 12:55:37,554 - httpcore.http11 - DEBUG - response_closed.started
-2025-01-22 12:55:37,554 - httpcore.http11 - DEBUG - response_closed.complete
-2025-01-22 12:55:37,554 - httpcore.connection - DEBUG - close.started
-2025-01-22 12:55:37,554 - httpcore.connection - DEBUG - close.complete
-2025-01-22 12:55:37,571 - httpcore.connection - DEBUG - connect_tcp.started host='127.0.0.1' port=8000 local_address=None timeout=5.0 socket_options=None
-2025-01-22 12:55:37,571 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7497381e4fe0>
-2025-01-22 12:55:37,571 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
-2025-01-22 12:55:37,572 - httpcore.http11 - DEBUG - send_request_headers.complete
-2025-01-22 12:55:37,572 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
-2025-01-22 12:55:37,572 - httpcore.http11 - DEBUG - send_request_body.complete
-2025-01-22 12:55:37,572 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
-2025-01-22 12:55:37,591 - root - ERROR - Failed to read image: cannot reshape array of size 2097152 into shape (1024,1024)
-2025-01-22 12:55:37,592 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 500, b'Internal Server Error', [(b'date', b'Wed, 22 Jan 2025 11:55:37 GMT'), (b'server', b'uvicorn'), (b'content-length', b'94'), (b'content-type', b'application/json')])
-2025-01-22 12:55:37,592 - httpx - INFO - HTTP Request: POST http://127.0.0.1:8000/segment?settings=%7B%22diameter%22%3A+60.0%2C+%22flow_threshold%22%3A+0.4%2C+%22cellprob_threshold%22%3A+0.0%7D&target_path=path%2Fto%2Ftarget&img_shape=%5B1024%2C+1024%5D "HTTP/1.1 500 Internal Server Error"
-2025-01-22 12:55:37,592 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
-2025-01-22 12:55:37,592 - httpcore.http11 - DEBUG - receive_response_body.complete
-2025-01-22 12:55:37,592 - httpcore.http11 - DEBUG - response_closed.started
-2025-01-22 12:55:37,592 - httpcore.http11 - DEBUG - response_closed.complete
-2025-01-22 12:55:37,592 - httpcore.connection - DEBUG - close.started
-2025-01-22 12:55:37,593 - httpcore.connection - DEBUG - close.complete
-2025-01-22 12:58:30,453 - root - INFO - The app is ready to accept requests
-2025-01-22 12:58:30,629 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 12:58:30,716 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 12:58:30,716 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 12:58:30,802 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 12:58:30,802 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 12:58:30,802 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 12:58:30,802 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 12:58:30,839 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 12:58:30,874 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 12:58:30,874 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7e45bb9a67b0> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 12:58:30,903 - root - ERROR - Failed to read image: cannot reshape array of size 2097152 into shape (1024,1024)
-2025-01-22 13:08:12,161 - root - INFO - The app is ready to accept requests
-2025-01-22 13:08:12,425 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 13:08:12,511 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:08:12,512 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:08:12,598 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:08:12,598 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 13:08:12,598 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:08:12,598 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:08:12,636 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 13:08:12,675 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:08:12,676 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x752a9e1aa750> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 13:08:12,709 - root - ERROR - Failed to read image: cannot reshape array of size 2097152 into shape (1024,1024)
-2025-01-22 13:08:35,945 - root - INFO - The app is ready to accept requests
-2025-01-22 13:08:36,086 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 13:08:36,162 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:08:36,162 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:08:36,250 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:08:36,250 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 13:08:36,250 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:08:36,250 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:08:36,287 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 13:08:36,329 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:08:36,329 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7942387aa7b0> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 13:08:36,356 - root - ERROR - Failed to read image: cannot reshape array of size 2097152 into shape (1024,1024)
-2025-01-22 13:12:42,017 - root - INFO - The app is ready to accept requests
-2025-01-22 13:12:42,278 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 13:12:42,366 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:12:42,366 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:12:42,451 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:12:42,451 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 13:12:42,452 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:12:42,452 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:12:42,488 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 13:12:42,525 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:12:42,526 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7043b8daa7e0> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 13:12:42,560 - root - ERROR - Failed to read image: cannot reshape array of size 2097152 into shape (1024,1024)
-2025-01-22 13:17:44,232 - root - INFO - The app is ready to accept requests
-2025-01-22 13:17:44,303 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 13:17:44,383 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:17:44,383 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:17:44,474 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:17:44,475 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 13:17:44,475 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:17:44,475 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:17:44,513 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 13:17:44,553 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:17:44,553 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7c0aa75ae750> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 13:17:44,581 - root - INFO - Image read successfully with shape (1024, 1024)
-2025-01-22 13:17:46,459 - root - INFO - Image segmented successfully with mask shape (1024, 1024)
-2025-01-22 13:17:50,473 - root - INFO - The app is ready to accept requests
-2025-01-22 13:17:50,641 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 13:17:50,721 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:17:50,721 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:17:50,807 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:17:50,808 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 13:17:50,808 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:17:50,808 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:17:50,847 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 13:17:50,885 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:17:50,886 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7e2056b9e4e0> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 13:17:50,915 - root - INFO - Image read successfully with shape (1024, 1024)
-2025-01-22 13:17:52,812 - root - INFO - Image segmented successfully with mask shape (1024, 1024)
-2025-01-22 13:22:38,954 - root - INFO - The app is ready to accept requests
-2025-01-22 13:22:39,235 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 13:22:39,325 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:22:39,325 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:22:39,407 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:22:39,407 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 13:22:39,407 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:22:39,407 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:22:39,447 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 13:22:39,483 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:22:39,483 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7605f92b2780> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 13:22:39,515 - root - INFO - Image read successfully with shape (1024, 1024)
-2025-01-22 13:22:41,402 - root - INFO - Image segmented successfully with mask shape (1024, 1024)
-2025-01-22 13:23:24,225 - root - INFO - The app is ready to accept requests
-2025-01-22 13:23:24,428 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 13:23:24,513 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:23:24,513 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:23:24,596 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:23:24,596 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 13:23:24,596 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:23:24,597 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:23:24,637 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 13:23:24,673 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:23:24,673 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7470b69aa810> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 13:23:24,707 - root - INFO - Image read successfully with shape (1024, 1024)
-2025-01-22 13:23:26,602 - root - INFO - Image segmented successfully with mask shape (1024, 1024)
-2025-01-22 13:23:46,711 - root - INFO - The app is ready to accept requests
-2025-01-22 13:23:46,927 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 13:23:47,008 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:23:47,009 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:23:47,099 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:23:47,099 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 13:23:47,100 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:23:47,100 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:23:47,145 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 13:23:47,182 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:23:47,183 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7146e639e3c0> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 13:23:47,208 - root - INFO - Image read successfully with shape (1024, 1024)
-2025-01-22 13:23:49,067 - root - INFO - Image segmented successfully with mask shape (1024, 1024)
-2025-01-22 13:24:32,355 - root - INFO - The app is ready to accept requests
-2025-01-22 13:24:32,555 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 13:24:32,646 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:24:32,646 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:24:32,731 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:24:32,731 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 13:24:32,731 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:24:32,731 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:24:32,772 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 13:24:32,808 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:24:32,808 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x77137b5aa7e0> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 13:24:32,834 - root - INFO - Image read successfully with shape (1024, 1024)
-2025-01-22 13:24:34,708 - root - INFO - Image segmented successfully with mask shape (1024, 1024)
-2025-01-22 13:26:35,403 - root - INFO - The app is ready to accept requests
-2025-01-22 13:26:35,698 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 13:26:35,792 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:26:35,792 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:26:35,873 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:26:35,873 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 13:26:35,873 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:26:35,874 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:26:35,914 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 13:26:35,954 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:26:35,954 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x716b0bfa6840> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 13:26:35,981 - root - INFO - Image read successfully with shape (1024, 1024)
-2025-01-22 13:26:37,865 - root - INFO - Image segmented successfully with mask shape (1024, 1024)
-2025-01-22 13:36:54,693 - root - INFO - The app is ready to accept requests
-2025-01-22 13:36:54,896 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 13:36:54,991 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:36:54,991 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:36:55,078 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:36:55,078 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 13:36:55,078 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:36:55,078 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:36:55,120 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 13:36:55,160 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:36:55,160 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x72c8465aa7e0> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 13:36:55,194 - root - INFO - Image read successfully with shape (1024, 1024)
-2025-01-22 13:36:57,059 - root - INFO - Image segmented successfully with mask shape (1024, 1024)
-2025-01-22 13:39:24,642 - root - INFO - The app is ready to accept requests
-2025-01-22 13:39:24,900 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 13:39:24,983 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:39:24,983 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:39:25,073 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:39:25,073 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 13:39:25,073 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:39:25,073 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:39:25,110 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 13:39:25,152 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:39:25,152 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x703d66ab26f0> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 13:39:25,178 - root - INFO - Image read successfully with shape (1024, 1024)
-2025-01-22 13:39:27,077 - root - INFO - Image segmented successfully with mask shape (1024, 1024)
-2025-01-22 13:41:45,704 - root - INFO - The app is ready to accept requests
-2025-01-22 13:41:46,013 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 13:41:46,100 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:41:46,100 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:41:46,181 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:41:46,181 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 13:41:46,181 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:41:46,181 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:41:46,222 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 13:41:46,257 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:41:46,257 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7088224aea50> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 13:41:46,287 - root - INFO - Image read successfully with shape (1024, 1024)
-2025-01-22 13:41:48,184 - root - INFO - Image segmented successfully with mask shape (1024, 1024)
-2025-01-22 13:43:53,903 - root - INFO - The app is ready to accept requests
-2025-01-22 13:51:50,827 - root - INFO - The app is ready to accept requests
-2025-01-22 13:51:51,065 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 13:51:51,146 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:51:51,146 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:51:51,228 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:51:51,228 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 13:51:51,228 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 13:51:51,228 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 13:51:51,269 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 13:51:51,304 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 13:51:51,304 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7da7d41aa810> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 13:51:51,329 - root - INFO - Image read successfully with shape (1024, 1024)
-2025-01-22 13:51:53,251 - root - INFO - Image segmented successfully with mask shape (1024, 1024)
-2025-01-22 14:00:23,314 - root - INFO - The app is ready to accept requests
-2025-01-22 14:00:23,454 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 14:00:23,542 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 14:00:23,542 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 14:00:23,634 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 14:00:23,635 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 14:00:23,635 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 14:00:23,635 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 14:00:23,675 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 14:00:23,719 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 14:00:23,719 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x74ad52b9e270> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 14:00:23,749 - root - INFO - Image read successfully with shape (1024, 1024)
-2025-01-22 14:00:25,686 - root - INFO - Image segmented successfully with mask shape (1024, 1024)
-2025-01-22 14:01:10,272 - root - INFO - The app is ready to accept requests
-2025-01-22 14:01:10,503 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 14:01:10,603 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 14:01:10,603 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 14:01:10,689 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 14:01:10,690 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 14:01:10,690 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 14:01:10,690 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 14:01:10,726 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 14:01:10,768 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 14:01:10,768 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x78afdddb2840> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 14:01:10,794 - root - INFO - Image read successfully with shape (1024, 1024)
-2025-01-22 14:01:12,694 - root - INFO - Image segmented successfully with mask shape (1024, 1024)
-2025-01-22 15:27:11,344 - root - INFO - The app is ready to accept requests
-2025-01-22 15:27:11,627 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 15:27:11,726 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 15:27:11,726 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 15:27:11,815 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 15:27:11,815 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 15:27:11,815 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 15:27:11,815 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 15:27:11,851 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 15:27:11,891 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 15:27:11,891 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7b40849aa7e0> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 15:27:12,545 - root - INFO - Image read successfully with shape (10, 25, 512, 512)
-2025-01-22 15:27:12,545 - cellpose.transforms - WARNING - z_axis not specified, assuming it is dim 0
-2025-01-22 15:27:12,545 - cellpose.transforms - WARNING - if this is actually the channel_axis, use 'model.eval(channel_axis=0, ...)'
-2025-01-22 15:27:12,545 - cellpose.transforms - INFO - multi-stack tiff read in as having 10 planes 512 channels
-2025-01-22 15:27:12,588 - cellpose.core - INFO - 0%|          | 0/3 [00:00<?, ?it/s]
-2025-01-22 15:27:12,846 - cellpose.core - INFO - 100%|##########| 3/3 [00:00<00:00, 11.67it/s]
-2025-01-22 15:27:12,846 - cellpose.denoise - INFO - imgs denoised in 0.26s
-2025-01-22 15:27:12,846 - cellpose.transforms - WARNING - z_axis not specified, assuming it is dim 0
-2025-01-22 15:27:12,846 - cellpose.transforms - WARNING - if this is actually the channel_axis, use 'model.eval(channel_axis=0, ...)'
-2025-01-22 15:27:12,846 - cellpose.transforms - INFO - multi-stack tiff read in as having 10 planes 1 channels
-2025-01-22 15:27:12,849 - cellpose.core - INFO - 0%|          | 0/3 [00:00<?, ?it/s]
-2025-01-22 15:27:12,881 - cellpose.core - INFO - 100%|##########| 3/3 [00:00<00:00, 94.56it/s]
-2025-01-22 15:27:12,882 - cellpose.models - INFO - network run in 0.03s
-2025-01-22 15:27:12,882 - cellpose.models - INFO - 0%|          | 0/10 [00:00<?, ?it/s]
-2025-01-22 15:27:12,882 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:27:12,882 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:27:12,882 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:27:12,882 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:27:12,882 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:27:12,883 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:27:12,883 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:27:12,883 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:27:12,883 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:27:12,883 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:27:12,883 - cellpose.models - INFO - 100%|##########| 10/10 [00:00<00:00, 11841.63it/s]
-2025-01-22 15:27:12,883 - cellpose.models - INFO - stitching 10 planes using stitch_threshold=0.800 to make 3D masks
-2025-01-22 15:27:13,562 - cellpose.models - INFO - masks created in 0.68s
-2025-01-22 15:27:13,569 - root - INFO - Image segmented successfully with mask shape (10, 25, 512)
-2025-01-22 15:29:03,965 - root - INFO - The app is ready to accept requests
-2025-01-22 15:29:04,186 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 15:29:04,272 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 15:29:04,272 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 15:29:04,354 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 15:29:04,355 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 15:29:04,355 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 15:29:04,355 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 15:29:04,396 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 15:29:04,430 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 15:29:04,430 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7ad90d9a2570> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 15:29:05,114 - root - INFO - Image read successfully with shape (10, 25, 512, 512)
-2025-01-22 15:29:05,114 - cellpose.transforms - WARNING - z_axis not specified, assuming it is dim 0
-2025-01-22 15:29:05,114 - cellpose.transforms - WARNING - if this is actually the channel_axis, use 'model.eval(channel_axis=0, ...)'
-2025-01-22 15:29:05,114 - cellpose.transforms - INFO - multi-stack tiff read in as having 10 planes 512 channels
-2025-01-22 15:29:05,165 - cellpose.core - INFO - 0%|          | 0/3 [00:00<?, ?it/s]
-2025-01-22 15:29:05,425 - cellpose.core - INFO - 100%|##########| 3/3 [00:00<00:00, 11.55it/s]
-2025-01-22 15:29:05,425 - cellpose.denoise - INFO - imgs denoised in 0.26s
-2025-01-22 15:29:05,425 - cellpose.transforms - WARNING - z_axis not specified, assuming it is dim 0
-2025-01-22 15:29:05,425 - cellpose.transforms - WARNING - if this is actually the channel_axis, use 'model.eval(channel_axis=0, ...)'
-2025-01-22 15:29:05,425 - cellpose.transforms - INFO - multi-stack tiff read in as having 10 planes 1 channels
-2025-01-22 15:29:05,428 - cellpose.core - INFO - 0%|          | 0/3 [00:00<?, ?it/s]
-2025-01-22 15:29:05,462 - cellpose.core - INFO - 100%|##########| 3/3 [00:00<00:00, 90.50it/s]
-2025-01-22 15:29:05,463 - cellpose.models - INFO - network run in 0.03s
-2025-01-22 15:29:05,463 - cellpose.models - INFO - 0%|          | 0/10 [00:00<?, ?it/s]
-2025-01-22 15:29:05,463 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:29:05,463 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:29:05,463 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:29:05,463 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:29:05,463 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:29:05,463 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:29:05,463 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:29:05,464 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:29:05,464 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:29:05,464 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:29:05,464 - cellpose.models - INFO - 100%|##########| 10/10 [00:00<00:00, 11922.41it/s]
-2025-01-22 15:29:05,464 - cellpose.models - INFO - stitching 10 planes using stitch_threshold=0.800 to make 3D masks
-2025-01-22 15:29:06,136 - cellpose.models - INFO - masks created in 0.67s
-2025-01-22 15:29:06,143 - root - INFO - Image segmented successfully with mask shape (10, 25, 512)
-2025-01-22 15:30:31,815 - root - INFO - The app is ready to accept requests
-2025-01-22 15:30:32,072 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 15:30:32,166 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 15:30:32,166 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 15:30:32,245 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 15:30:32,245 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 15:30:32,245 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 15:30:32,245 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 15:30:32,285 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 15:30:32,325 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 15:30:32,325 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x74d7f0fae870> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 15:30:32,416 - root - INFO - Image read successfully with shape (25, 512, 512)
-2025-01-22 15:30:32,416 - cellpose.transforms - WARNING - z_axis not specified, assuming it is dim 0
-2025-01-22 15:30:32,416 - cellpose.transforms - WARNING - if this is actually the channel_axis, use 'model.eval(channel_axis=0, ...)'
-2025-01-22 15:30:32,416 - cellpose.transforms - INFO - multi-stack tiff read in as having 25 planes 1 channels
-2025-01-22 15:30:32,539 - cellpose.core - INFO - 0%|          | 0/13 [00:00<?, ?it/s]
-2025-01-22 15:30:33,472 - cellpose.core - INFO - 100%|##########| 13/13 [00:00<00:00, 13.93it/s]
-2025-01-22 15:30:33,484 - cellpose.denoise - INFO - imgs denoised in 1.05s
-2025-01-22 15:30:33,489 - cellpose.transforms - WARNING - z_axis not specified, assuming it is dim 0
-2025-01-22 15:30:33,489 - cellpose.transforms - WARNING - if this is actually the channel_axis, use 'model.eval(channel_axis=0, ...)'
-2025-01-22 15:30:33,489 - cellpose.transforms - INFO - multi-stack tiff read in as having 25 planes 1 channels
-2025-01-22 15:30:33,646 - cellpose.core - INFO - 0%|          | 0/13 [00:00<?, ?it/s]
-2025-01-22 15:30:34,405 - cellpose.core - INFO - 100%|##########| 13/13 [00:00<00:00, 17.13it/s]
-2025-01-22 15:30:34,446 - cellpose.models - INFO - network run in 0.80s
-2025-01-22 15:30:34,446 - cellpose.models - INFO - 0%|          | 0/25 [00:00<?, ?it/s]
-2025-01-22 15:30:34,446 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:30:34,448 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:30:34,448 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:30:34,449 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:30:34,449 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:30:34,450 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:30:39,664 - cellpose.models - INFO - 100%|##########| 25/25 [00:05<00:00,  4.79it/s]
-2025-01-22 15:30:39,664 - cellpose.models - INFO - stitching 25 planes using stitch_threshold=0.800 to make 3D masks
-2025-01-22 15:30:40,315 - cellpose.models - INFO - masks created in 5.87s
-2025-01-22 15:30:40,769 - root - INFO - Image segmented successfully with mask shape (25, 512, 512)
-2025-01-22 15:31:22,557 - root - INFO - The app is ready to accept requests
-2025-01-22 15:31:22,790 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 15:31:22,888 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 15:31:22,888 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 15:31:22,970 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 15:31:22,970 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 15:31:22,970 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 15:31:22,970 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 15:31:23,014 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 15:31:23,050 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 15:31:23,050 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x76ea4fdaa660> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 15:31:23,131 - root - INFO - Image read successfully with shape (25, 512, 512)
-2025-01-22 15:31:23,131 - cellpose.transforms - WARNING - z_axis not specified, assuming it is dim 0
-2025-01-22 15:31:23,131 - cellpose.transforms - WARNING - if this is actually the channel_axis, use 'model.eval(channel_axis=0, ...)'
-2025-01-22 15:31:23,131 - cellpose.transforms - INFO - multi-stack tiff read in as having 25 planes 1 channels
-2025-01-22 15:31:23,254 - cellpose.core - INFO - 0%|          | 0/13 [00:00<?, ?it/s]
-2025-01-22 15:31:24,188 - cellpose.core - INFO - 100%|##########| 13/13 [00:00<00:00, 13.91it/s]
-2025-01-22 15:31:24,201 - cellpose.denoise - INFO - imgs denoised in 1.05s
-2025-01-22 15:31:24,205 - cellpose.transforms - WARNING - z_axis not specified, assuming it is dim 0
-2025-01-22 15:31:24,205 - cellpose.transforms - WARNING - if this is actually the channel_axis, use 'model.eval(channel_axis=0, ...)'
-2025-01-22 15:31:24,205 - cellpose.transforms - INFO - multi-stack tiff read in as having 25 planes 1 channels
-2025-01-22 15:31:24,361 - cellpose.core - INFO - 0%|          | 0/13 [00:00<?, ?it/s]
-2025-01-22 15:31:25,126 - cellpose.core - INFO - 100%|##########| 13/13 [00:00<00:00, 17.01it/s]
-2025-01-22 15:31:25,166 - cellpose.models - INFO - network run in 0.81s
-2025-01-22 15:31:25,166 - cellpose.models - INFO - 0%|          | 0/25 [00:00<?, ?it/s]
-2025-01-22 15:31:25,166 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:31:25,168 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:31:25,169 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:31:25,169 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:31:25,170 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:31:25,171 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:31:30,412 - cellpose.models - INFO - 100%|##########| 25/25 [00:05<00:00,  4.77it/s]
-2025-01-22 15:31:30,412 - cellpose.models - INFO - stitching 25 planes using stitch_threshold=0.800 to make 3D masks
-2025-01-22 15:31:31,031 - cellpose.models - INFO - masks created in 5.87s
-2025-01-22 15:31:31,493 - root - INFO - Image segmented successfully with mask shape (25, 512, 512)
-2025-01-22 15:54:12,096 - root - INFO - The app is ready to accept requests
-2025-01-22 15:54:12,367 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 15:54:12,458 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 15:54:12,458 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 15:54:12,545 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 15:54:12,545 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 15:54:12,545 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 15:54:12,545 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 15:54:12,581 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 15:54:12,618 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 15:54:12,618 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7ec4b91b2810> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 15:54:12,709 - root - INFO - Image read successfully with shape (25, 512, 512)
-2025-01-22 15:54:12,709 - cellpose.transforms - WARNING - z_axis not specified, assuming it is dim 0
-2025-01-22 15:54:12,709 - cellpose.transforms - WARNING - if this is actually the channel_axis, use 'model.eval(channel_axis=0, ...)'
-2025-01-22 15:54:12,710 - cellpose.transforms - INFO - multi-stack tiff read in as having 25 planes 1 channels
-2025-01-22 15:54:12,831 - cellpose.core - INFO - 0%|          | 0/13 [00:00<?, ?it/s]
-2025-01-22 15:54:13,765 - cellpose.core - INFO - 100%|##########| 13/13 [00:00<00:00, 13.93it/s]
-2025-01-22 15:54:13,779 - cellpose.denoise - INFO - imgs denoised in 1.05s
-2025-01-22 15:54:13,785 - cellpose.transforms - WARNING - z_axis not specified, assuming it is dim 0
-2025-01-22 15:54:13,786 - cellpose.transforms - WARNING - if this is actually the channel_axis, use 'model.eval(channel_axis=0, ...)'
-2025-01-22 15:54:13,786 - cellpose.transforms - INFO - multi-stack tiff read in as having 25 planes 1 channels
-2025-01-22 15:54:13,959 - cellpose.core - INFO - 0%|          | 0/13 [00:00<?, ?it/s]
-2025-01-22 15:54:14,719 - cellpose.core - INFO - 100%|##########| 13/13 [00:00<00:00, 17.10it/s]
-2025-01-22 15:54:14,761 - cellpose.models - INFO - network run in 0.80s
-2025-01-22 15:54:14,761 - cellpose.models - INFO - 0%|          | 0/25 [00:00<?, ?it/s]
-2025-01-22 15:54:14,761 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:54:14,763 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:54:14,763 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:54:14,764 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:54:14,765 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:54:14,765 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 15:54:20,002 - cellpose.models - INFO - 100%|##########| 25/25 [00:05<00:00,  4.77it/s]
-2025-01-22 15:54:20,003 - cellpose.models - INFO - stitching 25 planes using stitch_threshold=0.800 to make 3D masks
-2025-01-22 15:54:20,613 - cellpose.models - INFO - masks created in 5.85s
-2025-01-22 15:54:20,972 - root - ERROR - Failed to segment image: object numpy.ndarray can't be used in 'await' expression
-2025-01-22 16:11:54,279 - root - INFO - The app is ready to accept requests
-2025-01-22 16:11:54,514 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 16:11:54,615 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 16:11:54,615 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 16:11:54,695 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 16:11:54,695 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 16:11:54,696 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 16:11:54,696 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 16:11:54,735 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 16:11:54,769 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 16:11:54,769 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7b2a4a3aa7e0> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 16:11:54,858 - root - INFO - Image read successfully with shape (25, 512, 512)
-2025-01-22 16:11:54,858 - cellpose.transforms - WARNING - z_axis not specified, assuming it is dim 0
-2025-01-22 16:11:54,858 - cellpose.transforms - WARNING - if this is actually the channel_axis, use 'model.eval(channel_axis=0, ...)'
-2025-01-22 16:11:54,858 - cellpose.transforms - INFO - multi-stack tiff read in as having 25 planes 1 channels
-2025-01-22 16:11:54,981 - cellpose.core - INFO - 0%|          | 0/13 [00:00<?, ?it/s]
-2025-01-22 16:11:55,911 - cellpose.core - INFO - 100%|##########| 13/13 [00:00<00:00, 13.99it/s]
-2025-01-22 16:11:55,924 - cellpose.denoise - INFO - imgs denoised in 1.04s
-2025-01-22 16:11:55,928 - cellpose.transforms - WARNING - z_axis not specified, assuming it is dim 0
-2025-01-22 16:11:55,928 - cellpose.transforms - WARNING - if this is actually the channel_axis, use 'model.eval(channel_axis=0, ...)'
-2025-01-22 16:11:55,928 - cellpose.transforms - INFO - multi-stack tiff read in as having 25 planes 1 channels
-2025-01-22 16:11:56,083 - cellpose.core - INFO - 0%|          | 0/13 [00:00<?, ?it/s]
-2025-01-22 16:11:56,836 - cellpose.core - INFO - 100%|##########| 13/13 [00:00<00:00, 17.26it/s]
-2025-01-22 16:11:56,877 - cellpose.models - INFO - network run in 0.79s
-2025-01-22 16:11:56,877 - cellpose.models - INFO - 0%|          | 0/25 [00:00<?, ?it/s]
-2025-01-22 16:11:56,878 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 16:11:56,879 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 16:11:56,880 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 16:11:56,880 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 16:11:56,881 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 16:11:56,882 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 16:12:02,074 - cellpose.models - INFO - 100%|##########| 25/25 [00:05<00:00,  4.81it/s]
-2025-01-22 16:12:02,074 - cellpose.models - INFO - stitching 25 planes using stitch_threshold=0.800 to make 3D masks
-2025-01-22 16:12:02,686 - cellpose.models - INFO - masks created in 5.81s
-2025-01-22 16:12:03,044 - root - ERROR - Failed to segment image: object numpy.ndarray can't be used in 'await' expression
-2025-01-22 16:12:29,629 - root - INFO - The app is ready to accept requests
-2025-01-22 16:12:29,849 - cellpose.denoise - INFO - >> denoise_cyto3 << model set to be used
-2025-01-22 16:12:29,955 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 16:12:29,955 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 16:12:30,040 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 16:12:30,040 - cellpose.models - INFO - >> cyto3 << model set to be used
-2025-01-22 16:12:30,040 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
-2025-01-22 16:12:30,040 - cellpose.core - INFO - >>>> using GPU (CUDA)
-2025-01-22 16:12:30,077 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto3
-2025-01-22 16:12:30,113 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
-2025-01-22 16:12:30,113 - root - INFO - Model <cellpose.denoise.CellposeDenoiseModel object at 0x7757502b27b0> was created successfully with settings: {'gpu': True, 'model_type': 'cyto3', 'pretrained_model': False, 'restore_type': 'denoise_cyto3'}
-2025-01-22 16:12:30,207 - root - INFO - Image read successfully with shape (25, 512, 512)
-2025-01-22 16:12:30,207 - cellpose.transforms - WARNING - z_axis not specified, assuming it is dim 0
-2025-01-22 16:12:30,207 - cellpose.transforms - WARNING - if this is actually the channel_axis, use 'model.eval(channel_axis=0, ...)'
-2025-01-22 16:12:30,207 - cellpose.transforms - INFO - multi-stack tiff read in as having 25 planes 1 channels
-2025-01-22 16:12:30,329 - cellpose.core - INFO - 0%|          | 0/13 [00:00<?, ?it/s]
-2025-01-22 16:12:31,270 - cellpose.core - INFO - 100%|##########| 13/13 [00:00<00:00, 13.82it/s]
-2025-01-22 16:12:31,283 - cellpose.denoise - INFO - imgs denoised in 1.05s
-2025-01-22 16:12:31,287 - cellpose.transforms - WARNING - z_axis not specified, assuming it is dim 0
-2025-01-22 16:12:31,287 - cellpose.transforms - WARNING - if this is actually the channel_axis, use 'model.eval(channel_axis=0, ...)'
-2025-01-22 16:12:31,287 - cellpose.transforms - INFO - multi-stack tiff read in as having 25 planes 1 channels
-2025-01-22 16:12:31,443 - cellpose.core - INFO - 0%|          | 0/13 [00:00<?, ?it/s]
-2025-01-22 16:12:32,194 - cellpose.core - INFO - 100%|##########| 13/13 [00:00<00:00, 17.30it/s]
-2025-01-22 16:12:32,235 - cellpose.models - INFO - network run in 0.79s
-2025-01-22 16:12:32,236 - cellpose.models - INFO - 0%|          | 0/25 [00:00<?, ?it/s]
-2025-01-22 16:12:32,236 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 16:12:32,237 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 16:12:32,238 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 16:12:32,239 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 16:12:32,240 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 16:12:32,240 - cellpose.dynamics - INFO - No cell pixels found.
-2025-01-22 16:12:37,433 - cellpose.models - INFO - 100%|##########| 25/25 [00:05<00:00,  4.81it/s]
-2025-01-22 16:12:37,433 - cellpose.models - INFO - stitching 25 planes using stitch_threshold=0.800 to make 3D masks
-2025-01-22 16:12:38,041 - cellpose.models - INFO - masks created in 5.81s
-2025-01-22 16:12:38,428 - root - INFO - Image segmented successfully with mask shape (25, 512, 512)
+2025-01-29 12:03:45,018 - celery.utils.functional - DEBUG - 
+def chunks(task, it, n):
+    return 1
+
+2025-01-29 12:03:45,018 - celery.utils.functional - DEBUG - 
+def unlock_chord(self, group_id, callback, interval=0, max_retries=1, result=2, Result=3, GroupResult=4, result_from_tuple=5, **kwargs):
+    return 1
+
+2025-01-29 12:03:45,018 - celery.utils.functional - DEBUG - 
+def group(self, tasks, result, group_id, partial_args, add_to_parent=0):
+    return 1
+
+2025-01-29 12:03:45,018 - celery.utils.functional - DEBUG - 
+def xmap(task, it):
+    return 1
+
+2025-01-29 12:03:45,018 - celery.utils.functional - DEBUG - 
+def backend_cleanup():
+    return 1
+
+2025-01-29 12:03:45,018 - celery.utils.functional - DEBUG - 
+def chain(*args, **kwargs):
+    return 1
+
+2025-01-29 12:05:30,981 - celery.utils.functional - DEBUG - 
+def xmap(task, it):
+    return 1
+
+2025-01-29 12:05:30,981 - celery.utils.functional - DEBUG - 
+def backend_cleanup():
+    return 1
+
+2025-01-29 12:05:30,982 - celery.utils.functional - DEBUG - 
+def process_images(self, src_dir, dst_dir, settings, image_name):
+    return 1
+
+2025-01-29 12:05:30,982 - celery.utils.functional - DEBUG - 
+def chain(*args, **kwargs):
+    return 1
+
+2025-01-29 12:05:30,982 - celery.utils.functional - DEBUG - 
+def xstarmap(task, it):
+    return 1
+
+2025-01-29 12:05:30,982 - celery.utils.functional - DEBUG - 
+def accumulate(self, *args, **kwargs):
+    return 1
+
+2025-01-29 12:05:30,982 - celery.utils.functional - DEBUG - 
+def chord(self, header, body, partial_args=0, interval=1, countdown=2, max_retries=3, eager=4, **kwargs):
+    return 1
+
+2025-01-29 12:05:30,982 - celery.utils.functional - DEBUG - 
+def chunks(task, it, n):
+    return 1
+
+2025-01-29 12:05:30,983 - celery.utils.functional - DEBUG - 
+def unlock_chord(self, group_id, callback, interval=0, max_retries=1, result=2, Result=3, GroupResult=4, result_from_tuple=5, **kwargs):
+    return 1
+
+2025-01-29 12:05:30,983 - celery.utils.functional - DEBUG - 
+def group(self, tasks, result, group_id, partial_args, add_to_parent=0):
+    return 1
+
+2025-01-29 12:07:49,835 - celery.utils.functional - DEBUG - 
+def xmap(task, it):
+    return 1
+
+2025-01-29 12:07:49,835 - celery.utils.functional - DEBUG - 
+def backend_cleanup():
+    return 1
+
+2025-01-29 12:07:49,835 - celery.utils.functional - DEBUG - 
+def process_images(self, src_dir, dst_dir, settings, image_name):
+    return 1
+
+2025-01-29 12:07:49,835 - celery.utils.functional - DEBUG - 
+def chain(*args, **kwargs):
+    return 1
+
+2025-01-29 12:07:49,835 - celery.utils.functional - DEBUG - 
+def xstarmap(task, it):
+    return 1
+
+2025-01-29 12:07:49,835 - celery.utils.functional - DEBUG - 
+def accumulate(self, *args, **kwargs):
+    return 1
+
+2025-01-29 12:07:49,836 - celery.utils.functional - DEBUG - 
+def chord(self, header, body, partial_args=0, interval=1, countdown=2, max_retries=3, eager=4, **kwargs):
+    return 1
+
+2025-01-29 12:07:49,836 - celery.utils.functional - DEBUG - 
+def chunks(task, it, n):
+    return 1
+
+2025-01-29 12:07:49,836 - celery.utils.functional - DEBUG - 
+def unlock_chord(self, group_id, callback, interval=0, max_retries=1, result=2, Result=3, GroupResult=4, result_from_tuple=5, **kwargs):
+    return 1
+
+2025-01-29 12:07:49,836 - celery.utils.functional - DEBUG - 
+def group(self, tasks, result, group_id, partial_args, add_to_parent=0):
+    return 1
+
