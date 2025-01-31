@@ -161,3 +161,76 @@ def group(self, tasks, result, group_id, partial_args, add_to_parent=0):
 2025-01-31 13:09:45,706 - cp_server - INFO - Redis shut down via shutdown command.
 2025-01-31 13:11:03,991 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
 2025-01-31 13:11:04,008 - cp_server - INFO - Redis shut down via shutdown command.
+2025-01-31 15:51:08,241 - cp_server - INFO - Starting Celery worker...
+2025-01-31 15:51:11,244 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
+2025-01-31 15:51:14,249 - cp_server - INFO - Waiting for Celery to start... 4s elapsed
+2025-01-31 15:51:17,253 - cp_server - INFO - Waiting for Celery to start... 6s elapsed
+2025-01-31 15:51:20,259 - cp_server - INFO - Waiting for Celery to start... 8s elapsed
+2025-01-31 15:51:23,263 - cp_server - INFO - Waiting for Celery to start... 10s elapsed
+2025-01-31 15:51:26,268 - cp_server - INFO - Waiting for Celery to start... 12s elapsed
+2025-01-31 15:51:29,273 - cp_server - INFO - Waiting for Celery to start... 14s elapsed
+2025-01-31 15:51:32,277 - cp_server - INFO - Waiting for Celery to start... 16s elapsed
+2025-01-31 15:51:35,281 - cp_server - INFO - Waiting for Celery to start... 18s elapsed
+2025-01-31 15:51:38,286 - cp_server - INFO - Waiting for Celery to start... 20s elapsed
+2025-01-31 15:51:41,292 - cp_server - INFO - Waiting for Celery to start... 22s elapsed
+2025-01-31 15:51:44,297 - cp_server - INFO - Waiting for Celery to start... 24s elapsed
+2025-01-31 15:51:47,304 - cp_server - INFO - Waiting for Celery to start... 26s elapsed
+2025-01-31 15:51:50,311 - cp_server - INFO - Waiting for Celery to start... 28s elapsed
+2025-01-31 15:51:53,316 - cp_server - INFO - Waiting for Celery to start... 30s elapsed
+2025-01-31 15:51:56,320 - cp_server - INFO - Waiting for Celery to start... 32s elapsed
+2025-01-31 15:51:59,325 - cp_server - INFO - Waiting for Celery to start... 34s elapsed
+2025-01-31 15:52:02,331 - cp_server - INFO - Waiting for Celery to start... 36s elapsed
+2025-01-31 15:52:05,337 - cp_server - INFO - Waiting for Celery to start... 38s elapsed
+2025-01-31 15:52:08,344 - cp_server - INFO - Waiting for Celery to start... 40s elapsed
+2025-01-31 15:52:11,348 - cp_server - INFO - Waiting for Celery to start... 42s elapsed
+2025-01-31 15:52:14,353 - cp_server - INFO - Waiting for Celery to start... 44s elapsed
+2025-01-31 15:53:07,810 - cp_server - INFO - Redis is already running.
+2025-01-31 15:53:07,810 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
+2025-01-31 15:53:07,823 - cp_server - INFO - Redis shut down via shutdown command.
+2025-01-31 15:54:15,602 - cp_server - INFO - Starting Celery worker...
+2025-01-31 15:54:18,608 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
+2025-01-31 15:54:21,613 - cp_server - INFO - Waiting for Celery to start... 4s elapsed
+2025-01-31 15:54:24,618 - cp_server - INFO - Waiting for Celery to start... 6s elapsed
+2025-01-31 15:54:27,622 - cp_server - INFO - Waiting for Celery to start... 8s elapsed
+2025-01-31 15:54:30,626 - cp_server - INFO - Waiting for Celery to start... 10s elapsed
+2025-01-31 15:54:33,631 - cp_server - INFO - Waiting for Celery to start... 12s elapsed
+2025-01-31 15:54:36,636 - cp_server - INFO - Waiting for Celery to start... 14s elapsed
+2025-01-31 15:54:39,641 - cp_server - INFO - Waiting for Celery to start... 16s elapsed
+2025-01-31 15:54:42,646 - cp_server - INFO - Waiting for Celery to start... 18s elapsed
+2025-01-31 15:54:45,650 - cp_server - INFO - Waiting for Celery to start... 20s elapsed
+2025-01-31 15:54:48,655 - cp_server - INFO - Waiting for Celery to start... 22s elapsed
+2025-01-31 15:54:51,660 - cp_server - INFO - Waiting for Celery to start... 24s elapsed
+2025-01-31 15:54:54,665 - cp_server - INFO - Waiting for Celery to start... 26s elapsed
+2025-01-31 15:54:57,669 - cp_server - INFO - Waiting for Celery to start... 28s elapsed
+2025-01-31 15:55:00,676 - cp_server - INFO - Waiting for Celery to start... 30s elapsed
+2025-01-31 15:55:03,680 - cp_server - INFO - Waiting for Celery to start... 32s elapsed
+2025-01-31 15:55:06,685 - cp_server - INFO - Waiting for Celery to start... 34s elapsed
+2025-01-31 15:55:09,689 - cp_server - INFO - Waiting for Celery to start... 36s elapsed
+2025-01-31 15:55:12,694 - cp_server - INFO - Waiting for Celery to start... 38s elapsed
+2025-01-31 15:55:15,698 - cp_server - INFO - Waiting for Celery to start... 40s elapsed
+2025-01-31 15:55:18,705 - cp_server - INFO - Waiting for Celery to start... 42s elapsed
+2025-01-31 15:55:21,709 - cp_server - INFO - Waiting for Celery to start... 44s elapsed
+2025-01-31 15:55:24,714 - cp_server - INFO - Waiting for Celery to start... 46s elapsed
+2025-01-31 15:55:27,719 - cp_server - INFO - Waiting for Celery to start... 48s elapsed
+2025-01-31 15:55:30,722 - cp_server - INFO - Waiting for Celery to start... 50s elapsed
+2025-01-31 15:55:33,726 - cp_server - INFO - Waiting for Celery to start... 52s elapsed
+2025-01-31 15:55:36,730 - cp_server - INFO - Waiting for Celery to start... 54s elapsed
+2025-01-31 15:55:39,734 - cp_server - INFO - Waiting for Celery to start... 56s elapsed
+2025-01-31 15:55:42,740 - cp_server - INFO - Waiting for Celery to start... 58s elapsed
+2025-01-31 15:55:45,745 - cp_server - INFO - Waiting for Celery to start... 60s elapsed
+2025-01-31 15:55:48,750 - cp_server - INFO - Waiting for Celery to start... 62s elapsed
+2025-01-31 15:55:51,754 - cp_server - INFO - Waiting for Celery to start... 64s elapsed
+2025-01-31 15:55:54,760 - cp_server - INFO - Waiting for Celery to start... 66s elapsed
+2025-01-31 15:55:57,764 - cp_server - INFO - Waiting for Celery to start... 68s elapsed
+2025-01-31 15:56:00,768 - cp_server - INFO - Waiting for Celery to start... 70s elapsed
+2025-01-31 15:56:03,774 - cp_server - INFO - Waiting for Celery to start... 72s elapsed
+2025-01-31 15:56:06,779 - cp_server - INFO - Waiting for Celery to start... 74s elapsed
+2025-01-31 15:56:09,782 - cp_server - INFO - Waiting for Celery to start... 76s elapsed
+2025-01-31 15:56:12,788 - cp_server - INFO - Waiting for Celery to start... 78s elapsed
+2025-01-31 15:56:15,792 - cp_server - INFO - Waiting for Celery to start... 80s elapsed
+2025-01-31 15:56:18,796 - cp_server - INFO - Waiting for Celery to start... 82s elapsed
+2025-01-31 16:01:13,818 - cp_server - INFO - Starting Celery worker...
+2025-01-31 16:01:16,823 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
+2025-01-31 16:01:18,834 - cp_server - INFO - Celery worker is now running.
+2025-01-31 16:01:20,842 - cp_server - INFO - Stopping Celery worker...
+2025-01-31 16:01:22,959 - cp_server - INFO - Celery worker has been stopped.

@@ -1,18 +1,11 @@
 import subprocess
 import time
-import redis
 import os
-from pathlib import Path
-import sys
 
-# Resolve the root of the project dynamically
-ROOT_DIR = Path(__file__).resolve().parent.parent
+import redis
 
-# Add root directory to sys.path if it's not already there
-if str(ROOT_DIR) not in sys.path:
-    sys.path.insert(0, str(ROOT_DIR))
-
-from cp_server import logger  # noqa: E402
+from .. import logger
+from ..utils import RedisServerError
 
 
 # Configurable Redis settings
@@ -20,7 +13,7 @@ REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
 REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
 REDIS_PROCESS = None
 
-def is_redis_running():
+def is_redis_running()-> bool:
     """Check if Redis server is running."""
     try:
         client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
@@ -28,7 +21,7 @@ def is_redis_running():
     except redis.ConnectionError:
         return False
 
-def start_redis():
+def start_redis()-> None:
     """Start Redis server if it's not already running, with a timeout."""
     global REDIS_PROCESS
     if not is_redis_running():
@@ -38,8 +31,7 @@ def start_redis():
         REDIS_PROCESS = subprocess.Popen(
             ["redis-server"],
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
-        )
+            stderr=subprocess.PIPE)
 
         # Wait for Redis to start (max 2 minutes)
         timeout = 120
@@ -55,7 +47,10 @@ def start_redis():
             logger.info("Redis server started successfully.")
         else:
             logger.error("Redis server did not start within the timeout period.")
-            REDIS_PROCESS.terminate()  # Kill Redis if it fails to start
+            REDIS_PROCESS.terminate()
+            REDIS_PROCESS.wait()
+            REDIS_PROCESS = None
+            raise RedisServerError("Redis server did not start within the timeout period.")
     else:
         logger.info("Redis is already running.")
 
@@ -81,8 +76,8 @@ def stop_redis():
             
             
 if __name__ == "__main__":
-    # start_redis()
-    # print(is_redis_running())
+    start_redis()
+    print(is_redis_running())
     stop_redis()
     print(is_redis_running())
     time.sleep(5)

@@ -1,18 +1,15 @@
-# Standard imports
 import warnings
 from pathlib import Path
-# Third-party imports
+
 from cellpose.denoise import CellposeDenoiseModel
 import tifffile as tiff
-# Local imports
-from .celery_worker import celery_app
-from . import logger  # Import global logger
 
+from .celery_server import celery_app
+from .. import logger
 
 
 # Suppress FutureWarning messages from cellpose
 warnings.filterwarnings("ignore", category=FutureWarning, module="cellpose")
-
 
 
 @celery_app.task(bind=True)

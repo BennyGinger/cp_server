@@ -1,22 +1,11 @@
-# Standard imports
 import os
 import subprocess
 import time
-# Third-party imports
+
 from celery import Celery
-# Local imports
-from pathlib import Path
-import sys
 
-# Resolve the root of the project dynamically
-ROOT_DIR = Path(__file__).resolve().parent.parent
-
-# Add root directory to sys.path if it's not already there
-if str(ROOT_DIR) not in sys.path:
-    sys.path.insert(0, str(ROOT_DIR))
-
-
-from cp_server import logger  # Import global logger  # noqa: E402
+from .. import logger  
+from ..utils import CeleryServerError
 
 
 # Configure Celery
@@ -24,12 +13,12 @@ celery_app = Celery(
     "tasks",
     broker="redis://localhost:6379/0",
     backend="redis://localhost:6379/0",
-    broker_connection_retry_on_startup=True
-)
+    broker_connection_retry_on_startup=True)
 
+# Celery worker process
 WORKER = None
 
-def is_celery_running():
+def is_celery_running()-> bool:
     try:
         response = celery_app.control.ping(timeout=1)  # Ping workers
         return bool(response)  # Returns True if workers respond
@@ -37,14 +26,14 @@ def is_celery_running():
         print(f"Error: {e}")
         return False
     
-def start_celery_worker():
+def start_celery_worker()-> None:
     """Start Celery worker in a separate process if it's not already running, with a timeout."""
     global WORKER
     
     if not is_celery_running():
         logger.info("Starting Celery worker...")
         WORKER = subprocess.Popen(
-            ["celery", "-A", "cp_server.celery_worker.celery_app", "worker", "--loglevel=info"],
+            ["celery", "-A", "cp_server.celery.celery_server.celery_app", "worker", "--loglevel=info"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE)
         
@@ -62,10 +51,15 @@ def start_celery_worker():
             logger.info("Celery worker is now running.")
         else:
             logger.error("Celery worker did not start within the timeout period.")
+            WORKER.terminate()
+            WORKER.wait()
+            WORKER = None
+            raise CeleryServerError("Celery worker did not start within the timeout period.")
     else:
         logger.info("Celery worker is already running.")
+        return True
 
-def stop_celery_worker():
+def stop_celery_worker()-> None:
     """Stop the Celery worker process."""
     global WORKER
     
@@ -81,10 +75,11 @@ def stop_celery_worker():
             logger.info("Celery worker forcefully stopped.")
     else:
         logger.info("No Celery worker is running.")
-     
+
+
 if __name__ == "__main__":
+    print(is_celery_running())
     start_celery_worker()
-    
     print(is_celery_running())
     stop_celery_worker()
     print(is_celery_running())
