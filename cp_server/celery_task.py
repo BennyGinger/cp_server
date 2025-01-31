@@ -1,20 +1,19 @@
-from pathlib import Path
+# Standard imports
 import warnings
-from celery import Celery
+from pathlib import Path
+# Third-party imports
 from cellpose.denoise import CellposeDenoiseModel
 import tifffile as tiff
+# Local imports
+from .celery_worker import celery_app
 from . import logger  # Import global logger
+
+
 
 # Suppress FutureWarning messages from cellpose
 warnings.filterwarnings("ignore", category=FutureWarning, module="cellpose")
 
-# Configure Celery
-celery_app = Celery(
-    "tasks",
-    broker="redis://localhost:6379/0",
-    backend="redis://localhost:6379/0",
-    broker_connection_retry_on_startup=True
-)
+
 
 @celery_app.task(bind=True)
 def process_images(self, src_dir: str, dst_dir: str, settings: dict, image_name: str):

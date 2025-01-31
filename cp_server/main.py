@@ -1,36 +1,22 @@
-from fastapi import FastAPI, HTTPException
+# Third-party imports
+from fastapi import FastAPI
 import uvicorn
-from pathlib import Path
-from .tasks import process_images
+# Local imports
+from .redis_utils import start_redis
+from .celery_worker import start_celery_worker
 from . import logger  # Import global logger
+
 
 app = FastAPI()
 
-# Configuration dictionary to store active tasks
-tasks = {}
+# Start Redis and Celery when the app starts
+logger.info("Checking Redis and Celery services...")
+start_redis()
+start_celery_worker()
 
-@app.post("/start_task")
-def start_task(src_dir: str, dst_dir: str, image_name: str, settings: dict)-> dict:
-    """Start a new segmentation task for a single image"""
-    if not Path(src_dir) or not Path(dst_dir):
-        logger.error("Source or destination directory does not exist")
-        raise HTTPException(status_code=400, detail="Source or destination directory does not exist")
-    
-    tasks[image_name] = "running"
-    logger.info(f"Starting task for {image_name}")
-    
-    # Run processing in Celery
-    process_images.apply_async(args=[src_dir, dst_dir, settings, image_name])
-    
-    return {"task_id": image_name, "status": "started"}
-
-@app.get("/task_status/{image_name}")
-def task_status(image_name: str)-> dict:
-    """Check the status of a task"""
-    status = tasks.get(image_name, "not found")
-    logger.info(f"Checking status for {image_name}: {status}")
-    return {"task_id": image_name, "status": status}
-
+@app.get("/")
+def read_root():
+    return {"message": "FastAPI server is running with Celery and Redis"}
 
 if __name__ == "__main__":
     logger.info("Starting FastAPI server...")
