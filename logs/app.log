@@ -234,3 +234,26 @@ def group(self, tasks, result, group_id, partial_args, add_to_parent=0):
 2025-01-31 16:01:18,834 - cp_server - INFO - Celery worker is now running.
 2025-01-31 16:01:20,842 - cp_server - INFO - Stopping Celery worker...
 2025-01-31 16:01:22,959 - cp_server - INFO - Celery worker has been stopped.
+2025-02-02 13:00:28,009 - cp_server - INFO - Checking Redis and Celery services...
+2025-02-02 13:00:28,011 - cp_server - INFO - Redis is already running.
+2025-02-02 13:00:29,029 - cp_server - INFO - Starting Celery worker...
+2025-02-02 13:00:32,044 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
+2025-02-02 13:00:34,055 - cp_server - INFO - Celery worker is now running.
+2025-02-02 13:09:26,430 - cp_server - INFO - Checking Redis and Celery services...
+2025-02-02 13:09:26,432 - cp_server - INFO - Redis is already running.
+2025-02-02 13:09:27,451 - cp_server - INFO - Celery worker is already running.
+2025-02-02 13:09:28,710 - cp_server - INFO - Stopping Celery worker...
+2025-02-02 13:09:28,743 - cp_server - INFO - Celery worker forcefully stopped.
+2025-02-02 13:09:28,743 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
+2025-02-02 13:09:28,747 - cp_server - INFO - Redis shut down via shutdown command.
+2025-02-02 13:12:57,314 - cp_server - INFO - Checking Redis and Celery services...
+2025-02-02 13:12:57,316 - cp_server - INFO - Redis is already running.
+2025-02-02 13:12:58,333 - cp_server - INFO - Starting Celery worker...
+2025-02-02 13:13:01,337 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
+2025-02-02 13:13:03,348 - cp_server - INFO - Celery worker is now running.
+2025-02-02 13:13:03,818 - cp_server - INFO - Source Path mounted: /home/ben/Lab/Python/cp_server/Image_tests/Images which contains 1150 files
+2025-02-02 13:13:03,820 - cp_server - INFO - Destination Path mounted: /home/ben/Lab/Python/cp_server/Image_tests which contains 1151 files
+2025-02-02 13:13:04,847 - cp_server - INFO - Stopping Celery worker...
+2025-02-02 13:13:06,485 - cp_server - INFO - Celery worker has been stopped.
+2025-02-02 13:13:06,485 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
+2025-02-02 13:13:06,499 - cp_server - INFO - Redis shut down via shutdown command.

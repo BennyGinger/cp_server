@@ -1,3 +1,4 @@
+import time
 import warnings
 from pathlib import Path
 
@@ -13,7 +14,7 @@ warnings.filterwarnings("ignore", category=FutureWarning, module="cellpose")
 
 
 @celery_app.task(bind=True)
-def process_images(self, src_dir: str, dst_dir: str, settings: dict, image_name: str):
+def process_images(self, src_dir: str, dst_dir: str, settings: dict, image_name: str)-> None:
     """Background task to process images with Cellpose"""
     try:
                 
@@ -33,3 +34,17 @@ def process_images(self, src_dir: str, dst_dir: str, settings: dict, image_name:
             logger.warning(f"Image {image_name} not found or invalid format")
     except Exception as e:
         logger.error(f"Error processing image {image_name}: {e}")
+
+@celery_app.task(bind=True)
+def mock_task(self, duration: int = 60):
+    """Mock task for testing Celery worker with a long-running process"""
+    logger.info("Mock task started")
+    
+    for i in range(duration):
+        time.sleep(1)
+        self.update_state(state='PROGRESS', meta={'progress': (i + 1) / duration * 100})
+    
+    logger.info("Mock task completed")
+    return "Task finished successfully"
+    
+    

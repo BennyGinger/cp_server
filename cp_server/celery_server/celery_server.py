@@ -5,7 +5,7 @@ import time
 from celery import Celery
 
 from .. import logger  
-from ..utils import CeleryServerError
+from ..utils import CeleryServerError, get_app_path
 
 
 # Configure Celery
@@ -33,7 +33,7 @@ def start_celery_worker()-> None:
     if not is_celery_running():
         logger.info("Starting Celery worker...")
         WORKER = subprocess.Popen(
-            ["celery", "-A", "cp_server.celery.celery_server.celery_app", "worker", "--loglevel=info"],
+            ["celery", "-A", get_app_path(__file__), "worker", "--loglevel=info"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE)
         
@@ -76,10 +76,3 @@ def stop_celery_worker()-> None:
     else:
         logger.info("No Celery worker is running.")
 
-
-if __name__ == "__main__":
-    print(is_celery_running())
-    start_celery_worker()
-    print(is_celery_running())
-    stop_celery_worker()
-    print(is_celery_running())
