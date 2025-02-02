@@ -257,3 +257,118 @@ def group(self, tasks, result, group_id, partial_args, add_to_parent=0):
 2025-02-02 13:13:06,485 - cp_server - INFO - Celery worker has been stopped.
 2025-02-02 13:13:06,485 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
 2025-02-02 13:13:06,499 - cp_server - INFO - Redis shut down via shutdown command.
+2025-02-02 16:57:23,419 - cp_server - INFO - Checking Redis and Celery services...
+2025-02-02 16:57:23,421 - cp_server - INFO - Redis is already running.
+2025-02-02 16:57:24,436 - cp_server - INFO - Starting Celery worker...
+2025-02-02 16:57:27,442 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
+2025-02-02 16:57:29,456 - cp_server - INFO - Celery worker is now running.
+2025-02-02 17:00:08,490 - cp_server - INFO - Checking Redis and Celery services...
+2025-02-02 17:00:08,491 - cp_server - INFO - Redis is already running.
+2025-02-02 17:00:09,510 - cp_server - INFO - Celery worker is already running.
+2025-02-02 17:00:09,697 - cp_server - INFO - Source Path mounted: /home/ben/Lab/Python/cp_server/Image_tests/Images which contains 1150 files
+2025-02-02 17:00:09,700 - cp_server - INFO - Destination Path mounted: /home/ben/Lab/Python/cp_server/Image_tests which contains 1151 files
+2025-02-02 17:00:09,732 - cp_server - INFO - Starting image processing task from /home/ben/Lab/Python/cp_server/Image_tests/Images
+2025-02-02 17:00:10,777 - cp_server - INFO - Stopping Celery worker...
+2025-02-02 17:00:10,795 - cp_server - INFO - Celery worker forcefully stopped.
+2025-02-02 17:00:10,795 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
+2025-02-02 17:00:10,813 - cp_server - INFO - Redis shut down via shutdown command.
+2025-02-02 17:06:02,828 - cp_server - INFO - Checking Redis and Celery services...
+2025-02-02 17:06:02,830 - cp_server - INFO - Redis is already running.
+2025-02-02 17:06:03,850 - cp_server - INFO - Starting Celery worker...
+2025-02-02 17:06:06,859 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
+2025-02-02 17:06:08,873 - cp_server - INFO - Celery worker is now running.
+2025-02-02 17:06:09,435 - cp_server - INFO - Source Path mounted: /home/ben/Lab/Python/cp_server/Image_tests/Images which contains 1150 files
+2025-02-02 17:06:09,437 - cp_server - INFO - Destination Path mounted: /home/ben/Lab/Python/cp_server/Image_tests which contains 1151 files
+2025-02-02 17:06:09,461 - cp_server - INFO - Starting image processing task from /home/ben/Lab/Python/cp_server/Image_tests/Images
+2025-02-02 17:06:10,497 - cp_server - INFO - Stopping Celery worker...
+2025-02-02 17:06:12,258 - cp_server - INFO - Celery worker has been stopped.
+2025-02-02 17:06:12,259 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
+2025-02-02 17:06:12,266 - cp_server - INFO - Redis shut down via shutdown command.
+2025-02-02 17:07:09,387 - cp_server - INFO - Checking Redis and Celery services...
+2025-02-02 17:07:09,388 - cp_server - INFO - Redis is already running.
+2025-02-02 17:07:10,417 - cp_server - INFO - Starting Celery worker...
+2025-02-02 17:07:13,424 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
+2025-02-02 17:07:15,437 - cp_server - INFO - Celery worker is now running.
+2025-02-02 17:07:15,626 - cp_server - INFO - Source Path mounted: /home/ben/Lab/Python/cp_server/Image_tests/Images which contains 1150 files
+2025-02-02 17:07:15,629 - cp_server - INFO - Destination Path mounted: /home/ben/Lab/Python/cp_server/Image_tests which contains 1151 files
+2025-02-02 17:07:15,653 - cp_server - INFO - Starting image processing task from /home/ben/Lab/Python/cp_server/Image_tests/Images
+2025-02-02 17:07:16,698 - cp_server - INFO - Stopping Celery worker...
+2025-02-02 17:07:18,967 - cp_server - INFO - Celery worker has been stopped.
+2025-02-02 17:07:18,967 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
+2025-02-02 17:07:18,983 - cp_server - INFO - Redis shut down via shutdown command.
+2025-02-02 17:09:02,693 - cp_server - INFO - Checking Redis and Celery services...
+2025-02-02 17:09:02,694 - cp_server - INFO - Redis is already running.
+2025-02-02 17:09:03,715 - cp_server - INFO - Starting Celery worker...
+2025-02-02 17:09:06,719 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
+2025-02-02 17:09:08,731 - cp_server - INFO - Celery worker is now running.
+2025-02-02 17:09:09,186 - cp_server - INFO - Source Path mounted: /home/ben/Lab/Python/cp_server/Image_tests/Images which contains 1150 files
+2025-02-02 17:09:09,188 - cp_server - INFO - Destination Path mounted: /home/ben/Lab/Python/cp_server/Image_tests which contains 1151 files
+2025-02-02 17:09:09,214 - cp_server - INFO - Starting image processing task from /home/ben/Lab/Python/cp_server/Image_tests/Images
+2025-02-02 17:09:10,278 - cp_server - INFO - Stopping Celery worker...
+2025-02-02 17:09:11,892 - cp_server - INFO - Celery worker has been stopped.
+2025-02-02 17:09:11,893 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
+2025-02-02 17:09:11,898 - cp_server - INFO - Redis shut down via shutdown command.
+2025-02-02 17:15:19,618 - cp_server - INFO - Checking Redis and Celery services...
+2025-02-02 17:15:19,620 - cp_server - INFO - Redis is already running.
+2025-02-02 17:15:20,638 - cp_server - INFO - Starting Celery worker...
+2025-02-02 17:15:23,646 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
+2025-02-02 17:15:25,663 - cp_server - INFO - Celery worker is now running.
+2025-02-02 17:15:26,199 - cp_server - INFO - Source Path mounted: /home/ben/Lab/Python/cp_server/Image_tests/Images which contains 1150 files
+2025-02-02 17:15:26,202 - cp_server - INFO - Destination Path mounted: /home/ben/Lab/Python/cp_server/Image_tests which contains 1151 files
+2025-02-02 17:15:26,225 - cp_server - INFO - Starting image processing task from /home/ben/Lab/Python/cp_server/Image_tests/Images
+2025-02-02 17:15:27,270 - cp_server - INFO - Stopping Celery worker...
+2025-02-02 17:15:29,028 - cp_server - INFO - Celery worker has been stopped.
+2025-02-02 17:15:29,028 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
+2025-02-02 17:15:29,044 - cp_server - INFO - Redis shut down via shutdown command.
+2025-02-02 17:20:50,158 - cp_server - INFO - Checking Redis and Celery services...
+2025-02-02 17:20:50,160 - cp_server - INFO - Redis is already running.
+2025-02-02 17:20:51,177 - cp_server - INFO - Starting Celery worker...
+2025-02-02 17:20:51,361 - celery.utils.functional - DEBUG - 
+def chord(self, header, body, partial_args=0, interval=1, countdown=2, max_retries=3, eager=4, **kwargs):
+    return 1
+
+2025-02-02 17:20:51,362 - celery.utils.functional - DEBUG - 
+def chunks(task, it, n):
+    return 1
+
+2025-02-02 17:20:51,362 - celery.utils.functional - DEBUG - 
+def unlock_chord(self, group_id, callback, interval=0, max_retries=1, result=2, Result=3, GroupResult=4, result_from_tuple=5, **kwargs):
+    return 1
+
+2025-02-02 17:20:51,362 - celery.utils.functional - DEBUG - 
+def group(self, tasks, result, group_id, partial_args, add_to_parent=0):
+    return 1
+
+2025-02-02 17:20:51,362 - celery.utils.functional - DEBUG - 
+def xmap(task, it):
+    return 1
+
+2025-02-02 17:20:51,362 - celery.utils.functional - DEBUG - 
+def backend_cleanup():
+    return 1
+
+2025-02-02 17:20:51,362 - celery.utils.functional - DEBUG - 
+def chain(*args, **kwargs):
+    return 1
+
+2025-02-02 17:20:51,362 - celery.utils.functional - DEBUG - 
+def xstarmap(task, it):
+    return 1
+
+2025-02-02 17:20:51,363 - celery.utils.functional - DEBUG - 
+def accumulate(self, *args, **kwargs):
+    return 1
+
+2025-02-02 17:20:54,181 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
+2025-02-02 17:20:56,194 - cp_server - INFO - Celery worker is now running.
+2025-02-02 17:20:56,753 - cp_server - INFO - Source Path mounted: /home/ben/Lab/Python/cp_server/Image_tests/Images which contains 1150 files
+2025-02-02 17:20:56,756 - cp_server - INFO - Destination Path mounted: /home/ben/Lab/Python/cp_server/Image_tests which contains 1151 files
+2025-02-02 17:20:56,777 - cp_server - INFO - Starting image processing task from /home/ben/Lab/Python/cp_server/Image_tests/Images
+2025-02-02 17:20:56,780 - celery.utils.functional - DEBUG - 
+def mock_task(self, src_dir, dest_dir):
+    return 1
+
+2025-02-02 17:20:57,813 - cp_server - INFO - Stopping Celery worker...
+2025-02-02 17:21:00,438 - cp_server - INFO - Celery worker has been stopped.
+2025-02-02 17:21:00,438 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
+2025-02-02 17:21:00,454 - cp_server - INFO - Redis shut down via shutdown command.

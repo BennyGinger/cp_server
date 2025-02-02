@@ -1,4 +1,3 @@
-import time
 import warnings
 from pathlib import Path
 
@@ -36,14 +35,19 @@ def process_images(self, src_dir: str, dst_dir: str, settings: dict, image_name:
         logger.error(f"Error processing image {image_name}: {e}")
 
 @celery_app.task(bind=True)
-def mock_task(self, duration: int = 60):
+def mock_task(self, src_dir: str, dest_dir: str)-> str:
     """Mock task for testing Celery worker with a long-running process"""
     logger.info("Mock task started")
     
-    for i in range(duration):
-        time.sleep(1)
-        self.update_state(state='PROGRESS', meta={'progress': (i + 1) / duration * 100})
-    
+    # Create mock text file
+    reslt_path = Path(dest_dir).joinpath("mock_result.txt")
+    with open(reslt_path, "w") as file:
+        
+        for i, img in enumerate(Path(src_dir).iterdir()):
+            if not img.suffix == ".tif":
+                continue
+            file.write(f"{i}-{img}\n")
+        
     logger.info("Mock task completed")
     return "Task finished successfully"
     

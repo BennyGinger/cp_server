@@ -34,6 +34,14 @@ def check_mount_dirs(src_dir: str, dst_dir: str)-> None:
     except Exception as e:
         print(f"An error occurred: {e}")
 
+def check_segment(start_observer: bool = False)-> None:
+    """Test the segment endpoint"""
+    try:
+        response = httpx.post("http://127.0.0.1:8000/segment", json={"start_observer": start_observer})
+        print(f"Segment response: {response.json()}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
 def stop_servers()-> None:
     """Define a function to stop the server"""
     try:
@@ -53,6 +61,7 @@ def main(payload: dict)-> None:
         print("Server is up!")
         
         check_mount_dirs(payload["src_dir"], payload["dst_dir"])
+        check_segment()
     
     except RuntimeError as r:
         print(f"Server did not start in time {r}")

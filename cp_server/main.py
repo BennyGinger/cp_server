@@ -3,7 +3,8 @@ from fastapi import FastAPI
 from .redis_server.redis_server import start_redis
 from .celery_server.celery_server import start_celery_worker
 from .endpoints.app_utils import router as app_utils_router
-from .endpoints.mount import mount_dirs
+from .endpoints.mount import router as mount_dirs
+from .endpoints.segment import router as segment_task
 
 from . import logger
 from .utils import RedisServerError, CeleryServerError
@@ -27,6 +28,7 @@ except CeleryServerError as e:
 
 app.include_router(app_utils_router)
 app.include_router(mount_dirs)
+app.include_router(segment_task)
 
 
 
