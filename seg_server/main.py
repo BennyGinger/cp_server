@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from .brocker_service.redis_server import start_redis
-from .celery_server.celery_server import start_celery_worker
+from .task_server.celery_server import start_celery_worker
 from .endpoints.app_utils import router as app_utils_router
 from .endpoints.mount import router as mount_dirs
 from .endpoints.segment import router as segment_task

@@ -2,7 +2,7 @@ from pathlib import Path
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 
-from cp_server import logger
+from seg_server import logger
 
 
 router = APIRouter()
