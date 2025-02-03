@@ -4,15 +4,15 @@ import time
 
 from celery import Celery
 
-from .. import logger  
-from ..utils import CeleryServerError, get_app_path
+from cp_server import logger
+from ..utils import CeleryServerError
 
 
 # Configure Celery
 celery_app = Celery(
     "tasks",
     broker="redis://localhost:6379/0",
-    backend="redis://localhost:6379/0",
+    backend="redis://localhost",
     broker_connection_retry_on_startup=True)
 
 # Celery worker process
@@ -31,9 +31,9 @@ def start_celery_worker()-> None:
     global WORKER
     
     if not is_celery_running():
-        logger.info("Starting Celery worker...")
+        logger.info("Starting Celery worker ...")
         WORKER = subprocess.Popen(
-            ["celery", "-A", get_app_path(__file__), "worker", "--loglevel=info"],
+            ["celery", "-A", "cp_server.celery_server.celery_task", "worker", "--loglevel=info"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE)
         

@@ -1,0 +1,27 @@
+
+2025-02-03 16:00:01,815 - kombu.common - DEBUG - basic.qos: prefetch_count->64
+2025-02-03 16:00:04,617 - kombu.pidbox - DEBUG - pidbox received method ping() [reply_to:{'exchange': 'reply.celery.pidbox', 'routing_key': '5e116a1b-6ace-3188-a1ac-fc2c626552b6'} ticket:1a01f793-314b-40eb-82ad-2407cde7641a]
+2025-02-03 16:00:05,620 - kombu.pidbox - DEBUG - pidbox received method ping() [reply_to:{'exchange': 'reply.celery.pidbox', 'routing_key': '0bcf1fe2-75f8-3409-aba3-6b4ee29bfd99'} ticket:22a87626-da77-4a2a-b742-72322b95dea1]
+2025-02-03 16:00:06,807 - cp_server.celery_server.celery_task - INFO - Mock task started
+2025-02-03 16:00:06,807 - cp_server.celery_server.celery_task - DEBUG - Source dir: /media/ben/Analysis/Python/cp_server/Image_tests/c2z25t23v1_nd2_s1/Images
+2025-02-03 16:00:06,807 - cp_server.celery_server.celery_task - DEBUG - Result path: /media/ben/Analysis/Python/cp_server/Image_tests/mock_result.txt
+2025-02-03 16:00:06,810 - cp_server.celery_server.celery_task - INFO - Mock task completed
+2025-02-03 16:00:06,822 - kombu.pidbox - DEBUG - pidbox received method ping() [reply_to:{'exchange': 'reply.celery.pidbox', 'routing_key': '536206df-643f-3d88-840b-1db05aa5643b'} ticket:37f179e4-5e1a-4798-ad3b-d81a8d73add3]
+
+2025-02-03 16:02:14,987 - kombu.common - DEBUG - basic.qos: prefetch_count->64
+2025-02-03 16:02:17,777 - kombu.pidbox - DEBUG - pidbox received method ping() [reply_to:{'exchange': 'reply.celery.pidbox', 'routing_key': '0cd5940a-10d5-37d8-8b31-ccbe00f4c4bf'} ticket:7ab4424d-f69d-41ef-8113-856f7a47d053]
+2025-02-03 16:02:18,781 - kombu.pidbox - DEBUG - pidbox received method ping() [reply_to:{'exchange': 'reply.celery.pidbox', 'routing_key': 'a2188239-8955-3864-8054-fc033c341274'} ticket:6762f7da-e19b-4fb7-b8e3-4a31c00e3b93]
+2025-02-03 16:02:20,026 - cp_server.celery_server.celery_task - INFO - Mock task started
+2025-02-03 16:02:20,026 - cp_server.celery_server.celery_task - DEBUG - Source dir: /media/ben/Analysis/Python/cp_server/Image_tests/c2z25t23v1_nd2_s1/Images
+2025-02-03 16:02:20,027 - cp_server.celery_server.celery_task - DEBUG - Result path: /media/ben/Analysis/Python/cp_server/Image_tests/mock_result.txt
+2025-02-03 16:02:20,030 - cp_server.celery_server.celery_task - INFO - Mock task completed
+2025-02-03 16:02:20,042 - kombu.pidbox - DEBUG - pidbox received method ping() [reply_to:{'exchange': 'reply.celery.pidbox', 'routing_key': '2612e8a1-f3f0-3e49-a038-4d9be218aee0'} ticket:1ee2a77f-92c0-4fc2-8a7f-d1ad272dac5d]
+
+2025-02-03 16:07:46,532 - cp_server.celery_server.celery_task - INFO - Mock task started
+2025-02-03 16:07:46,532 - cp_server.celery_server.celery_task - DEBUG - Source dir: /media/ben/Analysis/Python/cp_server/Image_tests/c2z25t23v1_nd2_s1/Images
+2025-02-03 16:07:46,532 - cp_server.celery_server.celery_task - DEBUG - Result path: /media/ben/Analysis/Python/cp_server/Image_tests/mock_result.txt
+2025-02-03 16:07:46,535 - cp_server.celery_server.celery_task - INFO - Mock task completed
+2025-02-03 16:09:13,741 - cp_server.celery_server.celery_task - INFO - Mock task started
+2025-02-03 16:09:13,741 - cp_server.celery_server.celery_task - DEBUG - Source dir: /media/ben/Analysis/Python/cp_server/Image_tests/c2z25t23v1_nd2_s1/Images
+2025-02-03 16:09:13,741 - cp_server.celery_server.celery_task - DEBUG - Result path: /media/ben/Analysis/Python/cp_server/Image_tests/mock_result.txt
+2025-02-03 16:09:13,744 - cp_server.celery_server.celery_task - INFO - Mock task completed

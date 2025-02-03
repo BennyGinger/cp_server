@@ -1,374 +1,80 @@
-2025-01-29 12:03:45,017 - celery.utils.functional - DEBUG - 
-def xstarmap(task, it):
-    return 1
 
-2025-01-29 12:03:45,017 - celery.utils.functional - DEBUG - 
-def accumulate(self, *args, **kwargs):
-    return 1
+2025-02-03 15:59:54,588 - cp_server - INFO - Checking Redis and Celery services...
+2025-02-03 15:59:54,590 - cp_server - INFO - Redis is already running.
+2025-02-03 15:59:55,605 - cp_server - INFO - Starting Celery worker ...
 
-2025-01-29 12:03:45,017 - celery.utils.functional - DEBUG - 
-def process_images(self, src_dir, dst_dir, settings, image_name):
-    return 1
+2025-02-03 15:59:58,609 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
+2025-02-03 16:00:01,612 - cp_server - INFO - Waiting for Celery to start... 4s elapsed
+2025-02-03 16:00:04,615 - cp_server - INFO - Waiting for Celery to start... 6s elapsed
+2025-02-03 16:00:06,622 - cp_server - INFO - Celery worker is now running.
+2025-02-03 16:00:06,766 - cp_server - INFO - Source Path mounted: /media/ben/Analysis/Python/cp_server/Image_tests/c2z25t23v1_nd2_s1/Images which contains 1150 files
+2025-02-03 16:00:06,772 - cp_server - INFO - Destination Path mounted: /media/ben/Analysis/Python/cp_server/Image_tests which contains 2308 files
+2025-02-03 16:00:06,793 - cp_server - INFO - Starting image processing task from /media/ben/Analysis/Python/cp_server/Image_tests/c2z25t23v1_nd2_s1/Images
+2025-02-03 16:00:07,824 - cp_server - INFO - Stopping Celery worker...
+2025-02-03 16:00:10,830 - cp_server - INFO - Celery worker has been stopped.
+2025-02-03 16:00:10,830 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
+2025-02-03 16:00:10,834 - cp_server - INFO - Redis shut down via shutdown command.
 
-2025-01-29 12:03:45,017 - celery.utils.functional - DEBUG - 
-def chord(self, header, body, partial_args=0, interval=1, countdown=2, max_retries=3, eager=4, **kwargs):
-    return 1
 
-2025-01-29 12:03:45,018 - celery.utils.functional - DEBUG - 
-def chunks(task, it, n):
-    return 1
 
-2025-01-29 12:03:45,018 - celery.utils.functional - DEBUG - 
-def unlock_chord(self, group_id, callback, interval=0, max_retries=1, result=2, Result=3, GroupResult=4, result_from_tuple=5, **kwargs):
-    return 1
 
-2025-01-29 12:03:45,018 - celery.utils.functional - DEBUG - 
-def group(self, tasks, result, group_id, partial_args, add_to_parent=0):
-    return 1
 
-2025-01-29 12:03:45,018 - celery.utils.functional - DEBUG - 
-def xmap(task, it):
-    return 1
+2025-02-03 16:02:07,750 - cp_server - INFO - Checking Redis and Celery services...
+2025-02-03 16:02:07,752 - cp_server - INFO - Redis is already running.
+2025-02-03 16:02:08,767 - cp_server - INFO - Starting Celery worker ...
 
-2025-01-29 12:03:45,018 - celery.utils.functional - DEBUG - 
-def backend_cleanup():
-    return 1
+2025-02-03 16:02:11,771 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
+2025-02-03 16:02:14,773 - cp_server - INFO - Waiting for Celery to start... 4s elapsed
+2025-02-03 16:02:17,776 - cp_server - INFO - Waiting for Celery to start... 6s elapsed
+2025-02-03 16:02:19,783 - cp_server - INFO - Celery worker is now running.
+2025-02-03 16:02:19,986 - cp_server - INFO - Source Path mounted: /media/ben/Analysis/Python/cp_server/Image_tests/c2z25t23v1_nd2_s1/Images which contains 1150 files
+2025-02-03 16:02:19,992 - cp_server - INFO - Destination Path mounted: /media/ben/Analysis/Python/cp_server/Image_tests which contains 2308 files
+2025-02-03 16:02:20,013 - cp_server - INFO - Starting image processing task from /media/ben/Analysis/Python/cp_server/Image_tests/c2z25t23v1_nd2_s1/Images
+2025-02-03 16:02:21,044 - cp_server - INFO - Stopping Celery worker...
+2025-02-03 16:02:24,061 - cp_server - INFO - Celery worker has been stopped.
+2025-02-03 16:02:24,061 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
+2025-02-03 16:02:24,064 - cp_server - INFO - Redis shut down via shutdown command.
 
-2025-01-29 12:03:45,018 - celery.utils.functional - DEBUG - 
-def chain(*args, **kwargs):
-    return 1
 
-2025-01-29 12:05:30,981 - celery.utils.functional - DEBUG - 
-def xmap(task, it):
-    return 1
 
-2025-01-29 12:05:30,981 - celery.utils.functional - DEBUG - 
-def backend_cleanup():
-    return 1
 
-2025-01-29 12:05:30,982 - celery.utils.functional - DEBUG - 
-def process_images(self, src_dir, dst_dir, settings, image_name):
-    return 1
 
-2025-01-29 12:05:30,982 - celery.utils.functional - DEBUG - 
-def chain(*args, **kwargs):
-    return 1
 
-2025-01-29 12:05:30,982 - celery.utils.functional - DEBUG - 
-def xstarmap(task, it):
-    return 1
 
-2025-01-29 12:05:30,982 - celery.utils.functional - DEBUG - 
-def accumulate(self, *args, **kwargs):
-    return 1
 
-2025-01-29 12:05:30,982 - celery.utils.functional - DEBUG - 
-def chord(self, header, body, partial_args=0, interval=1, countdown=2, max_retries=3, eager=4, **kwargs):
-    return 1
 
-2025-01-29 12:05:30,982 - celery.utils.functional - DEBUG - 
-def chunks(task, it, n):
-    return 1
 
-2025-01-29 12:05:30,983 - celery.utils.functional - DEBUG - 
-def unlock_chord(self, group_id, callback, interval=0, max_retries=1, result=2, Result=3, GroupResult=4, result_from_tuple=5, **kwargs):
-    return 1
+2025-02-03 16:07:34,424 - cp_server - INFO - Checking Redis and Celery services...
+2025-02-03 16:07:34,425 - cp_server - INFO - Redis is already running.
+2025-02-03 16:07:35,440 - cp_server - INFO - Starting Celery worker ...
 
-2025-01-29 12:05:30,983 - celery.utils.functional - DEBUG - 
-def group(self, tasks, result, group_id, partial_args, add_to_parent=0):
-    return 1
+2025-02-03 16:07:38,443 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
+2025-02-03 16:07:41,446 - cp_server - INFO - Waiting for Celery to start... 4s elapsed
+2025-02-03 16:07:44,449 - cp_server - INFO - Waiting for Celery to start... 6s elapsed
+2025-02-03 16:07:46,456 - cp_server - INFO - Celery worker is now running.
+2025-02-03 16:07:46,495 - cp_server - INFO - Source Path mounted: /media/ben/Analysis/Python/cp_server/Image_tests/c2z25t23v1_nd2_s1/Images which contains 1150 files
+2025-02-03 16:07:46,501 - cp_server - INFO - Destination Path mounted: /media/ben/Analysis/Python/cp_server/Image_tests which contains 2308 files
+2025-02-03 16:07:46,519 - cp_server - INFO - Starting image processing task from /media/ben/Analysis/Python/cp_server/Image_tests/c2z25t23v1_nd2_s1/Images
+2025-02-03 16:07:47,550 - cp_server - INFO - Stopping Celery worker...
+2025-02-03 16:07:49,697 - cp_server - INFO - Celery worker has been stopped.
+2025-02-03 16:07:49,697 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
+2025-02-03 16:07:49,704 - cp_server - INFO - Redis shut down via shutdown command.
 
-2025-01-29 12:07:49,835 - celery.utils.functional - DEBUG - 
-def xmap(task, it):
-    return 1
 
-2025-01-29 12:07:49,835 - celery.utils.functional - DEBUG - 
-def backend_cleanup():
-    return 1
+2025-02-03 16:09:01,547 - cp_server - INFO - Checking Redis and Celery services...
+2025-02-03 16:09:01,548 - cp_server - INFO - Redis is already running.
+2025-02-03 16:09:02,564 - cp_server - INFO - Starting Celery worker ...
 
-2025-01-29 12:07:49,835 - celery.utils.functional - DEBUG - 
-def process_images(self, src_dir, dst_dir, settings, image_name):
-    return 1
+2025-02-03 16:09:05,568 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
 
-2025-01-29 12:07:49,835 - celery.utils.functional - DEBUG - 
-def chain(*args, **kwargs):
-    return 1
+2025-02-03 16:09:08,571 - cp_server - INFO - Waiting for Celery to start... 4s elapsed
+2025-02-03 16:09:11,574 - cp_server - INFO - Waiting for Celery to start... 6s elapsed
+2025-02-03 16:09:13,583 - cp_server - INFO - Celery worker is now running.
+2025-02-03 16:09:13,699 - cp_server - INFO - Source Path mounted: /media/ben/Analysis/Python/cp_server/Image_tests/c2z25t23v1_nd2_s1/Images which contains 1150 files
+2025-02-03 16:09:13,705 - cp_server - INFO - Destination Path mounted: /media/ben/Analysis/Python/cp_server/Image_tests which contains 2308 files
+2025-02-03 16:09:13,728 - cp_server - INFO - Starting image processing task from /media/ben/Analysis/Python/cp_server/Image_tests/c2z25t23v1_nd2_s1/Images
+2025-02-03 16:09:14,758 - cp_server - INFO - Stopping Celery worker...
+2025-02-03 16:09:16,791 - cp_server - INFO - Celery worker has been stopped.
+2025-02-03 16:09:16,791 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
+2025-02-03 16:09:16,795 - cp_server - INFO - Redis shut down via shutdown command.
 
-2025-01-29 12:07:49,835 - celery.utils.functional - DEBUG - 
-def xstarmap(task, it):
-    return 1
-
-2025-01-29 12:07:49,835 - celery.utils.functional - DEBUG - 
-def accumulate(self, *args, **kwargs):
-    return 1
-
-2025-01-29 12:07:49,836 - celery.utils.functional - DEBUG - 
-def chord(self, header, body, partial_args=0, interval=1, countdown=2, max_retries=3, eager=4, **kwargs):
-    return 1
-
-2025-01-29 12:07:49,836 - celery.utils.functional - DEBUG - 
-def chunks(task, it, n):
-    return 1
-
-2025-01-29 12:07:49,836 - celery.utils.functional - DEBUG - 
-def unlock_chord(self, group_id, callback, interval=0, max_retries=1, result=2, Result=3, GroupResult=4, result_from_tuple=5, **kwargs):
-    return 1
-
-2025-01-29 12:07:49,836 - celery.utils.functional - DEBUG - 
-def group(self, tasks, result, group_id, partial_args, add_to_parent=0):
-    return 1
-
-2025-01-31 11:53:14,252 - cp_server - INFO - Starting Celery worker...
-2025-01-31 11:53:19,273 - cp_server - INFO - Waiting for Celery to start... 5s elapsed
-2025-01-31 11:53:24,300 - cp_server - INFO - Waiting for Celery to start... 10s elapsed
-2025-01-31 11:53:29,325 - cp_server - INFO - Waiting for Celery to start... 15s elapsed
-2025-01-31 11:53:34,353 - cp_server - INFO - Waiting for Celery to start... 20s elapsed
-2025-01-31 11:53:39,381 - cp_server - INFO - Waiting for Celery to start... 25s elapsed
-2025-01-31 11:53:44,408 - cp_server - INFO - Waiting for Celery to start... 30s elapsed
-2025-01-31 11:53:49,435 - cp_server - INFO - Waiting for Celery to start... 35s elapsed
-2025-01-31 11:53:54,465 - cp_server - INFO - Waiting for Celery to start... 40s elapsed
-2025-01-31 11:53:59,486 - cp_server - INFO - Waiting for Celery to start... 45s elapsed
-2025-01-31 11:54:04,513 - cp_server - INFO - Waiting for Celery to start... 50s elapsed
-2025-01-31 11:54:09,541 - cp_server - INFO - Waiting for Celery to start... 55s elapsed
-2025-01-31 11:54:14,562 - cp_server - INFO - Waiting for Celery to start... 60s elapsed
-2025-01-31 11:54:19,597 - cp_server - INFO - Waiting for Celery to start... 65s elapsed
-2025-01-31 11:54:24,617 - cp_server - INFO - Waiting for Celery to start... 70s elapsed
-2025-01-31 11:54:29,637 - cp_server - INFO - Waiting for Celery to start... 75s elapsed
-2025-01-31 11:54:39,210 - cp_server - INFO - Starting Celery worker...
-2025-01-31 11:54:44,236 - cp_server - INFO - Waiting for Celery to start... 5s elapsed
-2025-01-31 11:54:49,265 - cp_server - INFO - Waiting for Celery to start... 10s elapsed
-2025-01-31 11:54:54,294 - cp_server - INFO - Waiting for Celery to start... 15s elapsed
-2025-01-31 11:54:59,322 - cp_server - INFO - Waiting for Celery to start... 20s elapsed
-2025-01-31 11:55:04,347 - cp_server - INFO - Waiting for Celery to start... 25s elapsed
-2025-01-31 11:55:09,376 - cp_server - INFO - Waiting for Celery to start... 30s elapsed
-2025-01-31 12:09:43,039 - cp_server - INFO - Starting Celery worker...
-2025-01-31 12:09:49,045 - cp_server - INFO - Waiting for Celery to start... 5s elapsed
-2025-01-31 12:09:51,057 - cp_server - INFO - Celery worker is now running.
-2025-01-31 12:13:57,625 - cp_server - INFO - Starting Celery worker...
-2025-01-31 12:14:03,631 - cp_server - INFO - Waiting for Celery to start... 5s elapsed
-2025-01-31 12:14:05,644 - cp_server - INFO - Celery worker is now running.
-2025-01-31 12:54:44,170 - cp_server - INFO - Starting Celery worker...
-2025-01-31 12:54:47,176 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
-2025-01-31 12:54:49,189 - cp_server - INFO - Celery worker is now running.
-2025-01-31 12:54:51,200 - cp_server - INFO - Stopping Celery worker...
-2025-01-31 12:54:53,735 - cp_server - INFO - Celery worker has been stopped.
-2025-01-31 13:08:48,702 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
-2025-01-31 13:08:48,718 - cp_server - INFO - Redis shut down via shutdown command.
-2025-01-31 13:09:05,061 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
-2025-01-31 13:09:05,078 - cp_server - INFO - Redis shut down via shutdown command.
-2025-01-31 13:09:45,690 - cp_server - INFO - Redis is already running.
-2025-01-31 13:09:45,691 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
-2025-01-31 13:09:45,706 - cp_server - INFO - Redis shut down via shutdown command.
-2025-01-31 13:11:03,991 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
-2025-01-31 13:11:04,008 - cp_server - INFO - Redis shut down via shutdown command.
-2025-01-31 15:51:08,241 - cp_server - INFO - Starting Celery worker...
-2025-01-31 15:51:11,244 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
-2025-01-31 15:51:14,249 - cp_server - INFO - Waiting for Celery to start... 4s elapsed
-2025-01-31 15:51:17,253 - cp_server - INFO - Waiting for Celery to start... 6s elapsed
-2025-01-31 15:51:20,259 - cp_server - INFO - Waiting for Celery to start... 8s elapsed
-2025-01-31 15:51:23,263 - cp_server - INFO - Waiting for Celery to start... 10s elapsed
-2025-01-31 15:51:26,268 - cp_server - INFO - Waiting for Celery to start... 12s elapsed
-2025-01-31 15:51:29,273 - cp_server - INFO - Waiting for Celery to start... 14s elapsed
-2025-01-31 15:51:32,277 - cp_server - INFO - Waiting for Celery to start... 16s elapsed
-2025-01-31 15:51:35,281 - cp_server - INFO - Waiting for Celery to start... 18s elapsed
-2025-01-31 15:51:38,286 - cp_server - INFO - Waiting for Celery to start... 20s elapsed
-2025-01-31 15:51:41,292 - cp_server - INFO - Waiting for Celery to start... 22s elapsed
-2025-01-31 15:51:44,297 - cp_server - INFO - Waiting for Celery to start... 24s elapsed
-2025-01-31 15:51:47,304 - cp_server - INFO - Waiting for Celery to start... 26s elapsed
-2025-01-31 15:51:50,311 - cp_server - INFO - Waiting for Celery to start... 28s elapsed
-2025-01-31 15:51:53,316 - cp_server - INFO - Waiting for Celery to start... 30s elapsed
-2025-01-31 15:51:56,320 - cp_server - INFO - Waiting for Celery to start... 32s elapsed
-2025-01-31 15:51:59,325 - cp_server - INFO - Waiting for Celery to start... 34s elapsed
-2025-01-31 15:52:02,331 - cp_server - INFO - Waiting for Celery to start... 36s elapsed
-2025-01-31 15:52:05,337 - cp_server - INFO - Waiting for Celery to start... 38s elapsed
-2025-01-31 15:52:08,344 - cp_server - INFO - Waiting for Celery to start... 40s elapsed
-2025-01-31 15:52:11,348 - cp_server - INFO - Waiting for Celery to start... 42s elapsed
-2025-01-31 15:52:14,353 - cp_server - INFO - Waiting for Celery to start... 44s elapsed
-2025-01-31 15:53:07,810 - cp_server - INFO - Redis is already running.
-2025-01-31 15:53:07,810 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
-2025-01-31 15:53:07,823 - cp_server - INFO - Redis shut down via shutdown command.
-2025-01-31 15:54:15,602 - cp_server - INFO - Starting Celery worker...
-2025-01-31 15:54:18,608 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
-2025-01-31 15:54:21,613 - cp_server - INFO - Waiting for Celery to start... 4s elapsed
-2025-01-31 15:54:24,618 - cp_server - INFO - Waiting for Celery to start... 6s elapsed
-2025-01-31 15:54:27,622 - cp_server - INFO - Waiting for Celery to start... 8s elapsed
-2025-01-31 15:54:30,626 - cp_server - INFO - Waiting for Celery to start... 10s elapsed
-2025-01-31 15:54:33,631 - cp_server - INFO - Waiting for Celery to start... 12s elapsed
-2025-01-31 15:54:36,636 - cp_server - INFO - Waiting for Celery to start... 14s elapsed
-2025-01-31 15:54:39,641 - cp_server - INFO - Waiting for Celery to start... 16s elapsed
-2025-01-31 15:54:42,646 - cp_server - INFO - Waiting for Celery to start... 18s elapsed
-2025-01-31 15:54:45,650 - cp_server - INFO - Waiting for Celery to start... 20s elapsed
-2025-01-31 15:54:48,655 - cp_server - INFO - Waiting for Celery to start... 22s elapsed
-2025-01-31 15:54:51,660 - cp_server - INFO - Waiting for Celery to start... 24s elapsed
-2025-01-31 15:54:54,665 - cp_server - INFO - Waiting for Celery to start... 26s elapsed
-2025-01-31 15:54:57,669 - cp_server - INFO - Waiting for Celery to start... 28s elapsed
-2025-01-31 15:55:00,676 - cp_server - INFO - Waiting for Celery to start... 30s elapsed
-2025-01-31 15:55:03,680 - cp_server - INFO - Waiting for Celery to start... 32s elapsed
-2025-01-31 15:55:06,685 - cp_server - INFO - Waiting for Celery to start... 34s elapsed
-2025-01-31 15:55:09,689 - cp_server - INFO - Waiting for Celery to start... 36s elapsed
-2025-01-31 15:55:12,694 - cp_server - INFO - Waiting for Celery to start... 38s elapsed
-2025-01-31 15:55:15,698 - cp_server - INFO - Waiting for Celery to start... 40s elapsed
-2025-01-31 15:55:18,705 - cp_server - INFO - Waiting for Celery to start... 42s elapsed
-2025-01-31 15:55:21,709 - cp_server - INFO - Waiting for Celery to start... 44s elapsed
-2025-01-31 15:55:24,714 - cp_server - INFO - Waiting for Celery to start... 46s elapsed
-2025-01-31 15:55:27,719 - cp_server - INFO - Waiting for Celery to start... 48s elapsed
-2025-01-31 15:55:30,722 - cp_server - INFO - Waiting for Celery to start... 50s elapsed
-2025-01-31 15:55:33,726 - cp_server - INFO - Waiting for Celery to start... 52s elapsed
-2025-01-31 15:55:36,730 - cp_server - INFO - Waiting for Celery to start... 54s elapsed
-2025-01-31 15:55:39,734 - cp_server - INFO - Waiting for Celery to start... 56s elapsed
-2025-01-31 15:55:42,740 - cp_server - INFO - Waiting for Celery to start... 58s elapsed
-2025-01-31 15:55:45,745 - cp_server - INFO - Waiting for Celery to start... 60s elapsed
-2025-01-31 15:55:48,750 - cp_server - INFO - Waiting for Celery to start... 62s elapsed
-2025-01-31 15:55:51,754 - cp_server - INFO - Waiting for Celery to start... 64s elapsed
-2025-01-31 15:55:54,760 - cp_server - INFO - Waiting for Celery to start... 66s elapsed
-2025-01-31 15:55:57,764 - cp_server - INFO - Waiting for Celery to start... 68s elapsed
-2025-01-31 15:56:00,768 - cp_server - INFO - Waiting for Celery to start... 70s elapsed
-2025-01-31 15:56:03,774 - cp_server - INFO - Waiting for Celery to start... 72s elapsed
-2025-01-31 15:56:06,779 - cp_server - INFO - Waiting for Celery to start... 74s elapsed
-2025-01-31 15:56:09,782 - cp_server - INFO - Waiting for Celery to start... 76s elapsed
-2025-01-31 15:56:12,788 - cp_server - INFO - Waiting for Celery to start... 78s elapsed
-2025-01-31 15:56:15,792 - cp_server - INFO - Waiting for Celery to start... 80s elapsed
-2025-01-31 15:56:18,796 - cp_server - INFO - Waiting for Celery to start... 82s elapsed
-2025-01-31 16:01:13,818 - cp_server - INFO - Starting Celery worker...
-2025-01-31 16:01:16,823 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
-2025-01-31 16:01:18,834 - cp_server - INFO - Celery worker is now running.
-2025-01-31 16:01:20,842 - cp_server - INFO - Stopping Celery worker...
-2025-01-31 16:01:22,959 - cp_server - INFO - Celery worker has been stopped.
-2025-02-02 13:00:28,009 - cp_server - INFO - Checking Redis and Celery services...
-2025-02-02 13:00:28,011 - cp_server - INFO - Redis is already running.
-2025-02-02 13:00:29,029 - cp_server - INFO - Starting Celery worker...
-2025-02-02 13:00:32,044 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
-2025-02-02 13:00:34,055 - cp_server - INFO - Celery worker is now running.
-2025-02-02 13:09:26,430 - cp_server - INFO - Checking Redis and Celery services...
-2025-02-02 13:09:26,432 - cp_server - INFO - Redis is already running.
-2025-02-02 13:09:27,451 - cp_server - INFO - Celery worker is already running.
-2025-02-02 13:09:28,710 - cp_server - INFO - Stopping Celery worker...
-2025-02-02 13:09:28,743 - cp_server - INFO - Celery worker forcefully stopped.
-2025-02-02 13:09:28,743 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
-2025-02-02 13:09:28,747 - cp_server - INFO - Redis shut down via shutdown command.
-2025-02-02 13:12:57,314 - cp_server - INFO - Checking Redis and Celery services...
-2025-02-02 13:12:57,316 - cp_server - INFO - Redis is already running.
-2025-02-02 13:12:58,333 - cp_server - INFO - Starting Celery worker...
-2025-02-02 13:13:01,337 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
-2025-02-02 13:13:03,348 - cp_server - INFO - Celery worker is now running.
-2025-02-02 13:13:03,818 - cp_server - INFO - Source Path mounted: /home/ben/Lab/Python/cp_server/Image_tests/Images which contains 1150 files
-2025-02-02 13:13:03,820 - cp_server - INFO - Destination Path mounted: /home/ben/Lab/Python/cp_server/Image_tests which contains 1151 files
-2025-02-02 13:13:04,847 - cp_server - INFO - Stopping Celery worker...
-2025-02-02 13:13:06,485 - cp_server - INFO - Celery worker has been stopped.
-2025-02-02 13:13:06,485 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
-2025-02-02 13:13:06,499 - cp_server - INFO - Redis shut down via shutdown command.
-2025-02-02 16:57:23,419 - cp_server - INFO - Checking Redis and Celery services...
-2025-02-02 16:57:23,421 - cp_server - INFO - Redis is already running.
-2025-02-02 16:57:24,436 - cp_server - INFO - Starting Celery worker...
-2025-02-02 16:57:27,442 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
-2025-02-02 16:57:29,456 - cp_server - INFO - Celery worker is now running.
-2025-02-02 17:00:08,490 - cp_server - INFO - Checking Redis and Celery services...
-2025-02-02 17:00:08,491 - cp_server - INFO - Redis is already running.
-2025-02-02 17:00:09,510 - cp_server - INFO - Celery worker is already running.
-2025-02-02 17:00:09,697 - cp_server - INFO - Source Path mounted: /home/ben/Lab/Python/cp_server/Image_tests/Images which contains 1150 files
-2025-02-02 17:00:09,700 - cp_server - INFO - Destination Path mounted: /home/ben/Lab/Python/cp_server/Image_tests which contains 1151 files
-2025-02-02 17:00:09,732 - cp_server - INFO - Starting image processing task from /home/ben/Lab/Python/cp_server/Image_tests/Images
-2025-02-02 17:00:10,777 - cp_server - INFO - Stopping Celery worker...
-2025-02-02 17:00:10,795 - cp_server - INFO - Celery worker forcefully stopped.
-2025-02-02 17:00:10,795 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
-2025-02-02 17:00:10,813 - cp_server - INFO - Redis shut down via shutdown command.
-2025-02-02 17:06:02,828 - cp_server - INFO - Checking Redis and Celery services...
-2025-02-02 17:06:02,830 - cp_server - INFO - Redis is already running.
-2025-02-02 17:06:03,850 - cp_server - INFO - Starting Celery worker...
-2025-02-02 17:06:06,859 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
-2025-02-02 17:06:08,873 - cp_server - INFO - Celery worker is now running.
-2025-02-02 17:06:09,435 - cp_server - INFO - Source Path mounted: /home/ben/Lab/Python/cp_server/Image_tests/Images which contains 1150 files
-2025-02-02 17:06:09,437 - cp_server - INFO - Destination Path mounted: /home/ben/Lab/Python/cp_server/Image_tests which contains 1151 files
-2025-02-02 17:06:09,461 - cp_server - INFO - Starting image processing task from /home/ben/Lab/Python/cp_server/Image_tests/Images
-2025-02-02 17:06:10,497 - cp_server - INFO - Stopping Celery worker...
-2025-02-02 17:06:12,258 - cp_server - INFO - Celery worker has been stopped.
-2025-02-02 17:06:12,259 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
-2025-02-02 17:06:12,266 - cp_server - INFO - Redis shut down via shutdown command.
-2025-02-02 17:07:09,387 - cp_server - INFO - Checking Redis and Celery services...
-2025-02-02 17:07:09,388 - cp_server - INFO - Redis is already running.
-2025-02-02 17:07:10,417 - cp_server - INFO - Starting Celery worker...
-2025-02-02 17:07:13,424 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
-2025-02-02 17:07:15,437 - cp_server - INFO - Celery worker is now running.
-2025-02-02 17:07:15,626 - cp_server - INFO - Source Path mounted: /home/ben/Lab/Python/cp_server/Image_tests/Images which contains 1150 files
-2025-02-02 17:07:15,629 - cp_server - INFO - Destination Path mounted: /home/ben/Lab/Python/cp_server/Image_tests which contains 1151 files
-2025-02-02 17:07:15,653 - cp_server - INFO - Starting image processing task from /home/ben/Lab/Python/cp_server/Image_tests/Images
-2025-02-02 17:07:16,698 - cp_server - INFO - Stopping Celery worker...
-2025-02-02 17:07:18,967 - cp_server - INFO - Celery worker has been stopped.
-2025-02-02 17:07:18,967 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
-2025-02-02 17:07:18,983 - cp_server - INFO - Redis shut down via shutdown command.
-2025-02-02 17:09:02,693 - cp_server - INFO - Checking Redis and Celery services...
-2025-02-02 17:09:02,694 - cp_server - INFO - Redis is already running.
-2025-02-02 17:09:03,715 - cp_server - INFO - Starting Celery worker...
-2025-02-02 17:09:06,719 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
-2025-02-02 17:09:08,731 - cp_server - INFO - Celery worker is now running.
-2025-02-02 17:09:09,186 - cp_server - INFO - Source Path mounted: /home/ben/Lab/Python/cp_server/Image_tests/Images which contains 1150 files
-2025-02-02 17:09:09,188 - cp_server - INFO - Destination Path mounted: /home/ben/Lab/Python/cp_server/Image_tests which contains 1151 files
-2025-02-02 17:09:09,214 - cp_server - INFO - Starting image processing task from /home/ben/Lab/Python/cp_server/Image_tests/Images
-2025-02-02 17:09:10,278 - cp_server - INFO - Stopping Celery worker...
-2025-02-02 17:09:11,892 - cp_server - INFO - Celery worker has been stopped.
-2025-02-02 17:09:11,893 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
-2025-02-02 17:09:11,898 - cp_server - INFO - Redis shut down via shutdown command.
-2025-02-02 17:15:19,618 - cp_server - INFO - Checking Redis and Celery services...
-2025-02-02 17:15:19,620 - cp_server - INFO - Redis is already running.
-2025-02-02 17:15:20,638 - cp_server - INFO - Starting Celery worker...
-2025-02-02 17:15:23,646 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
-2025-02-02 17:15:25,663 - cp_server - INFO - Celery worker is now running.
-2025-02-02 17:15:26,199 - cp_server - INFO - Source Path mounted: /home/ben/Lab/Python/cp_server/Image_tests/Images which contains 1150 files
-2025-02-02 17:15:26,202 - cp_server - INFO - Destination Path mounted: /home/ben/Lab/Python/cp_server/Image_tests which contains 1151 files
-2025-02-02 17:15:26,225 - cp_server - INFO - Starting image processing task from /home/ben/Lab/Python/cp_server/Image_tests/Images
-2025-02-02 17:15:27,270 - cp_server - INFO - Stopping Celery worker...
-2025-02-02 17:15:29,028 - cp_server - INFO - Celery worker has been stopped.
-2025-02-02 17:15:29,028 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
-2025-02-02 17:15:29,044 - cp_server - INFO - Redis shut down via shutdown command.
-2025-02-02 17:20:50,158 - cp_server - INFO - Checking Redis and Celery services...
-2025-02-02 17:20:50,160 - cp_server - INFO - Redis is already running.
-2025-02-02 17:20:51,177 - cp_server - INFO - Starting Celery worker...
-2025-02-02 17:20:51,361 - celery.utils.functional - DEBUG - 
-def chord(self, header, body, partial_args=0, interval=1, countdown=2, max_retries=3, eager=4, **kwargs):
-    return 1
-
-2025-02-02 17:20:51,362 - celery.utils.functional - DEBUG - 
-def chunks(task, it, n):
-    return 1
-
-2025-02-02 17:20:51,362 - celery.utils.functional - DEBUG - 
-def unlock_chord(self, group_id, callback, interval=0, max_retries=1, result=2, Result=3, GroupResult=4, result_from_tuple=5, **kwargs):
-    return 1
-
-2025-02-02 17:20:51,362 - celery.utils.functional - DEBUG - 
-def group(self, tasks, result, group_id, partial_args, add_to_parent=0):
-    return 1
-
-2025-02-02 17:20:51,362 - celery.utils.functional - DEBUG - 
-def xmap(task, it):
-    return 1
-
-2025-02-02 17:20:51,362 - celery.utils.functional - DEBUG - 
-def backend_cleanup():
-    return 1
-
-2025-02-02 17:20:51,362 - celery.utils.functional - DEBUG - 
-def chain(*args, **kwargs):
-    return 1
-
-2025-02-02 17:20:51,362 - celery.utils.functional - DEBUG - 
-def xstarmap(task, it):
-    return 1
-
-2025-02-02 17:20:51,363 - celery.utils.functional - DEBUG - 
-def accumulate(self, *args, **kwargs):
-    return 1
-
-2025-02-02 17:20:54,181 - cp_server - INFO - Waiting for Celery to start... 2s elapsed
-2025-02-02 17:20:56,194 - cp_server - INFO - Celery worker is now running.
-2025-02-02 17:20:56,753 - cp_server - INFO - Source Path mounted: /home/ben/Lab/Python/cp_server/Image_tests/Images which contains 1150 files
-2025-02-02 17:20:56,756 - cp_server - INFO - Destination Path mounted: /home/ben/Lab/Python/cp_server/Image_tests which contains 1151 files
-2025-02-02 17:20:56,777 - cp_server - INFO - Starting image processing task from /home/ben/Lab/Python/cp_server/Image_tests/Images
-2025-02-02 17:20:56,780 - celery.utils.functional - DEBUG - 
-def mock_task(self, src_dir, dest_dir):
-    return 1
-
-2025-02-02 17:20:57,813 - cp_server - INFO - Stopping Celery worker...
-2025-02-02 17:21:00,438 - cp_server - INFO - Celery worker has been stopped.
-2025-02-02 17:21:00,438 - cp_server - WARNING - No Redis process tracked. Trying shutdown command.
-2025-02-02 17:21:00,454 - cp_server - INFO - Redis shut down via shutdown command.

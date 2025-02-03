@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 from cp_server.main import app
-from cp_server.redis_server.redis_server import is_redis_running
+from cp_server.brocker_service.redis_server import is_redis_running
 from cp_server.celery_server.celery_server import is_celery_running
 
 # Create a test client for FastAPI

@@ -20,5 +20,5 @@ def segment_task(request: Request, start_observer: bool = False):
     
     logger.info(f"Starting image processing task from {src_dir}")
     
-    mock_task.delay(src_dir, dst_dir)
-    return {"message": f"Processing started for {src_dir} and will be saved to {dst_dir}"}
+    resp = mock_task.delay(src_dir, dst_dir)
+    return {"message": f"Processing started for {resp.ready()} and will be saved to {dst_dir}"}

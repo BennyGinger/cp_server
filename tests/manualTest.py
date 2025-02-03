@@ -8,7 +8,7 @@ def start_server()-> subprocess.Popen:
     server_process = subprocess.Popen(["uvicorn", "cp_server.main:app"])
     return server_process
 
-def is_server_up(timeout: int=10)-> bool:
+def is_server_up(timeout: int=20)-> bool:
     """Define a function to check if the server is up"""
     start_time = time.time()
     while time.time() - start_time < timeout:
@@ -75,7 +75,7 @@ def main(payload: dict)-> None:
         server.wait()
         
 if __name__ == "__main__":
-    payload = {"src_dir": "/home/ben/Lab/Python/cp_server/Image_tests/Images",
-                "dst_dir": "/home/ben/Lab/Python/cp_server/Image_tests"}
+    payload = {"src_dir": "/media/ben/Analysis/Python/cp_server/Image_tests/c2z25t23v1_nd2_s1/Images",
+                "dst_dir": "/media/ben/Analysis/Python/cp_server/Image_tests"}
     
     main(payload)
