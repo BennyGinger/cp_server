@@ -187,6 +187,7 @@ dependencies = [
     { name = "cellpose", extra = ["gui"] },
     { name = "fastapi", extra = ["all"] },
     { name = "redis" },
+    { name = "smo" },
 ]
 
 [package.dev-dependencies]
@@ -201,6 +202,7 @@ requires-dist = [
     { name = "cellpose", extras = ["gui"], specifier = ">=3.1.0" },
     { name = "fastapi", extras = ["all"], specifier = ">=0.115.6" },
     { name = "redis", specifier = ">=5.2.1" },
+    { name = "smo", specifier = ">=2.0.2" },
 ]
 
 [package.metadata.requires-dev]
@@ -1131,6 +1133,19 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/94/e7/b2c673351809dca68a0e064b6af791aa332cf192da575fd474ed7d6f16a2/six-1.17.0.tar.gz", hash = "sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81", size = 34031 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b7/ce/149a00dd41f10bc29e5921b496af8b574d8413afcd5e30dfa0ed46c2cc5e/six-1.17.0-py2.py3-none-any.whl", hash = "sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274", size = 11050 },
+]
+
+[[package]]
+name = "smo"
+version = "2.0.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy" },
+    { name = "scipy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/4d/94/20a9a64bd4d6967058b9b5c881c5be8ae3f86d6469a2266d442d71c09b20/smo-2.0.2.tar.gz", hash = "sha256:e6bd078874f7401d76c31d8ced0721b67cddae2658bba1ad22c0bf4baad94aed", size = 811890 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/87/43/6bdd23ddbe118c977c5ebe4ad32deccdfc08729ca5213ee62630ae8821c8/smo-2.0.2-py2.py3-none-any.whl", hash = "sha256:06e47647f3fc2caaa9278ac47c6dbe22fe152c7f32f8563ec5539b2487eae17c", size = 702321 },
 ]
 
 [[package]]

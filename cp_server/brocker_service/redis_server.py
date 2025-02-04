@@ -4,8 +4,8 @@ import os
 
 import redis
 
-from .. import logger
-from ..utils import RedisServerError
+from cp_server import logger
+from cp_server.utils import RedisServerError
 
 
 # Configurable Redis settings
@@ -16,8 +16,9 @@ REDIS_PROCESS = None
 def is_redis_running()-> bool:
     """Check if Redis server is running."""
     try:
+        # Ping workers to check if they are running
         client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
-        return client.ping()  # Returns True if Redis is running
+        return client.ping()
     except redis.ConnectionError:
         return False
 
@@ -54,7 +55,7 @@ def start_redis()-> None:
     else:
         logger.info("Redis is already running.")
 
-def stop_redis():
+def stop_redis()-> None:
     """Stop Redis server if it was started as a subprocess."""
     global REDIS_PROCESS
     if REDIS_PROCESS:

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request
 
-from seg_server import logger
-from seg_server.task_server.celery_task import mock_task
+from cp_server import logger
+from cp_server.task_server.celery_task import mock_task
 
 
 router = APIRouter()

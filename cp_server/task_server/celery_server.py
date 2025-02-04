@@ -4,8 +4,8 @@ import time
 
 from celery import Celery
 
-from seg_server import logger
-from ..utils import CeleryServerError
+from cp_server import logger
+from cp_server.utils import CeleryServerError
 
 
 # Configure Celery
@@ -19,15 +19,18 @@ celery_app = Celery(
 WORKER = None
 
 def is_celery_running()-> bool:
+    """Test if the Celery worker is running."""
     try:
-        response = celery_app.control.ping(timeout=1)  # Ping workers
-        return bool(response)  # Returns True if workers respond
+        # Ping workers to check if they are running
+        response = celery_app.control.ping(timeout=1)  
+        return bool(response) 
     except Exception as e:
         print(f"Error: {e}")
         return False
     
 def start_celery_worker()-> None:
     """Start Celery worker in a separate process if it's not already running, with a timeout."""
+    
     global WORKER
     
     if not is_celery_running():
