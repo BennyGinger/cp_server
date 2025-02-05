@@ -504,3 +504,472 @@
 
 
 
+
+2025-02-05 09:20:12,632 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-02-05 09:20:12,711 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 09:20:12,711 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 09:20:12,797 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 09:20:12,797 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-02-05 09:20:12,797 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 09:20:12,797 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 09:20:12,834 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-02-05 09:20:12,877 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 09:20:12,877 - cp_server.task_server - DEBUG - model_settings={'model_type': 'cyto2', 'restore_type': 'denoise_cyto2', 'gpu': True}
+2025-02-05 09:20:12,877 - cp_server.task_server - DEBUG - cp_settings={'channels': [0, 0], 'diameter': 60, 'flow_threshold': 0.4, 'cellprob_threshold': 0.0}
+
+2025-02-05 09:21:39,455 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-02-05 09:21:39,544 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 09:21:39,544 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 09:21:39,627 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 09:21:39,627 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-02-05 09:21:39,627 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 09:21:39,627 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 09:21:39,668 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-02-05 09:21:39,710 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 09:21:39,710 - cp_server.task_server - DEBUG - model_settings={'model_type': 'cyto2', 'restore_type': 'denoise_cyto2', 'gpu': True}
+2025-02-05 09:21:39,710 - cp_server.task_server - DEBUG - cp_settings={'channels': [0, 0], 'diameter': 60, 'flow_threshold': 0.4, 'cellprob_threshold': 0.0}
+2025-02-05 09:21:41,538 - cp_server.task_server - DEBUG - type(masks)=<class 'numpy.ndarray'>
+2025-02-05 09:21:41,538 - cp_server.task_server - DEBUG - masks.shape=(1024, 1024)
+
+2025-02-05 09:24:03,855 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-02-05 09:24:03,936 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 09:24:03,936 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 09:24:04,019 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 09:24:04,020 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-02-05 09:24:04,020 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 09:24:04,020 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 09:24:04,060 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-02-05 09:24:04,104 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 09:24:04,104 - cp_server.task_server - DEBUG - model_settings={'model_type': 'cyto2', 'restore_type': 'denoise_cyto2', 'gpu': True}
+2025-02-05 09:24:04,104 - cp_server.task_server - DEBUG - cp_settings={'channels': None, 'diameter': 60, 'flow_threshold': 0.4, 'cellprob_threshold': 0.0}
+
+2025-02-05 09:34:11,482 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-02-05 09:34:11,578 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 09:34:11,578 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 09:34:11,666 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 09:34:11,667 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-02-05 09:34:11,667 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 09:34:11,667 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 09:34:11,704 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-02-05 09:34:11,746 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 09:34:11,746 - cp_server.task_server - DEBUG - model_settings={'model_type': 'cyto2', 'restore_type': 'denoise_cyto2', 'gpu': True}
+
+2025-02-05 09:35:58,338 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-02-05 09:35:58,418 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 09:35:58,418 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 09:35:58,505 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 09:35:58,505 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-02-05 09:35:58,505 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 09:35:58,506 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 09:35:58,542 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-02-05 09:35:58,584 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 09:35:58,585 - cp_server.task_server - DEBUG - model_settings={'model_type': 'cyto2', 'restore_type': 'denoise_cyto2', 'gpu': True}
+
+2025-02-05 09:37:50,840 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-02-05 09:37:50,930 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 09:37:50,931 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 09:37:51,017 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 09:37:51,017 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-02-05 09:37:51,017 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 09:37:51,017 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 09:37:51,054 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-02-05 09:37:51,096 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 09:37:51,096 - cp_server.task_server - DEBUG - model_settings={'model_type': 'cyto2', 'restore_type': 'denoise_cyto2', 'gpu': True}
+
+2025-02-05 09:39:18,719 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-02-05 09:39:18,802 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 09:39:18,802 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 09:39:18,891 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 09:39:18,891 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-02-05 09:39:18,891 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 09:39:18,892 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 09:39:18,930 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-02-05 09:39:18,971 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 09:39:18,972 - cp_server.task_server - DEBUG - model_settings={'model_type': 'cyto2', 'restore_type': 'denoise_cyto2', 'gpu': True}
+2025-02-05 09:39:18,972 - cp_server.task_server - DEBUG - cp_settings={'channels': [0, 0], 'diameter': 60, 'flow_threshold': 0.4, 'cellprob_threshold': 0.0}
+2025-02-05 09:39:20,775 - cp_server.task_server - DEBUG - type(masks)=<class 'numpy.ndarray'>
+2025-02-05 09:39:20,775 - cp_server.task_server - DEBUG - masks.shape=(1024, 1024)
+
+2025-02-05 09:45:18,486 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-02-05 09:45:18,582 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 09:45:18,582 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 09:45:18,668 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 09:45:18,668 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-02-05 09:45:18,668 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 09:45:18,668 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 09:45:18,704 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-02-05 09:45:18,743 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 09:45:18,743 - cp_server.task_server - DEBUG - model_settings={'model_type': 'cyto2', 'restore_type': 'denoise_cyto2', 'gpu': True}
+2025-02-05 09:45:18,743 - cp_server.task_server - DEBUG - cp_settings={'channels': [0, 0], 'diameter': 60, 'flow_threshold': 0.4, 'cellprob_threshold': 0.0}
+2025-02-05 09:45:18,743 - cellpose.transforms - WARNING - z_axis not specified, assuming it is dim 0
+2025-02-05 09:45:18,743 - cellpose.transforms - WARNING - if this is actually the channel_axis, use 'model.eval(channel_axis=0, ...)'
+2025-02-05 09:45:18,743 - cellpose.transforms - INFO - multi-stack tiff read in as having 10 planes 1 channels
+2025-02-05 09:45:18,795 - cellpose.core - INFO - 0%|          | 0/5 [00:00<?, ?it/s]
+2025-02-05 09:45:19,266 - cellpose.core - INFO - 100%|##########| 5/5 [00:00<00:00, 10.61it/s]
+2025-02-05 09:45:19,271 - cellpose.denoise - INFO - imgs denoised in 0.52s
+2025-02-05 09:45:19,272 - cellpose.transforms - WARNING - z_axis not specified, assuming it is dim 0
+2025-02-05 09:45:19,272 - cellpose.transforms - WARNING - if this is actually the channel_axis, use 'model.eval(channel_axis=0, ...)'
+2025-02-05 09:45:19,273 - cellpose.transforms - INFO - multi-stack tiff read in as having 10 planes 1 channels
+2025-02-05 09:45:19,281 - cellpose.models - WARNING - normalize_params['norm3D'] is True but do_3D is False and stitch_threshold=0, so setting to False
+2025-02-05 09:45:19,333 - cellpose.core - INFO - 0%|          | 0/5 [00:00<?, ?it/s]
+2025-02-05 09:45:19,639 - cellpose.core - INFO - 100%|##########| 5/5 [00:00<00:00, 16.38it/s]
+2025-02-05 09:45:19,655 - cellpose.models - INFO - network run in 0.32s
+2025-02-05 09:45:19,655 - cellpose.models - INFO - 0%|          | 0/10 [00:00<?, ?it/s]
+2025-02-05 09:45:23,960 - cellpose.models - INFO - 100%|##########| 10/10 [00:04<00:00,  2.32it/s]
+2025-02-05 09:45:23,960 - cellpose.models - WARNING - 3D stack used, but stitch_threshold=0 and do_3D=False, so masks are made per plane only
+2025-02-05 09:45:23,960 - cellpose.models - INFO - masks created in 4.31s
+2025-02-05 09:45:24,090 - cp_server.task_server - DEBUG - type(masks)=<class 'numpy.ndarray'>
+2025-02-05 09:45:24,090 - cp_server.task_server - DEBUG - masks.shape=(10, 512, 512)
+
+2025-02-05 09:47:45,032 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-02-05 09:47:45,117 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 09:47:45,117 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 09:47:45,207 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 09:47:45,207 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-02-05 09:47:45,207 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 09:47:45,207 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 09:47:45,243 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-02-05 09:47:45,284 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 09:47:45,284 - cp_server.task_server - DEBUG - model_settings={'model_type': 'cyto2', 'restore_type': 'denoise_cyto2', 'gpu': True}
+2025-02-05 09:47:45,284 - cp_server.task_server - DEBUG - cp_settings={'channels': [0, 0], 'diameter': 60, 'flow_threshold': 0.4, 'cellprob_threshold': 0.0, 'z_axis': 0, 'do_3D': True}
+2025-02-05 09:47:45,285 - cellpose.transforms - INFO - multi-stack tiff read in as having 25 planes 1 channels
+2025-02-05 09:47:45,407 - cellpose.core - INFO - 0%|          | 0/13 [00:00<?, ?it/s]
+2025-02-05 09:47:46,332 - cellpose.core - INFO - 100%|##########| 13/13 [00:00<00:00, 14.06it/s]
+2025-02-05 09:47:46,346 - cellpose.denoise - INFO - imgs denoised in 1.04s
+2025-02-05 09:47:46,351 - cellpose.transforms - WARNING - z_axis not specified, assuming it is dim 0
+2025-02-05 09:47:46,351 - cellpose.transforms - WARNING - if this is actually the channel_axis, use 'model.eval(channel_axis=0, ...)'
+2025-02-05 09:47:46,351 - cellpose.transforms - INFO - multi-stack tiff read in as having 25 planes 1 channels
+2025-02-05 09:47:46,498 - cellpose.models - INFO - resizing 3D image with rescale=0.50 and anisotropy=None
+2025-02-05 09:47:46,509 - cellpose.core - INFO - running YX: 12 planes of size (256, 256)
+2025-02-05 09:47:46,510 - cellpose.core - INFO - 0%|          | 0/6 [00:00<?, ?it/s]
+2025-02-05 09:47:46,880 - cellpose.core - INFO - 100%|##########| 6/6 [00:00<00:00, 16.21it/s]
+2025-02-05 09:47:46,883 - cellpose.core - INFO - running ZY: 256 planes of size (12, 256)
+2025-02-05 09:47:46,883 - cellpose.core - INFO - 0%|          | 0/64 [00:00<?, ?it/s]
+2025-02-05 09:47:47,554 - cellpose.core - INFO - 100%|##########| 64/64 [00:00<00:00, 95.37it/s]
+2025-02-05 09:47:47,558 - cellpose.core - INFO - running ZX: 256 planes of size (12, 256)
+2025-02-05 09:47:47,559 - cellpose.core - INFO - 0%|          | 0/64 [00:00<?, ?it/s]
+2025-02-05 09:47:48,221 - cellpose.core - INFO - 100%|##########| 64/64 [00:00<00:00, 96.63it/s]
+2025-02-05 09:47:48,226 - cellpose.models - INFO - resizing 3D flows and cellprob to original image size
+2025-02-05 09:47:48,294 - cellpose.models - INFO - network run in 1.80s
+2025-02-05 09:47:48,920 - cellpose.models - INFO - masks created in 0.54s
+2025-02-05 09:47:49,285 - cp_server.task_server - DEBUG - type(masks)=<class 'numpy.ndarray'>
+2025-02-05 09:47:49,285 - cp_server.task_server - DEBUG - masks.shape=(25, 512, 512)
+
+2025-02-05 10:13:42,378 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-02-05 10:13:42,468 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 10:13:42,468 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 10:13:42,560 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 10:13:42,561 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-02-05 10:13:42,561 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 10:13:42,561 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 10:13:42,601 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-02-05 10:13:42,638 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 10:13:42,638 - cp_server.task_server - DEBUG - model_settings={'model_type': 'cyto2', 'restore_type': 'denoise_cyto2', 'gpu': True}
+2025-02-05 10:13:42,638 - cp_server.task_server - DEBUG - cp_settings={'channels': [0, 0], 'diameter': 60, 'flow_threshold': 0.4, 'cellprob_threshold': 0.0, 'z_axis': 0, 'do_3D': False, 'stitch_threshold': 0.75}
+2025-02-05 10:13:42,638 - cellpose.transforms - INFO - multi-stack tiff read in as having 25 planes 1 channels
+2025-02-05 10:13:42,763 - cellpose.core - INFO - 0%|          | 0/13 [00:00<?, ?it/s]
+2025-02-05 10:13:43,662 - cellpose.core - INFO - 100%|##########| 13/13 [00:00<00:00, 14.46it/s]
+2025-02-05 10:13:43,676 - cellpose.denoise - INFO - imgs denoised in 1.01s
+2025-02-05 10:13:43,679 - cellpose.transforms - WARNING - z_axis not specified, assuming it is dim 0
+2025-02-05 10:13:43,679 - cellpose.transforms - WARNING - if this is actually the channel_axis, use 'model.eval(channel_axis=0, ...)'
+2025-02-05 10:13:43,680 - cellpose.transforms - INFO - multi-stack tiff read in as having 25 planes 1 channels
+2025-02-05 10:13:43,830 - cellpose.core - INFO - 0%|          | 0/13 [00:00<?, ?it/s]
+2025-02-05 10:13:44,570 - cellpose.core - INFO - 100%|##########| 13/13 [00:00<00:00, 17.56it/s]
+2025-02-05 10:13:44,614 - cellpose.models - INFO - network run in 0.79s
+2025-02-05 10:13:44,615 - cellpose.models - INFO - 0%|          | 0/25 [00:00<?, ?it/s]
+2025-02-05 10:13:44,615 - cellpose.dynamics - INFO - No cell pixels found.
+2025-02-05 10:13:44,617 - cellpose.dynamics - INFO - No cell pixels found.
+2025-02-05 10:13:44,617 - cellpose.dynamics - INFO - No cell pixels found.
+2025-02-05 10:13:44,618 - cellpose.dynamics - INFO - No cell pixels found.
+2025-02-05 10:13:44,619 - cellpose.dynamics - INFO - No cell pixels found.
+2025-02-05 10:13:49,356 - cellpose.models - INFO - 100%|##########| 25/25 [00:04<00:00,  5.27it/s]
+2025-02-05 10:13:49,356 - cellpose.models - INFO - stitching 25 planes using stitch_threshold=0.750 to make 3D masks
+2025-02-05 10:13:49,931 - cellpose.models - INFO - masks created in 5.32s
+2025-02-05 10:13:50,395 - cp_server.task_server - DEBUG - type(masks)=<class 'numpy.ndarray'>
+2025-02-05 10:13:50,395 - cp_server.task_server - DEBUG - masks.shape=(25, 512, 512)
+
+2025-02-05 10:16:28,955 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-02-05 10:16:29,034 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 10:16:29,035 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 10:16:29,121 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 10:16:29,121 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-02-05 10:16:29,121 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 10:16:29,122 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 10:16:29,159 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-02-05 10:16:29,200 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 10:16:29,200 - cp_server.task_server - DEBUG - model_settings={'model_type': 'cyto2', 'restore_type': 'denoise_cyto2', 'gpu': True}
+2025-02-05 10:16:29,200 - cp_server.task_server - DEBUG - cp_settings={'channels': [0, 0], 'diameter': 60, 'flow_threshold': 0.4, 'cellprob_threshold': 0.0, 'z_axis': 0, 'do_3D': False, 'stitch_threshold': 0.75}
+2025-02-05 10:16:29,200 - cellpose.transforms - INFO - multi-stack tiff read in as having 25 planes 1 channels
+2025-02-05 10:16:29,324 - cellpose.core - INFO - 0%|          | 0/13 [00:00<?, ?it/s]
+2025-02-05 10:16:30,228 - cellpose.core - INFO - 100%|##########| 13/13 [00:00<00:00, 14.39it/s]
+2025-02-05 10:16:30,241 - cellpose.denoise - INFO - imgs denoised in 1.02s
+2025-02-05 10:16:30,245 - cellpose.transforms - INFO - multi-stack tiff read in as having 25 planes 1 channels
+2025-02-05 10:16:30,391 - cellpose.core - INFO - 0%|          | 0/13 [00:00<?, ?it/s]
+2025-02-05 10:16:31,138 - cellpose.core - INFO - 100%|##########| 13/13 [00:00<00:00, 17.41it/s]
+2025-02-05 10:16:31,179 - cellpose.models - INFO - network run in 0.79s
+2025-02-05 10:16:31,180 - cellpose.models - INFO - 0%|          | 0/25 [00:00<?, ?it/s]
+2025-02-05 10:16:31,180 - cellpose.dynamics - INFO - No cell pixels found.
+2025-02-05 10:16:31,181 - cellpose.dynamics - INFO - No cell pixels found.
+2025-02-05 10:16:31,182 - cellpose.dynamics - INFO - No cell pixels found.
+2025-02-05 10:16:31,182 - cellpose.dynamics - INFO - No cell pixels found.
+2025-02-05 10:16:31,183 - cellpose.dynamics - INFO - No cell pixels found.
+2025-02-05 10:16:35,946 - cellpose.models - INFO - 100%|##########| 25/25 [00:04<00:00,  5.24it/s]
+2025-02-05 10:16:35,946 - cellpose.models - INFO - stitching 25 planes using stitch_threshold=0.750 to make 3D masks
+2025-02-05 10:16:36,599 - cellpose.models - INFO - masks created in 5.42s
+2025-02-05 10:16:36,978 - cp_server.task_server - DEBUG - type(masks)=<class 'numpy.ndarray'>
+2025-02-05 10:16:36,979 - cp_server.task_server - DEBUG - masks.shape=(25, 512, 512)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2025-02-05 11:57:49,914 - cellpose.denoise - INFO - >> denoise_cyto2 << model set to be used
+2025-02-05 11:57:50,000 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 11:57:50,000 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 11:57:50,087 - cellpose.denoise - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 11:57:50,087 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-02-05 11:57:50,088 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 11:57:50,088 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 11:57:50,123 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-02-05 11:57:50,166 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 11:57:50,166 - cp_server.task_server - DEBUG - Loading <class 'cellpose.denoise.CellposeDenoiseModel'> model with {'model_type': 'cyto2', 'restore_type': 'denoise_cyto2', 'gpu': True}
+2025-02-05 11:57:50,166 - cp_server.task_server - DEBUG - Running eval with {'channels': [0, 0], 'diameter': 60, 'flow_threshold': 0.4, 'cellprob_threshold': 0.0, 'z_axis': 0, 'do_3D': False, 'stitch_threshold': 0.75}
+2025-02-05 11:57:50,166 - cellpose.transforms - INFO - multi-stack tiff read in as having 25 planes 1 channels
+2025-02-05 11:57:50,289 - cellpose.core - INFO - 0%|          | 0/13 [00:00<?, ?it/s]
+2025-02-05 11:57:51,206 - cellpose.core - INFO - 100%|##########| 13/13 [00:00<00:00, 14.17it/s]
+2025-02-05 11:57:51,220 - cellpose.denoise - INFO - imgs denoised in 1.03s
+2025-02-05 11:57:51,225 - cellpose.transforms - INFO - multi-stack tiff read in as having 25 planes 1 channels
+2025-02-05 11:57:51,370 - cellpose.core - INFO - 0%|          | 0/13 [00:00<?, ?it/s]
+2025-02-05 11:57:52,120 - cellpose.core - INFO - 100%|##########| 13/13 [00:00<00:00, 17.33it/s]
+2025-02-05 11:57:52,162 - cellpose.models - INFO - network run in 0.79s
+2025-02-05 11:57:52,162 - cellpose.models - INFO - 0%|          | 0/25 [00:00<?, ?it/s]
+2025-02-05 11:57:52,162 - cellpose.dynamics - INFO - No cell pixels found.
+2025-02-05 11:57:52,163 - cellpose.dynamics - INFO - No cell pixels found.
+2025-02-05 11:57:52,164 - cellpose.dynamics - INFO - No cell pixels found.
+2025-02-05 11:57:52,165 - cellpose.dynamics - INFO - No cell pixels found.
+2025-02-05 11:57:52,165 - cellpose.dynamics - INFO - No cell pixels found.
+2025-02-05 11:57:56,894 - cellpose.models - INFO - 100%|##########| 25/25 [00:04<00:00,  5.28it/s]
+2025-02-05 11:57:56,894 - cellpose.models - INFO - stitching 25 planes using stitch_threshold=0.750 to make 3D masks
+2025-02-05 11:57:57,554 - cellpose.models - INFO - masks created in 5.39s
+2025-02-05 11:57:57,921 - cp_server.task_server - DEBUG - masks.shape=(25, 512, 512)
+
+
+2025-02-05 11:58:18,474 - cellpose.models - INFO - >> cyto2 << model set to be used
+2025-02-05 11:58:18,566 - cellpose.core - INFO - ** TORCH CUDA version installed and working. **
+2025-02-05 11:58:18,566 - cellpose.core - INFO - >>>> using GPU (CUDA)
+2025-02-05 11:58:18,613 - cellpose.models - INFO - >>>> loading model /home/ben/.cellpose/models/cyto2torch_0
+2025-02-05 11:58:18,657 - cellpose.models - INFO - >>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+2025-02-05 11:58:18,658 - cp_server.task_server - DEBUG - Loading <class 'cellpose.models.CellposeModel'> model with {'model_type': 'cyto2', 'gpu': True}
+2025-02-05 11:58:18,658 - cp_server.task_server - DEBUG - Running eval with {'channels': None, 'diameter': 60, 'flow_threshold': 0.4, 'cellprob_threshold': 0.0, 'z_axis': 0, 'do_3D': False, 'stitch_threshold': 0.75}
+2025-02-05 11:58:18,658 - cellpose.transforms - INFO - multi-stack tiff read in as having 25 planes 1 channels
+2025-02-05 11:58:18,826 - cellpose.core - INFO - 0%|          | 0/13 [00:00<?, ?it/s]
+2025-02-05 11:58:19,797 - cellpose.core - INFO - 100%|##########| 13/13 [00:00<00:00, 13.40it/s]
+2025-02-05 11:58:19,842 - cellpose.models - INFO - network run in 1.02s
+2025-02-05 11:58:19,843 - cellpose.models - INFO - 0%|          | 0/25 [00:00<?, ?it/s]
+2025-02-05 11:58:19,843 - cellpose.dynamics - INFO - No cell pixels found.
+2025-02-05 11:58:19,844 - cellpose.dynamics - INFO - No cell pixels found.
+2025-02-05 11:58:19,845 - cellpose.dynamics - INFO - No cell pixels found.
+2025-02-05 11:58:19,846 - cellpose.dynamics - INFO - No cell pixels found.
+2025-02-05 11:58:19,846 - cellpose.dynamics - INFO - No cell pixels found.
+2025-02-05 11:58:24,344 - cellpose.models - INFO - 100%|##########| 25/25 [00:04<00:00,  5.55it/s]
+2025-02-05 11:58:24,345 - cellpose.models - INFO - stitching 25 planes using stitch_threshold=0.750 to make 3D masks
+2025-02-05 11:58:25,009 - cellpose.models - INFO - masks created in 5.17s
+2025-02-05 11:58:25,391 - cp_server.task_server - DEBUG - masks.shape=(25, 512, 512)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
