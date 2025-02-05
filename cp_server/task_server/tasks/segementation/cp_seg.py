@@ -4,25 +4,20 @@ import numpy as np
 from cellpose.denoise import CellposeDenoiseModel
 from cellpose.models import CellposeModel
 
-from cp_server.task_server import celery_logger
-
 # Suppress FutureWarning messages from cellpose
 warnings.filterwarnings("ignore", category=FutureWarning, module="cellpose")                
 
 
-def run_seg(settings: dict[str, dict], img: np.ndarray, do_denoise: bool=True)-> np.ndarray:
+def run_seg(settings: dict, img: np.ndarray, do_denoise: bool=True)-> np.ndarray:
     
     # Unpack settings
     model_settings, cp_settings = unpack_settings(settings, do_denoise)
     
     # Initialize Cellpose model
     model = initialize_cellpose_model(do_denoise, model_settings)
-    celery_logger.debug(f"Loading {type(model)} model with {model_settings}")
     
     # Run segmentation
-    celery_logger.debug(f"Running eval with {cp_settings}")
     masks = segment_image(img, cp_settings, model)
-    celery_logger.debug(f"{masks.shape=}")
     
     return masks
 
@@ -32,8 +27,8 @@ def unpack_settings(settings: dict, do_denoise: bool)-> tuple[dict,dict]:
     """Unpack the settings for the model and segmentation"""
     
     # Unpack settings
-    mod_set = settings.get("model", {})
-    cp_set = settings.get("segmentation", {})
+    mod_set: dict = settings.get("model", {})
+    cp_set: dict = settings.get("segmentation", {})
     
     # No denoise, remove restore_type
     if not do_denoise:

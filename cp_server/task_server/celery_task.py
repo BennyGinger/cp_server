@@ -17,11 +17,22 @@ def remove_bg(img: np.ndarray, **kwargs)-> np.ndarray:
     return bg_img
     
 @celery_app.task()
-def segment(settings: dict, img: np.ndarray)-> np.ndarray:
+def segment(settings: dict, img: np.ndarray, do_denoise: bool=True)-> np.ndarray:
     """Segment the image using Cellpose"""
-    masks = run_seg(settings, img)
-    save_masks_task.delay(masks, img, settings["dst_folder"], settings["key_label"])
-    return run_seg(settings, img)
+    
+    # Log the settings
+    msg_settings = {**settings['model'], **settings['segmentation']}
+    celery_logger.info(f"Segmenting image {settings['img_file']} with settings: {msg_settings}")
+    celery_logger.info(f"Setting denoise to {do_denoise}")
+    
+    # Run the segmentation
+    masks = run_seg(settings, img, do_denoise)
+    celery_logger.debug(f"{masks.shape=}")
+    
+    # Save the masks in the background
+    celery_logger.info(f"Segmentation completed for {settings['img_file']}. Saving masks in {settings['dst_folder']}")
+    save_masks_task.delay(masks, settings["img_file"], settings["dst_folder"], settings["key_label"])
+    return masks
 
 @celery_app.task()
 def save_masks_task(masks: np.ndarray, img_file: Path, dst_folder: str, key_label: str)-> None:
@@ -59,7 +70,7 @@ def mock_task(src_dir: str, dest_dir: str)-> str:
 @celery_app.task()
 def process_images()-> None:
     """Process images with background subtraction and segmentation"""
-    
-    celery_logger.info("Processing images")
+    # Starting point of the log
+    celery_logger.info("------------------------")
     pass
     

@@ -27,7 +27,3 @@ logging.getLogger("httpcore").setLevel(logging.WARNING)
 logging.getLogger("celery").setLevel(logging.WARNING)
 
 logger = logging.getLogger(__name__)
-
-# Write an empty line at the beginning of the log file
-with open(LOG_FILE, "a") as f:
-    f.write("\n")

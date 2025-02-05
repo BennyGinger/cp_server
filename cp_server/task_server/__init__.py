@@ -2,7 +2,6 @@
 import logging
 from celery.signals import after_setup_logger
 
-from cp_server.utils import ROOT_PATH
 
 celery_logger = logging.getLogger(__name__)
 
@@ -10,8 +9,6 @@ celery_logger = logging.getLogger(__name__)
 def setup_loggers(logger: logging.Logger, *args, **kwargs)-> None:
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-    log_path = ROOT_PATH.joinpath("logs","celery.log")
-    
     # FileHandler
     fh = logging.FileHandler("/media/ben/Analysis/Python/cp_server/logs/celery.log")
     fh.setFormatter(formatter)
@@ -30,7 +27,3 @@ def setup_loggers(logger: logging.Logger, *args, **kwargs)-> None:
     celery_mod_logger.disabled = True
     kombu_logger = logging.getLogger('kombu')
     kombu_logger.setLevel(logging.WARNING)
-    
-    # Append an empty line at the beginning of the log file
-    with open(log_path, "a") as f:
-        f.write("\n")
