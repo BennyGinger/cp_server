@@ -6,9 +6,15 @@ from cp_server.task_server.tasks.saving.save_arrays import save_mask, save_img
 
 
 ############ Test save_mask ############
+<<<<<<< HEAD
 def test_save_mask_refseg(create_file, img):
     # Create fake file
     img_file: Path = create_file("test_refseg_1.tif")
+=======
+def test_save_mask_refseg(temp_dir, img):
+    # Create fake file
+    img_file: Path = temp_dir("test_refseg_1.tif")
+>>>>>>> 2d8dea9d55aa1116b3e8cbc65312ce3778c5efa2
     
     dst_folder = "output"
     key_label = "refseg"
@@ -26,9 +32,15 @@ def test_save_mask_refseg(create_file, img):
     saved_mask = tiff.imread(str(expected_file))
     np.testing.assert_array_equal(img.astype("uint16"), saved_mask)
 
+<<<<<<< HEAD
 def test_save_mask_z(create_file, img):
     # Create fake file
     img_file: Path = create_file("test_z_1.tif")
+=======
+def test_save_mask_z(temp_dir, img):
+    # Create fake file
+    img_file: Path = temp_dir("test_z_1.tif")
+>>>>>>> 2d8dea9d55aa1116b3e8cbc65312ce3778c5efa2
     
     dst_folder = "output"
     key_label = "_z"
