@@ -24,10 +24,6 @@ def settings():
             "stitch_threshold": 0.75,}}
 
 @pytest.fixture
-def img():
-    return np.random.randint(0, 65536, (256, 256), dtype=np.uint16)
-
-@pytest.fixture
 def img_zstack():
     return np.random.randint(0, 65536, (10, 256, 256), dtype=np.uint16)
 

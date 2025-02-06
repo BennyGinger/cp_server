@@ -973,3 +973,24 @@
 
 
 
+2025-02-06 23:30:08,476 - cp_server.task_server - DEBUG - Saving image to /tmp/pytest-of-ben/pytest-14/test_save_img_task_shape0_0/level1/level2/out_img.tif
+2025-02-06 23:30:08,480 - cp_server.task_server - DEBUG - Saving image to /tmp/pytest-of-ben/pytest-14/test_save_img_task_shape1_0/level1/level2/out_img.tif
+2025-02-06 23:37:10,613 - cp_server.task_server - DEBUG - Saving image to /tmp/pytest-of-ben/pytest-15/test_save_img_task_shape0_0/level1/level2/out_img.tif
+2025-02-06 23:37:10,640 - cp_server.task_server - DEBUG - Saving image to /tmp/pytest-of-ben/pytest-15/test_save_img_task_shape1_0/level1/level2/out_img.tif
+2025-02-06 23:41:43,045 - cp_server.task_server - DEBUG - Saving image to /tmp/pytest-of-ben/pytest-16/test_save_img_task_shape0_0/level1/level2/out_img.tif
+2025-02-06 23:41:43,071 - cp_server.task_server - DEBUG - Saving image to /tmp/pytest-of-ben/pytest-16/test_save_img_task_shape1_0/level1/level2/out_img.tif
+2025-02-06 23:48:02,601 - cp_server.task_server - DEBUG - Saving image to /tmp/pytest-of-ben/pytest-17/test_save_img_task_shape0_0/level1/level2/out_img.tif
+2025-02-06 23:48:02,627 - cp_server.task_server - DEBUG - Saving image to /tmp/pytest-of-ben/pytest-17/test_save_img_task_shape1_0/level1/level2/out_img.tif
+2025-02-06 23:49:55,007 - cp_server.task_server - DEBUG - Saving image to /tmp/pytest-of-ben/pytest-18/test_save_img_task_shape0_0/level1/level2/out_img.tif
+2025-02-06 23:49:55,010 - cp_server.task_server - DEBUG - Saving image to /tmp/pytest-of-ben/pytest-18/test_save_img_task_shape1_0/level1/level2/out_img.tif
+2025-02-06 23:50:33,346 - cp_server.task_server - DEBUG - Saving image to /tmp/pytest-of-ben/pytest-19/test_save_img_task_shape0_0/level1/level2/out_img.tif
+2025-02-06 23:50:33,348 - cp_server.task_server - DEBUG - Saving image to /tmp/pytest-of-ben/pytest-19/test_save_img_task_shape1_0/level1/level2/out_img.tif
+2025-02-06 23:52:23,986 - cp_server.task_server - DEBUG - Saving image to /tmp/pytest-of-ben/pytest-20/test_save_img_task_is_called_s0/level1/level2/out_img.tif
+2025-02-06 23:52:23,988 - cp_server.task_server - DEBUG - Saving image to /tmp/pytest-of-ben/pytest-20/test_save_img_task_is_called_s1/level1/level2/out_img.tif
+2025-02-06 23:58:33,600 - cp_server.task_server - DEBUG - Saving image to /tmp/pytest-of-ben/pytest-21/test_save_img_task_really_save0/out_img.tif
+2025-02-06 23:58:33,602 - cp_server.task_server - DEBUG - Saving image to /tmp/pytest-of-ben/pytest-21/test_save_img_task_really_save1/out_img.tif
+2025-02-07 00:02:21,604 - cp_server.task_server - DEBUG - Saving image to /tmp/pytest-of-ben/pytest-22/test_save_img_task_shape0_0/level1/level2/out_img.tif
+2025-02-07 00:02:21,606 - cp_server.task_server - DEBUG - Saving image to /tmp/pytest-of-ben/pytest-22/test_save_img_task_shape1_0/level1/level2/out_img.tif
+2025-02-07 00:13:12,739 - cp_server.task_server - DEBUG - Saving image to /tmp/pytest-of-ben/pytest-24/test_save_img_task_shape0_0/level1/level2/out_img.tif
+2025-02-07 00:13:12,742 - cp_server.task_server - DEBUG - Saving image to /tmp/pytest-of-ben/pytest-24/test_save_img_task_shape1_0/level1/level2/out_img.tif
+2025-02-07 00:13:56,826 - cp_server.task_server - DEBUG - Saving image to /tmp/pytest-of-ben/pytest-25/test_save_img_task0/level1/level2/out_img.tif

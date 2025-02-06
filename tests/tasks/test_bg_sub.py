@@ -1,12 +1,6 @@
 import numpy as np
-import pytest
 
 from cp_server.task_server.tasks.bg_sub.bg_sub import apply_bg_sub
-
-
-@pytest.fixture
-def img():
-    return np.random.randint(0, 65536, (256, 256), dtype=np.uint16)
 
 
 def test_apply_bg_sub(img):
