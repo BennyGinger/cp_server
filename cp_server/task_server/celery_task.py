@@ -11,7 +11,7 @@ from cp_server.task_server.tasks.segementation.cp_seg import run_seg
 from cp_server.task_server.tasks.saving.save_arrays import save_mask, save_img
 
 
-PIPELINE_MAP = {"refseg": "BioSensor Pipeline",
+PIPELINE_TYPE = {"refseg": "BioSensor Pipeline",
                 "_z": "ImageAnalysis Pipeline",}
 
 
@@ -77,7 +77,7 @@ def process_images(settings: dict[str, dict], img_file: Path, dst_folder: str, k
     """Process images with background subtraction and segmentation"""
     # Starting point of the log
     celery_logger.info("------------------------")
-    celery_logger.info(f"Processing image: {img_file} for the {PIPELINE_MAP[key_label]}")
+    celery_logger.info(f"Processing image: {img_file} for the {PIPELINE_TYPE[key_label]}")
     celery_logger.info(f"Setting denoise to {do_denoise}")
     
     # load the image
