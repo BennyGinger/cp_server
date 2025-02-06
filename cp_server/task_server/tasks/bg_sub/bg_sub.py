@@ -11,4 +11,4 @@ def apply_bg_sub(img: np.ndarray, sigma: float=0.0, size: int=7)-> np.ndarray:
     # Reset neg val to 0
     bg_img[bg_img<0] = 0
     
-    return bg_img
+    return bg_img.astype(img.dtype)

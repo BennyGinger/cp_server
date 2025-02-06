@@ -25,7 +25,7 @@ def create_img_file(temp_dir: Path):
         return img_file
     return _create_file
 
-
+############ Test save_mask ############
 def test_save_mask_refseg(create_img_file, array):
     # Create fake file
     img_file: Path = create_img_file("test_refseg_1.tif")
@@ -66,7 +66,7 @@ def test_save_mask_z(create_img_file, array):
     saved_mask = tiff.imread(str(expected_file))
     np.testing.assert_array_equal(array.astype("uint16"), saved_mask)
 
-
+########### Test save_img ############
 def test_save_img(array, temp_dir):
     # Create fake file
     img_file = temp_dir.joinpath("test_img.tif")

@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from cp_server.task_server.celery_server import stop_celery_worker
-from cp_server.brocker_service.redis_server import stop_redis
+from cp_server.task_server.worker_managment import stop_celery_worker
+from cp_server.broker_service.redis_server import stop_redis
 
 
 router = APIRouter()
