@@ -28,21 +28,19 @@ def img_zstack():
     return np.random.randint(0, 65536, (10, 256, 256), dtype=np.uint16)
 
 ########### Test unpack_settings ############
-def test_unpack_settings_with_denoise(settings):
+@pytest.mark.parametrize("do_denoise", [True, False])
+def test_unpack_settings(settings, do_denoise):
     
-    model_settings, cp_settings = unpack_settings(settings, do_denoise=True)
+    model_settings, cp_settings = unpack_settings(settings, do_denoise)
     
     assert model_settings == settings["model"]
-    assert cp_settings["channels"] == [0, 0]
-    assert cp_settings == settings["segmentation"]
-
-def test_unpack_settings_without_denoise(settings):
-    
-    model_settings, cp_settings = unpack_settings(settings, do_denoise=False)
-    
-    assert "restore_type" not in model_settings
-    assert model_settings == settings["model"]
-    assert cp_settings["channels"] is None
+    match do_denoise:
+        case True:
+            assert cp_settings["channels"] == [0, 0]
+            assert "restore_type" in model_settings
+        case False:
+            assert cp_settings["channels"] is None
+            assert "restore_type" not in model_settings
     assert cp_settings == settings["segmentation"]
 
 def test_unpack_settings_with_missing_channels(settings):
@@ -56,57 +54,41 @@ def test_unpack_settings_with_missing_channels(settings):
     assert cp_settings == settings["segmentation"]
 
 ########### Test initialize_cellpose_model ############
-def test_initialize_cellpose_model_with_denoise(settings):
-    do_denoise = True
+@pytest.mark.parametrize("do_denoise", [True, False])
+def test_initialize_cellpose_model_with_denoise(settings, do_denoise):
     
-    model_settings = unpack_settings(settings, do_denoise=do_denoise)[0]
+    model_settings = unpack_settings(settings, do_denoise)[0]
     
-    model = initialize_cellpose_model(do_denoise=do_denoise, model_settings=model_settings)
+    model = initialize_cellpose_model(do_denoise, model_settings)
     
-    assert isinstance(model, CellposeDenoiseModel)
-    assert model.cp.gpu
-
-def test_initialize_cellpose_model_without_denoise(settings):
-    do_denoise = False
-    
-    model_settings = unpack_settings(settings, do_denoise=do_denoise)[0]
-    
-    model = initialize_cellpose_model(do_denoise=do_denoise, model_settings=model_settings)
-    
-    assert isinstance(model, CellposeModel)
-    assert model.gpu
+    match do_denoise:
+        case True:
+            assert isinstance(model, CellposeDenoiseModel)
+            assert model.cp.gpu
+        case False:
+            assert isinstance(model, CellposeModel)
+            assert model.gpu
 
 ########### Test segment_image ############
-def test_segment_2Dimage_with_denoise(img, settings):
-    do_denoise = True
+@pytest.mark.parametrize("do_denoise", [True, False])
+def test_segment_2Dimage(img, settings, do_denoise):
     
-    model_settings, cp_settings = unpack_settings(settings, do_denoise=do_denoise)
+    model_settings, cp_settings = unpack_settings(settings, do_denoise)
     cp_settings['z_axis'] = None
     cp_settings['stitch_threshold'] = 0
     
-    model = initialize_cellpose_model(do_denoise=do_denoise, model_settings=model_settings)
+    model = initialize_cellpose_model(do_denoise, model_settings)
     
     masks = segment_image(img, cp_settings, model)
     
     assert masks.shape == img.shape
 
-def test_segment_2Dimage_without_denoise(img, settings):
-    do_denoise = False
-    
-    model_settings, cp_settings = unpack_settings(settings, do_denoise=do_denoise)
-    cp_settings['z_axis'] = None
-    cp_settings['stitch_threshold'] = 0
-    
-    model = initialize_cellpose_model(do_denoise=do_denoise, model_settings=model_settings)
-    
-    masks = segment_image(img, cp_settings, model)
-    
-    assert masks.shape == img.shape
-
-def test_segment_3Dimage_with_denoise(img_zstack, settings):
+@pytest.mark.parametrize("threeD_settings", [{"do_3D": False, "stitch_threshold": 0.75}, {"do_3D": True, "stitch_threshold": 0.0}])
+def test_segment_3Dimage(img_zstack, settings, threeD_settings):
     do_denoise = True
     
     model_settings, cp_settings = unpack_settings(settings, do_denoise=do_denoise)
+    cp_settings.update(threeD_settings)
     
     model = initialize_cellpose_model(do_denoise=do_denoise, model_settings=model_settings)
     

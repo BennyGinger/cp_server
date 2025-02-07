@@ -4,13 +4,14 @@ from unittest.mock import MagicMock
 import numpy as np
 from tifffile import imread
 
-# If you have them in the same file or different structure, adjust accordingly:
 from cp_server.task_server.celery_task import save_img_task
 from cp_server.task_server.celery_task import remove_bg
 
 
 def test_save_img_task(create_file, img):
-    """Actually save to a temporary file and confirm shape."""
+    """Test save_img_task to ensure it saves the image correctly.
+    """
+    
     # Create a dummy image
     out_file: Path = create_file("out_img.tif")
 
@@ -26,12 +27,12 @@ def test_save_img_task(create_file, img):
     assert loaded_img.dtype == img.dtype
 
 
-def test_remove_bg(monkeypatch, tmp_path, img):
+def test_remove_bg(monkeypatch, temp_dir, img):
     """
     Test remove_bg task to ensure it calls apply_bg_sub 
     and then save_img_task.delay with correct arguments.
     """
-    out_file = tmp_path.joinpath("bg_removed.tif")
+    out_file = temp_dir.joinpath("bg_removed.tif")
 
     # 1) Mock apply_bg_sub so it returns a known array
     def mock_apply_bg_sub(img, **kwargs):
@@ -49,7 +50,6 @@ def test_remove_bg(monkeypatch, tmp_path, img):
     result = remove_bg(img, out_file, some_param="test")
 
     # 4) Verify apply_bg_sub was called
-    #    (You could also check call args if you want: mock_apply_bg_sub.call_args)
     assert (result == 42).all(), "remove_bg should return array of 42"
     
     # 5) Verify save_img_task.delay was called once with the expected background image

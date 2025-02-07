@@ -51,6 +51,25 @@ def segment(settings: dict, img: np.ndarray, img_file: Path, dst_folder: str, ke
     save_masks_task.delay(masks, img_file, dst_folder, key_label)
     return masks
 
+################# Main task #################
+@celery_app.task()
+def process_images(settings: dict[str, dict], img_file: Path, dst_folder: str, key_label: str, do_denoise: bool=True, **kwargs)-> str:
+    """Process images with background subtraction and segmentation"""
+    # Starting point of the log
+    celery_logger.info("------------------------")
+    celery_logger.info(f"Processing image: {img_file} for the {PIPELINE_TYPE[key_label]}")
+    celery_logger.info(f"Setting denoise to {do_denoise}")
+    
+    # load the image
+    img = tiff.imread(img_file)
+    celery_logger.debug(f"{img.shape=}")
+
+    # Create the workflow
+    chain(remove_bg.s(img, img_file, **kwargs),
+          segment.s(settings, img, img_file, dst_folder, key_label, do_denoise)).apply_async()
+    celery_logger.info(f"Workflow created for {img_file}")
+    return f"Processing images with workflow {img_file}"
+
 # @celery_app.task()
 # def mock_task(src_dir: str, dest_dir: str)-> str:
 #     """Mock task for testing Celery worker with a long-running process"""
@@ -70,22 +89,3 @@ def segment(settings: dict, img: np.ndarray, img_file: Path, dst_folder: str, ke
         
 #     celery_logger.info("Mock task completed")
 #     return "Task finished successfully"
-
-################# Main task #################
-@celery_app.task()
-def process_images(settings: dict[str, dict], img_file: Path, dst_folder: str, key_label: str, do_denoise: bool=True, **kwargs)-> str:
-    """Process images with background subtraction and segmentation"""
-    # Starting point of the log
-    celery_logger.info("------------------------")
-    celery_logger.info(f"Processing image: {img_file} for the {PIPELINE_TYPE[key_label]}")
-    celery_logger.info(f"Setting denoise to {do_denoise}")
-    
-    # load the image
-    img = tiff.imread(img_file)
-    celery_logger.debug(f"{img.shape=}")
-
-    # Create the workflow
-    workflow = chain(remove_bg.s(img, img_file, **kwargs),
-                     segment.s(settings, img, img_file, dst_folder, key_label, do_denoise))
-    celery_logger.info(f"Workflow created: {workflow.id} for {img_file}")
-    return f"Processing images with workflow {workflow.id}"

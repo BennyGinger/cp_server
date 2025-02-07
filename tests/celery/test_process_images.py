@@ -1,0 +1,46 @@
+from cp_server.task_server.celery_task import process_images
+
+
+def test_process_images(temp_dir, monkeypatch, img):
+    """Test process_images function to ensure the chain executes properly."""
+    
+    # Create a dummy params
+    img_file = temp_dir.joinpath("test_img.tif")
+    dst_folder = "output_folder"
+    key_label = "refseg"
+    settings = {"some_key": {"param1": 1, "param2": 2}}
+
+    # Make sure that imread returns the dummy image.
+    monkeypatch.setattr("cp_server.task_server.celery_task.tiff.imread", lambda f: img)
+    
+    # Create a mock for the chain that just captures its arguments. Because the real chain is not actually called.
+    chain_calls = []
+    def fake_chain(*args, **kwargs):
+        chain_calls.extend(args)
+        class DummyChain:
+            def apply_async(self, *args, **kwargs):
+                return None
+        return DummyChain()
+    
+    monkeypatch.setattr("cp_server.task_server.celery_task.chain", fake_chain)
+
+    # Call the function
+    result = process_images(settings, img_file, dst_folder, key_label, do_denoise=True,)
+
+    # Verify the return value.
+    expected_msg = f"Processing images with workflow {img_file}"
+    assert result == expected_msg
+    
+    # Check that the chain was built with two tasks.
+    assert len(chain_calls) == 2
+
+    # Check the arguments of the two tasks.
+    remove_bg_sig = chain_calls[0]
+    segment_sig = chain_calls[1]
+
+    # Check that remove_bg_sig has the right arguments.
+    assert remove_bg_sig.args[0] is img
+    assert remove_bg_sig.args[1] == img_file
+    assert segment_sig.args[0] == settings
+    assert segment_sig.args[1] is img
+    
