@@ -69,23 +69,3 @@ def process_images(settings: dict[str, dict], img_file: Path, dst_folder: str, k
           segment.s(settings, img, img_file, dst_folder, key_label, do_denoise)).apply_async()
     celery_logger.info(f"Workflow created for {img_file}")
     return f"Processing images with workflow {img_file}"
-
-# @celery_app.task()
-# def mock_task(src_dir: str, dest_dir: str)-> str:
-#     """Mock task for testing Celery worker with a long-running process"""
-    
-#     celery_logger.info("Mock task started")
-#     celery_logger.debug(f"Source dir: {src_dir}")
-    
-#     # Create mock text file
-#     reslt_path = Path(dest_dir).joinpath("mock_result.txt")
-#     celery_logger.debug(f"Result path: {reslt_path}")
-#     with open(reslt_path, "w") as file:
-        
-#         for i, img in enumerate(Path(src_dir).iterdir()):
-#             if not img.suffix == ".tif":
-#                 continue
-#             file.write(f"{i}-{img}\n")
-        
-#     celery_logger.info("Mock task completed")
-#     return "Task finished successfully"
