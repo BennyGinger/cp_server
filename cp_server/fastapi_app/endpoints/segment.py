@@ -3,7 +3,7 @@ from typing import Any
 from fastapi import APIRouter, Request
 from pydantic import BaseModel
 
-from cp_server import logger
+from cp_server.fastapi_app import logger
 from cp_server.task_server.celery_task import process_images
 
 

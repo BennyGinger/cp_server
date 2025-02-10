@@ -10,14 +10,25 @@ authors = [
 requires-python = ">=3.12"
 dependencies = [
     "celery>=5.4.0",
-    "cellpose[gui]>=3.1.0",
-    "fastapi[all]>=0.115.6",
     "redis>=5.2.1",
-    "smo>=2.0.2",
 ]
 
 [project.scripts]
-cp-server = "cp_server:main"
+cp-server = "cp_server.fastapi_app:main"
+
+[project.optional-dependencies]
+celery = [
+    "cellpose>=3.1.0",
+    "smo>=2.0.2",
+]
+api = [
+    "fastapi[all]>=0.115.6",
+]
+all = [
+    "cellpose>=3.1.0",
+    "fastapi[all]>=0.115.6",
+    "smo>=2.0.2",
+]
 
 [build-system]
 requires = ["hatchling"]
@@ -25,6 +36,7 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
+    "cellpose[gui]>=3.1.0",
     "flask>=3.1.0",
     "pytest>=8.3.4",
 ]

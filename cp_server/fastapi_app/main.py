@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 
-from cp_server.endpoints.app_utils import router as app_utils_router
-from cp_server.endpoints.mount import router as mount_dirs
-from cp_server.endpoints.segment import router as segment_task
+from cp_server.fastapi_app.endpoints.health import router as app_utils_router
+from cp_server.fastapi_app.endpoints.mount import router as mount_dirs
+from cp_server.fastapi_app.endpoints.segment import router as segment_task
 from cp_server import logger
 
 
