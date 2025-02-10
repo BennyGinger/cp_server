@@ -1,35 +1,26 @@
-from typing import Any
+from pathlib import Path
 
 from fastapi import APIRouter, Request
-from pydantic import BaseModel
+from celery import Celery
 
 from cp_server.fastapi_app import logger
-from cp_server.task_server.celery_task import process_images
+from cp_server.fastapi_app.endpoints.utils import PayLoad
 
 
 router = APIRouter()
 
-class SegmentRequest(BaseModel):
-    src_folder: str
-    dst_folder: str
-    key_label: str
-    settings: dict[str, dict[str, Any]]
-    do_denoise: bool = True
 
 @router.post("/segment")
-def segment_task(request: Request, payload: SegmentRequest, start_observer: bool=False):
+def segment_task(request: Request, payload: PayLoad) -> dict:
     """Start a Celery task to process images with Cellpose."""
     
     # Get the source and destination directories
-    mnt_dir = str(request.app.state.src_dir)
+    celery_app: Celery = request.app.state.watcher_manager.celery_app
+    directory = Path(payload.directory)
     
-    if start_observer:
-        logger.info(f"Starting observer for {mnt_dir}")
-        raise NotImplementedError
+    logger.info(f"Starting image processing task from {directory}")
     
-    logger.info(f"Starting image processing task from {mnt_dir}")
-    
-    for img_file in mnt_dir.rglob("*.tif"):
+    for img_file in directory.rglob("*.tif"):
         # Check that parent dir has the same name as the src_folder
         if img_file.parent.name != payload.src_folder:
             continue
@@ -39,6 +30,12 @@ def segment_task(request: Request, payload: SegmentRequest, start_observer: bool
             continue
         
         # Execute celery's task
-        process_images.delay(payload.settings, img_file, payload.dst_folder, payload.key_label, payload.do_denoise)
+        celery_app.send_task("cp_server.task_server.celery_task.process_images", kwargs={
+            "settings": payload.settings,
+            "img_file": img_file,
+            "dst_folder": payload.dst_folder,
+            "key_label": payload.key_label,
+            "do_denoise": payload.do_denoise,
+        })
         
-    return {"message": f"Processing images in {mnt_dir} with settings: {payload.settings}",}
+    return {"message": f"Processing images in {directory} with settings: {payload.settings}",}
