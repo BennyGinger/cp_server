@@ -1,0 +1,42 @@
+# Use the official Python 3.12.8 slim image
+FROM python:3.12.8-slim
+
+# Define build arguments with default fallback values
+ARG USER_UID=1000
+ARG USER_GID=1000
+
+# Create a non-root user and group
+RUN groupadd -g $USER_GID fastapigroup && \
+    useradd -u $USER_UID -g fastapigroup fastapiuser
+
+# Install git (and clean up to reduce image size)
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+
+# Clone your public repository from the specified branch
+RUN git clone --branch DockerServerMount https://github.com/BennyGinger/cp_server.git /app
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Upgrade pip and install the "uv" tool which manages your project,
+# then use it to install only the required "api" extra dependencies
+RUN pip install --upgrade pip && pip install uv
+
+# Create a virtual environment using uv with Python 3.12
+RUN uv venv --python 3.12
+
+# "Activate" the venv for subsequent commands by updating PATH.
+# This makes executables from the venv (like pip) available.
+ENV PATH="/app/.venv/bin:$PATH"
+
+# Install only the "api" extra dependencies defined in your pyproject file
+RUN uv pip install -r pyproject.toml --extra api
+
+# Expose the port your FastAPI app will run on (adjust if needed)
+RUN chown -R fastapiuser:fastapigroup /app
+USER fastapiuser
+EXPOSE 8000
+
+# Use uvicorn to start your FastAPI app.
+# This example assumes your app instance is named "app" inside a module "main".
+CMD ["uvicorn", "cp_server.fastapi_app.main:app", "--host", "0.0.0.0", "--port", "8000"]

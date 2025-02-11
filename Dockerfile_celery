@@ -1,0 +1,51 @@
+# Use the official Python 3.12.8 slim image
+FROM nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04
+
+# Define build arguments with default fallback values
+ARG USER_UID=1000
+ARG USER_GID=1000
+
+# Create a non-root user and group
+RUN groupadd -g $USER_GID celerygroup && \
+    useradd -u $USER_UID -g celerygroup celeryuser
+
+# Install required packages: software-properties-common to add PPAs, git, curl, and Python 3.12 along with its venv and distutils packages.
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y \
+    software-properties-common && \
+    add-apt-repository ppa:deadsnakes/ppa -y && \
+    apt-get update && \
+    apt-get install -y \
+      git \
+      python3.12 \
+      python3.12-venv \
+      curl && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install pip for Python 3.12 using get-pip.py
+RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.12
+
+# Clone your public repository from the specified branch
+RUN git clone --branch DockerServerMount https://github.com/BennyGinger/cp_server.git /app
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Upgrade pip and install the "uv" tool which manages your project,
+# then use it to install only the required "api" extra dependencies
+RUN pip install --upgrade pip && pip install uv
+
+# Create a virtual environment using uv with Python 3.12
+RUN uv venv --python 3.12
+
+# "Activate" the venv for subsequent commands by updating PATH.
+# This makes executables from the venv (like pip) available.
+ENV PATH="/app/.venv/bin:$PATH"
+
+# Install only the "api" extra dependencies defined in your pyproject file
+RUN uv pip install -r pyproject.toml --extra celery
+
+# Start the Celery worker (example command)
+RUN chown -R celeryuser:celerygroup /app
+USER celeryuser
+CMD ["celery", "-A", "cp_server.task_server.celery_app:celery_app", "worker", "--loglevel=info"]
