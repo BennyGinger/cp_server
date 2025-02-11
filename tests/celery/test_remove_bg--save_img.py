@@ -4,8 +4,8 @@ from unittest.mock import MagicMock
 import numpy as np
 from tifffile import imread
 
-from cp_server.task_server.celery_task import save_img_task
-from cp_server.task_server.celery_task import remove_bg
+from cp_server.tasks_server.celery_tasks import save_img_task
+from cp_server.tasks_server.celery_tasks import remove_bg
 
 
 def test_save_img_task(create_file, img):
@@ -38,12 +38,12 @@ def test_remove_bg(monkeypatch, temp_dir, img):
     def mock_apply_bg_sub(img, **kwargs):
         return np.full_like(img, fill_value=42)  # fill with 42
 
-    monkeypatch.setattr("cp_server.task_server.celery_task.apply_bg_sub",
+    monkeypatch.setattr("cp_server.tasks_server.celery_tasks.apply_bg_sub",
                         mock_apply_bg_sub)
 
     # 2) Mock save_img_task.delay to verify it's called with the result
     mock_save_delay = MagicMock()
-    monkeypatch.setattr("cp_server.task_server.celery_task.save_img_task.delay",
+    monkeypatch.setattr("cp_server.tasks_server.celery_tasks.save_img_task.delay",
                         mock_save_delay)
 
     # 3) Execute remove_bg

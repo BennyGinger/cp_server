@@ -4,10 +4,10 @@ from celery import chain, shared_task
 import numpy as np
 import tifffile as tiff
 
-from cp_server.task_server import celery_logger
-from cp_server.task_server.tasks.bg_sub.bg_sub import apply_bg_sub
-from cp_server.task_server.tasks.segementation.cp_seg import run_seg
-from cp_server.task_server.tasks.saving.save_arrays import save_mask, save_img
+from cp_server.tasks_server import celery_logger
+from cp_server.tasks_server.tasks.bg_sub.bg_sub import apply_bg_sub
+from cp_server.tasks_server.tasks.segementation.cp_seg import run_seg
+from cp_server.tasks_server.tasks.saving.save_arrays import save_mask, save_img
 
 
 PIPELINE_TYPE = {"refseg": "BioSensor Pipeline",

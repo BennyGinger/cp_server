@@ -1,6 +1,6 @@
 import numpy as np
 
-from cp_server.task_server.tasks.bg_sub.bg_sub import apply_bg_sub
+from cp_server.tasks_server.tasks.bg_sub.bg_sub import apply_bg_sub
 
 
 def test_apply_bg_sub(img):

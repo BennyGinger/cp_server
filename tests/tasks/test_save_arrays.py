@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 import tifffile as tiff
 
-from cp_server.task_server.tasks.saving.save_arrays import save_mask, save_img
+from cp_server.tasks_server.tasks.saving.save_arrays import save_mask, save_img
 
 
 ############ Test save_mask ############

@@ -5,8 +5,8 @@ import numpy as np
 import pytest
 from tifffile import imread
 
-from cp_server.task_server.celery_task import save_masks_task
-from cp_server.task_server.celery_task import segment
+from cp_server.tasks_server.celery_tasks import save_masks_task
+from cp_server.tasks_server.celery_tasks import segment
 
 
 @pytest.mark.parametrize("key_label", ["refseg", "_z"])
@@ -47,12 +47,12 @@ def test_segment(monkeypatch, temp_dir, img):
     def mock_run_seg(settings, img, do_denoise):
         return np.full_like(img, fill_value=42)  # fill with 42
     
-    monkeypatch.setattr("cp_server.task_server.celery_task.run_seg", 
+    monkeypatch.setattr("cp_server.tasks_server.celery_tasks.run_seg", 
                         mock_run_seg)
     
     # 2) Mock save_masks_task.delay to verify it's called with the result
     mock_save_delay = MagicMock()
-    monkeypatch.setattr("cp_server.task_server.celery_task.save_masks_task.delay", 
+    monkeypatch.setattr("cp_server.tasks_server.celery_tasks.save_masks_task.delay", 
                         mock_save_delay)
     
     # 3) Execute segment

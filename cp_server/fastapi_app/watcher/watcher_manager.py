@@ -51,7 +51,7 @@ class FileWatcherManager:
             
             logger.info(f"New file detected: {img_path}")
             # Send the Celery task. Adjust 'process_file' as needed.
-            self.celery_app.send_task('cp_server.task_server.celery_task.process_images', 
+            self.celery_app.send_task('cp_server.tasks_server.celery_tasks.process_images', 
                                       kwargs={"settings": settings,
                                             "img_file": Path(img_path),
                                             "dst_folder": dst_folder,

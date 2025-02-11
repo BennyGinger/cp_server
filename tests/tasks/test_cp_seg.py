@@ -3,7 +3,7 @@ from cellpose.denoise import CellposeDenoiseModel
 import numpy as np
 import pytest
 
-from cp_server.task_server.tasks.segementation.cp_seg import initialize_cellpose_model, unpack_settings, segment_image
+from cp_server.tasks_server.tasks.segementation.cp_seg import initialize_cellpose_model, unpack_settings, segment_image
 
 
 @pytest.fixture

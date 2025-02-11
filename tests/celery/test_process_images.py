@@ -1,4 +1,4 @@
-from cp_server.task_server.celery_task import process_images
+from cp_server.tasks_server.celery_tasks import process_images
 
 
 def test_process_images(temp_dir, monkeypatch, img):
@@ -11,7 +11,7 @@ def test_process_images(temp_dir, monkeypatch, img):
     settings = {"some_key": {"param1": 1, "param2": 2}}
 
     # Make sure that imread returns the dummy image.
-    monkeypatch.setattr("cp_server.task_server.celery_task.tiff.imread", lambda f: img)
+    monkeypatch.setattr("cp_server.tasks_server.celery_tasks.tiff.imread", lambda f: img)
     
     # Create a mock for the chain that just captures its arguments. Because the real chain is not actually called.
     chain_calls = []
@@ -22,7 +22,7 @@ def test_process_images(temp_dir, monkeypatch, img):
                 return None
         return DummyChain()
     
-    monkeypatch.setattr("cp_server.task_server.celery_task.chain", fake_chain)
+    monkeypatch.setattr("cp_server.tasks_server.celery_tasks.chain", fake_chain)
 
     # Call the function
     result = process_images(settings, img_file, dst_folder, key_label, do_denoise=True,)
