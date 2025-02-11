@@ -1,5 +1,6 @@
 import asyncio
 from pathlib import Path
+from typing import Any
 import warnings
 
 from watchfiles import Change, awatch
@@ -21,26 +22,41 @@ class FileWatcherManager:
         When a new file is detected, send a Celery task.
         The loop exits gracefully when stop_event is set.
         """
+        # Create the watcher.
         watcher = awatch(directory)
+        
+        # Loop until the stop_event is set.
         while not stop_event.is_set():
             try:
                 # Wait for changes with a timeout to periodically check the stop_event.
                 changes = await asyncio.wait_for(watcher.__anext__(), timeout=0.5)
+            # if the timeout is reached, continue the loop.
             except asyncio.TimeoutError:
-                continue  # Check the stop_event again.
-            for change, path in changes:
-                if change == Change.added:
-                    logger.info(f"New file detected: {path}")
-                    # Send the Celery task. Adjust 'process_file' as needed.
-                    self.celery_app.send_task('cp_server.task_server.celery_task.process_images', 
-                                              kwargs={
-                                                "settings": settings,
-                                                "img_file": Path(path),
-                                                "dst_folder": dst_folder,
-                                                "key_label": key_label,
-                                                "do_denoise": do_denoise,})
+                continue
+            # Exit gracefully if the watcher is closed.
+            except StopAsyncIteration:
+                break  
+            self._process_new_file(settings, dst_folder, key_label, do_denoise, changes)
                     
         logger.info(f"Watcher for directory {directory} has been stopped.")
+
+    def _process_new_file(self, settings: dict[str, Any], dst_folder: str, key_label: str, do_denoise: bool, changes: set[tuple[Change, str]])-> None:
+        """
+        Process the new file changes. Send a Celery task for each new file.
+        """
+        
+        for change, img_path in changes:
+            if change != Change.added:
+                continue
+            
+            logger.info(f"New file detected: {img_path}")
+            # Send the Celery task. Adjust 'process_file' as needed.
+            self.celery_app.send_task('cp_server.task_server.celery_task.process_images', 
+                                      kwargs={"settings": settings,
+                                            "img_file": Path(img_path),
+                                            "dst_folder": dst_folder,
+                                            "key_label": key_label,
+                                            "do_denoise": do_denoise,})
 
     async def start_watcher(self, directory: str, settings: dict, dst_folder: str, key_label: str, do_denoise:bool)-> None:
         """
@@ -55,6 +71,7 @@ class FileWatcherManager:
         if str(directory) in self.watchers:
             logger.warning(f"A watcher is already running for this directory: {directory}")
             warnings.warn("A watcher is already running for this directory")
+            return
         
         # Create an asyncio event to signal when to stop.
         stop_event = asyncio.Event()

@@ -13,7 +13,7 @@ app = FastAPI()
 app.state.src_dir = None
 app.state.dst_dir = None
 
-# Start Redis and Celery when the app starts
+# Set the logger
 logger.info("-----------------------------------------------")
 logger.info("Starting the Cellpose server...")
 logger.info("Checking Redis and Celery services...")

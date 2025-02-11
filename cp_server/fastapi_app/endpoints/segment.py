@@ -4,14 +4,14 @@ from fastapi import APIRouter, Request
 from celery import Celery
 
 from cp_server.fastapi_app import logger
-from cp_server.fastapi_app.endpoints.utils import PayLoad
+from cp_server.fastapi_app.endpoints.utils import PayLoadSegement
 
 
 router = APIRouter()
 
 
 @router.post("/segment")
-def segment_task(request: Request, payload: PayLoad) -> dict:
+def segment_task(request: Request, payload: PayLoadSegement) -> dict:
     """Start a Celery task to process images with Cellpose."""
     
     # Get the source and destination directories

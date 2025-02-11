@@ -21,3 +21,31 @@ def create_file(temp_dir: Path):
 @pytest.fixture
 def img():
     return np.random.randint(0, 65536, (256, 256), dtype=np.uint16)
+
+@pytest.fixture
+def payload():
+    return {
+        "settings": {"example": {"option": "value"}},
+        "dst_folder": "dst",
+        "key_label": "test",
+        "do_denoise": False,}
+
+# A simple dummy celery app that records task submissions.
+class DummyCelery:
+    def __init__(self):
+        self.tasks = []
+
+    def send_task(self, name, kwargs):
+        self.tasks.append((name, kwargs))
+
+class FakeWatcherManager:
+    def __init__(self):
+        self.celery_app = DummyCelery()
+
+@pytest.fixture
+def fake_celery():
+    return DummyCelery()
+
+@pytest.fixture
+def fake_manager():
+    return FakeWatcherManager()

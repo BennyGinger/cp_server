@@ -2,8 +2,18 @@
 import logging
 from pathlib import Path
 
+
+def find_project_root(current_path: Path) -> Path:
+    """
+    Recursively search for the project root directory by looking for the .git directory.
+    """
+    for parent in current_path.parents:
+        if parent.joinpath(".git").exists():
+            return parent
+    raise FileNotFoundError("Project root with .git directory not found.")
+
 # Ensure logs directory exists at the project root
-BASE_DIR = Path(__file__).resolve().parent.parent  # Moves two levels up to project root
+BASE_DIR = find_project_root(Path(__file__).resolve())
 LOGS_DIR = BASE_DIR.joinpath("logs")  # Append "logs" folder
 
 LOGS_DIR.mkdir(parents=True, exist_ok=True)  # Create logs directory if it doesn't exist
