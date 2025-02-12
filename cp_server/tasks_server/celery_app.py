@@ -18,9 +18,10 @@ def create_celery_app(include_tasks: bool = False)-> Celery:
     
     # Only load tasks if we're running as a worker
     if include_tasks:
-        app.conf.update(include=["cp_server.tasks_server.celery_tasks"])
-        celery_logger.info("____Celery tasks loaded_____")
-        celery_logger.debug("------Checking if Debug is working-------")
+        app.conf.update(include=["cp_server.tasks_server.celery_tasks"],
+                        task_serializer="pickle",
+                        accept_content=["pickle"],
+                        result_serializer="pickle",)
     return app
 
 
