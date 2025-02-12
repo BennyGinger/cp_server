@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y \
 RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.12
 
 # Clone your public repository from the specified branch
-RUN git clone --branch DockerServerMount https://github.com/BennyGinger/cp_server.git /app
+RUN git clone --branch master https://github.com/BennyGinger/cp_server.git /app
 
 # Set the working directory in the container
 WORKDIR /app

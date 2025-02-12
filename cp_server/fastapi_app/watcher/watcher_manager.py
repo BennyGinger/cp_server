@@ -53,7 +53,7 @@ class FileWatcherManager:
             # Send the Celery task. Adjust 'process_file' as needed.
             self.celery_app.send_task('cp_server.tasks_server.celery_tasks.process_images', 
                                       kwargs={"settings": settings,
-                                            "img_file": Path(img_path),
+                                            "img_file": img_path,
                                             "dst_folder": dst_folder,
                                             "key_label": key_label,
                                             "do_denoise": do_denoise,})

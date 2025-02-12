@@ -13,7 +13,7 @@ RUN groupadd -g $USER_GID fastapigroup && \
 RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 
 # Clone your public repository from the specified branch
-RUN git clone --branch DockerServerMount https://github.com/BennyGinger/cp_server.git /app
+RUN git clone --branch master https://github.com/BennyGinger/cp_server.git /app
 
 # Set the working directory in the container
 WORKDIR /app

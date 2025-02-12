@@ -52,7 +52,7 @@ def segment(settings: dict, img: np.ndarray, img_file: Path, dst_folder: str, ke
 
 ################# Main task #################
 @shared_task(name="cp_server.task_server.celery_task.process_images")
-def process_images(settings: dict[str, dict], img_file: Path, dst_folder: str, key_label: str, do_denoise: bool=True, **kwargs)-> str:
+def process_images(settings: dict[str, dict], img_file: str, dst_folder: str, key_label: str, do_denoise: bool=True, **kwargs)-> str:
     """Process images with background subtraction and segmentation"""
     # Starting point of the log
     celery_logger.info("------------------------")
@@ -64,7 +64,7 @@ def process_images(settings: dict[str, dict], img_file: Path, dst_folder: str, k
     celery_logger.debug(f"{img.shape=}")
 
     # Create the workflow
-    chain(remove_bg.s(img, img_file, **kwargs),
-          segment.s(settings, img, img_file, dst_folder, key_label, do_denoise)).apply_async()
+    chain(remove_bg.s(img, Path(img_file), **kwargs),
+          segment.s(settings, img, Path(img_file), dst_folder, key_label, do_denoise)).apply_async()
     celery_logger.info(f"Workflow created for {img_file}")
     return f"Processing images with workflow {img_file}"

@@ -10,9 +10,6 @@ from cp_server.fastapi_app import logger
 
 app = FastAPI()
 
-app.state.src_dir = None
-app.state.dst_dir = None
-
 # Set the logger
 logger.info("-----------------------------------------------")
 logger.info("Starting the Cellpose server...")
