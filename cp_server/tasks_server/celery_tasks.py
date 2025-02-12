@@ -27,22 +27,22 @@ def save_img_task(img: np.ndarray, img_file: Path)-> None:
     return save_img(img, img_file)
 
 @shared_task(name="cp_server.task_server.celery_task.remove_bg")
-def remove_bg(img: np.ndarray, img_file: Path, **kwargs)-> np.ndarray:
+def remove_bg(img: np.ndarray, img_file: Path, **kwargs)-> list:
     """Apply background subtraction to the image"""
     bg_img = apply_bg_sub(img, **kwargs)
     save_img_task.delay(bg_img, img_file)
-    return bg_img
+    return bg_img.tolist()
     
 @shared_task(name="cp_server.task_server.celery_task.segment")
-def segment(settings: dict, img: np.ndarray, img_file: Path, dst_folder: str, key_label: str, do_denoise: bool=True)-> np.ndarray:
-    """Segment the image using Cellpose"""
+def segment(settings: dict, img: list, img_file: Path, dst_folder: str, key_label: str, do_denoise: bool=True)-> np.ndarray:
+    """Segment the image using Cellpose. Note that the image is passed as a list to be compatible with Celery serialization"""
     
     # Log the settings
     msg_settings = {**settings['model'], **settings['segmentation']}
     celery_logger.info(f"Segmenting image {img_file} with settings: {msg_settings}")
     
     # Run the segmentation
-    masks = run_seg(settings, img, do_denoise)
+    masks = run_seg(settings, np.array(img), do_denoise)
     celery_logger.debug(f"{masks.shape=}")
     
     # Save the masks in the background
