@@ -21,7 +21,7 @@ logging.basicConfig(
 logging.getLogger("numba").setLevel(logging.WARNING)
 logging.getLogger("python_multipart").setLevel(logging.WARNING)
 logging.getLogger("httpcore").setLevel(logging.WARNING)
-celery_mod_logger = logging.getLogger("celery")
-celery_mod_logger.disabled = True
+logging.getLogger("celery").setLevel(logging.WARNING)
 
-logger = logging.getLogger(__name__)
+
+logger = logging.getLogger("cp_server.fastapi_app")
