@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 services:
   redis:
@@ -16,6 +16,8 @@ services:
         USER_GID: "${USER_GID}"
     ports:
       - "8000:8000"
+    volumes:
+      - /media/ben/Analysis/Python/Test_mount:/app/data
     environment:
       # Environment variable used by your app to know where the Celery broker is.
       CELERY_BROKER_URL: "redis://redis:6379/0"
@@ -31,15 +33,19 @@ services:
       args:
         USER_UID: "${USER_UID}"
         USER_GID: "${USER_GID}"
-    device_requests:
-      - driver: "nvidia"
-        count: all       # can be an integer or "all"
-        capabilities: ["gpu"]
-
+    volumes:
+      - /media/ben/Analysis/Python/Test_mount:/app/data
     environment:
       # Pass the same broker URL so the Celery worker can connect to Redis.
       CELERY_BROKER_URL: "redis://redis:6379/0"
       CELERY_BACKEND_URL: "redis://redis:6379/1"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: "nvidia"
+              count: all       # can be an integer or "all"
+              capabilities: ["gpu"]
     depends_on:
       - redis
     restart: on-failure
