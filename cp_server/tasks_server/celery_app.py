@@ -2,6 +2,8 @@ import os
 
 from celery import Celery
 
+from cp_server.tasks_server import celery_logger
+
 
 CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
 CELERY_BACKEND_URL = os.getenv("CELERY_BACKEND_URL", "redis://localhost")
@@ -17,6 +19,8 @@ def create_celery_app(include_tasks: bool = False)-> Celery:
     # Only load tasks if we're running as a worker
     if include_tasks:
         app.conf.update(include=["cp_server.tasks_server.celery_tasks"])
+        celery_logger.info("____Celery tasks loaded_____")
+        celery_logger.debug("------Checking if Debug is working-------")
     return app
 
 

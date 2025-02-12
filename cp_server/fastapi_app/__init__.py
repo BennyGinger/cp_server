@@ -21,6 +21,7 @@ logging.basicConfig(
 logging.getLogger("numba").setLevel(logging.WARNING)
 logging.getLogger("python_multipart").setLevel(logging.WARNING)
 logging.getLogger("httpcore").setLevel(logging.WARNING)
-logging.getLogger("celery").setLevel(logging.WARNING)
+celery_mod_logger = logging.getLogger("celery")
+celery_mod_logger.disabled = True
 
 logger = logging.getLogger(__name__)

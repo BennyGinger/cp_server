@@ -28,5 +28,7 @@ def setup_loggers(logger: logging.Logger, *args, **kwargs)-> None:
     logger.setLevel(logging.DEBUG)
     
     # Disable Module logging
-    logging.getLogger("celery.bootsteps").setLevel(logging.WARNING)
-    logging.getLogger("kombu").setLevel(logging.WARNING)
+    celery_mod_logger = logging.getLogger("celery")
+    celery_mod_logger.disabled = True
+    kombu_logger = logging.getLogger('kombu')
+    kombu_logger.setLevel(logging.WARNING)
