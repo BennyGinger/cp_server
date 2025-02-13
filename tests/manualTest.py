@@ -29,7 +29,8 @@ if __name__ == "__main__":
                                       "gpu": True},
                             "segmentation": {"diameter": 60,
                                              "flow_threshold": 0.4,
-                                             "cellprob_threshold": 0.0,}},
+                                             "cellprob_threshold": 0.0,
+                                             "do_3D": True,}},
                "dst_folder": "/app/data/Masks_CP",
                "key_label": "_z",
                "do_denoise": True}

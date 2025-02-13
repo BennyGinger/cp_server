@@ -32,3 +32,4 @@ def setup_loggers(logger: logging.Logger, *args, **kwargs)-> None:
     logging.getLogger("celery.bootsteps").setLevel(logging.WARNING)
     logging.getLogger("celery.apps.worker").setLevel(logging.WARNING)
     logging.getLogger('kombu').setLevel(logging.WARNING)
+    logging.getLogger('numba').setLevel(logging.WARNING)
