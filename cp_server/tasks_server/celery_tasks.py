@@ -50,7 +50,7 @@ def remove_bg(img_b64: str, img_file: str, **kwargs)-> str:
     return bg_img_b64
     
 @shared_task(name="cp_server.task_server.celery_task.segment")
-def segment(settings: dict, img_b64: str, img_file: str, dst_folder: str, key_label: str, do_denoise: bool=True)-> str:
+def segment(img_b64: str, settings: dict, img_file: str, dst_folder: str, key_label: str, do_denoise: bool=True)-> str:
     """Segment the image using Cellpose. Note that the image (ndarray) is encoded as a base64 string"""
     
     # Log the settings
@@ -90,6 +90,10 @@ def process_images(settings: dict[str, dict], img_file: str, dst_folder: str, ke
 
     # Create the workflow
     chain(remove_bg.s(img_b64, img_file, **kwargs),
-          segment.s(settings, img_b64, img_file, dst_folder, key_label, do_denoise)).apply_async()
+          segment.s(settings=settings, 
+                    img_file=img_file, 
+                    dst_folder=dst_folder, 
+                    key_label=key_label, 
+                    do_denoise=do_denoise)).apply_async()
     celery_logger.info(f"Workflow created for {img_file}")
     return f"Processing images with workflow {img_file}"
