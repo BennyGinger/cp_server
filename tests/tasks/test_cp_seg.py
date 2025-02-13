@@ -23,10 +23,6 @@ def settings():
             "do_3D": False,
             "stitch_threshold": 0.75,}}
 
-@pytest.fixture
-def img_zstack():
-    return np.random.randint(0, 65536, (10, 256, 256), dtype=np.uint16)
-
 ########### Test unpack_settings ############
 @pytest.mark.parametrize("do_denoise", [True, False])
 def test_unpack_settings(settings, do_denoise):
