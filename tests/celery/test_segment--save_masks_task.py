@@ -7,6 +7,7 @@ from tifffile import imread
 
 from cp_server.tasks_server.celery_tasks import save_masks_task
 from cp_server.tasks_server.celery_tasks import segment
+from cp_server.tasks_server.utils import encode_ndarray_as_bytesb64, decode_bytesb64_to_array
 
 
 @pytest.mark.parametrize("key_label", ["refseg", "_z"])
@@ -19,7 +20,8 @@ def test_save_masks_task(temp_dir, img, key_label):
     dst_folder = "output"
     
     # Call the real task (no monkeypatch)
-    save_masks_task(img, img_file, dst_folder, key_label)
+    img_b64 = encode_ndarray_as_bytesb64(img)
+    save_masks_task(img_b64, img_file, dst_folder, key_label)
     
     # Expected path
     expected_dir = img_file.parent.parent.joinpath(dst_folder)
@@ -56,15 +58,18 @@ def test_segment(monkeypatch, temp_dir, img):
                         mock_save_delay)
     
     # 3) Execute segment
-    result = segment({"segmentation":{"abc":[1,2]}, "model":{"def":[3,4]}}, img, img_file, "output", "refseg")
+    img_b64 = encode_ndarray_as_bytesb64(img)
+    result_b64 = segment(img_b64, {"segmentation":{"abc":[1,2]}, "model":{"def":[3,4]}}, img_file, "output", "refseg")
     
     # 4) Verify run_seg was called
+    result = decode_bytesb64_to_array(result_b64)
     assert (result == 42).all(), "segment should return array of 42"
     
     # 5) Verify save_masks_task.delay was called once with the expected masks
     mock_save_delay.assert_called_once()
     call_args = mock_save_delay.call_args[0]  # (masks, img_file, dst_folder, key_label)
-    masks_arg, file_arg, dst_folder_arg, key_label_arg = call_args
+    masks_b64_arg, file_arg, dst_folder_arg, key_label_arg = call_args
+    masks_arg = decode_bytesb64_to_array(masks_b64_arg)
     assert (masks_arg == 42).all()
     assert file_arg == img_file
     assert dst_folder_arg == "output"

@@ -58,5 +58,5 @@ def test_segment_endpoint(setup_fake_env, payload):
         assert kwargs["key_label"] == payload["key_label"]
         assert kwargs["do_denoise"] == payload["do_denoise"]
         # And that 'img_file' is a Path object pointing to a .tif file:
-        assert isinstance(kwargs["img_file"], Path)
-        assert kwargs["img_file"].suffix == ".tif"
+        assert isinstance(kwargs["img_file"], str)
+        assert Path(kwargs["img_file"]).suffix == ".tif"

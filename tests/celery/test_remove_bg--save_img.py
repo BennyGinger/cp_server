@@ -6,6 +6,7 @@ from tifffile import imread
 
 from cp_server.tasks_server.celery_tasks import save_img_task
 from cp_server.tasks_server.celery_tasks import remove_bg
+from cp_server.tasks_server.utils import encode_ndarray_as_bytesb64, decode_bytesb64_to_array
 
 
 def test_save_img_task(create_file, img):
@@ -13,13 +14,14 @@ def test_save_img_task(create_file, img):
     """
     
     # Create a dummy image
-    out_file: Path = create_file("out_img.tif")
+    out_file = str(create_file("out_img.tif"))
 
     # Call the real task (no monkeypatch)
-    save_img_task(img, out_file)
+    img_b64 = encode_ndarray_as_bytesb64(img)
+    save_img_task(img_b64, out_file)
 
     # Ensure the file was created
-    assert out_file.exists(), f"Expected {out_file} to be created."
+    assert Path(out_file).exists(), f"Expected {out_file} to be created."
 
     # Load the file to check shape
     loaded_img = imread(out_file)
@@ -47,14 +49,17 @@ def test_remove_bg(monkeypatch, temp_dir, img):
                         mock_save_delay)
 
     # 3) Execute remove_bg
-    result = remove_bg(img, out_file, some_param="test")
+    img_b64 = encode_ndarray_as_bytesb64(img)
+    result_b64 = remove_bg(img_b64, out_file, some_param="test")
 
     # 4) Verify apply_bg_sub was called
+    result = decode_bytesb64_to_array(result_b64)
     assert (result == 42).all(), "remove_bg should return array of 42"
     
     # 5) Verify save_img_task.delay was called once with the expected background image
     mock_save_delay.assert_called_once()
     call_args = mock_save_delay.call_args[0]  # (bg_img, img_file)
-    bg_img_arg, file_arg = call_args
+    bg_img_b64_arg, file_arg = call_args
+    bg_img_arg = decode_bytesb64_to_array(bg_img_b64_arg)
     assert (bg_img_arg == 42).all()
     assert file_arg == out_file

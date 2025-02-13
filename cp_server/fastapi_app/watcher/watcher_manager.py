@@ -64,7 +64,7 @@ class FileWatcherManager:
         Raises a ValueError if the directory is invalid or a watcher is already running.
         """
         directory = Path(directory)
-        
+        print(f"{str(directory)=}")
         if not directory.is_dir():
             logger.error(f"Provided directory does not exist: {directory}")
             raise ValueError("Provided directory does not exist")

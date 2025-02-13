@@ -1,4 +1,5 @@
 from cp_server.tasks_server.celery_tasks import process_images
+from cp_server.tasks_server.utils import encode_ndarray_as_bytesb64, decode_bytesb64_to_array
 
 
 def test_process_images(temp_dir, monkeypatch, img):
@@ -37,10 +38,11 @@ def test_process_images(temp_dir, monkeypatch, img):
     # Check the arguments of the two tasks.
     remove_bg_sig = chain_calls[0]
     segment_sig = chain_calls[1]
+    print(segment_sig.kwargs)
 
     # Check that remove_bg_sig has the right arguments.
-    assert remove_bg_sig.args[0] is img
+    img_b64 = encode_ndarray_as_bytesb64(img)
+    assert remove_bg_sig.args[0] == img_b64
     assert remove_bg_sig.args[1] == img_file
-    assert segment_sig.args[0] == settings
-    assert segment_sig.args[1] is img
+    assert segment_sig.kwargs['settings'] == settings
     

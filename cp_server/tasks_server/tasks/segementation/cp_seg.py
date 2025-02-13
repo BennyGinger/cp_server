@@ -37,14 +37,13 @@ def unpack_settings(settings: dict, do_denoise: bool)-> tuple[dict,dict]:
         
         return mod_set, cp_set
     
+    # Add denoise model if not present
+    if "restore_type" not in mod_set:
+        mod_set["restore_type"] = "denoise_cyto3" if mod_set["model_type"] == "cyto3" else "denoise_cyto2"
+        
     # Catch the channels bug from cellpose: default val is None, but denoise model requires a list
-    if "channels" not in cp_set:
+    if "channels" not in cp_set or cp_set["channels"] is None:
         cp_set["channels"] = [0, 0]
-        return mod_set, cp_set
-    
-    if cp_set["channels"] is None:
-        cp_set["channels"] = [0, 0]
-        return mod_set, cp_set
     
     return mod_set, cp_set
 

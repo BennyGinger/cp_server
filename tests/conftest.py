@@ -42,13 +42,13 @@ class DummyCelery:
     def send_task(self, name, kwargs):
         self.tasks.append((name, kwargs))
 
-class FakeWatcherManager:
-    def __init__(self):
-        self.celery_app = DummyCelery()
-
 @pytest.fixture
 def fake_celery():
     return DummyCelery()
+
+class FakeWatcherManager:
+    def __init__(self):
+        self.celery_app = DummyCelery()
 
 @pytest.fixture
 def fake_manager():

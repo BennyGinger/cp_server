@@ -49,6 +49,21 @@ def test_unpack_settings_with_missing_channels(settings):
     assert cp_settings["channels"] == [0, 0]
     assert cp_settings == settings["segmentation"]
 
+@pytest.mark.parametrize("model", ["cyto2", "cyto3", "nuclei"])
+def test_unpack_settings_with_no_restore_model(settings, model):
+    
+    settings["model"]['model_type'] = model
+    settings["model"].pop("restore_type")
+    
+    model_settings, _ = unpack_settings(settings, do_denoise=True)
+    
+    assert "restore_type" in model_settings
+    if "cyto" in model:
+        assert model_settings['model_type'] in model_settings['restore_type']
+    else:
+        assert "cyto2" in model_settings['restore_type']
+    
+
 ########### Test initialize_cellpose_model ############
 @pytest.mark.parametrize("do_denoise", [True, False])
 def test_initialize_cellpose_model_with_denoise(settings, do_denoise):

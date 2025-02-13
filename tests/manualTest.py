@@ -24,8 +24,8 @@ def stop_servers()-> None:
 if __name__ == "__main__":
     payload = {"src_folder": "Images",
                "directory": "/app/data",
-               "settings": {"model": {"model_type": "cyto2",
-                                      "restore_type": "denoise_cyto2",
+               "settings": {"model": {"model_type": "cyto3",
+                                      "restore_type": "denoise_cyto3",
                                       "gpu": True},
                             "segmentation": {"diameter": 60,
                                              "flow_threshold": 0.4,
