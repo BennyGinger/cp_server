@@ -22,11 +22,11 @@ class FileWatcherManager:
         When a new file is detected, send a Celery task.
         The loop exits gracefully when stop_event is set.
         """
-        # Create the watcher.
-        watcher = awatch(directory)
         
-        # Loop until the stop_event is set.
+        # Loop until the stop_event is set. The watcher is created inside the loop to handle exceptions and not raise StopAsyncIteration, when timeout is reached.
         while not stop_event.is_set():
+            # Create the watcher.
+            watcher = awatch(directory)
             try:
                 # Wait for changes with a timeout to periodically check the stop_event.
                 changes = await asyncio.wait_for(watcher.__anext__(), timeout=0.5)
@@ -35,7 +35,9 @@ class FileWatcherManager:
                 continue
             # Exit gracefully if the watcher is closed.
             except StopAsyncIteration:
-                break  
+                print("the loop has been broken")
+                continue  
+        
             self._process_new_file(settings, dst_folder, key_label, do_denoise, changes)
                     
         logger.info(f"Watcher for directory {directory} has been stopped.")
@@ -101,3 +103,34 @@ class FileWatcherManager:
         watcher_info["stop_event"].set()
         # Wait for the task to complete.
         await watcher_info["task"]
+
+if __name__ == "__main__":
+    
+    class DummyCelery:
+        def __init__(self):
+            self.tasks = []
+
+        def send_task(self, name, kwargs):
+            self.tasks.append((name, kwargs))
+    
+    async def main():
+        path = Path("/media/ben/Analysis/Python/Image_tests/src_test")
+        
+        payload = {
+            "settings": {"example": {"option": "value"}},
+            "dst_folder": "dst",
+            "key_label": "test",
+            "do_denoise": False,
+        }
+        
+        celery_fake = DummyCelery()
+        
+        manager = FileWatcherManager(celery_fake)
+        
+        await manager.start_watcher(str(path), **payload)
+        await asyncio.sleep(10)
+        await manager.stop_watcher(str(path))
+        
+        print(celery_fake.tasks)
+    
+    asyncio.run(main())

@@ -50,29 +50,26 @@ async def test_watcher_detects_new_file(tmp_path, fake_celery, payload):
     directory = tmp_path.joinpath("watch_dir")
     directory.mkdir()
     payload["directory"] = str(directory)
-    print(f"{payload=}")
+
     await manager.start_watcher(**payload)
     # Wait briefly to ensure the watcher loop is active.
-    await asyncio.sleep(10)
+    await asyncio.sleep(0.2)
 
     # Create a new file in the directory.
     new_file = directory.joinpath("test.txt")
-    print(f"{new_file=}")
     new_file.write_text("Hello World")
     assert new_file.exists()
     
-    # Stop the watcher.
-    await asyncio.sleep(2)
+    # Stop the watcher. 
     await manager.stop_watcher(str(directory))
 
     # Check that send_task was called with the correct parameters.
     # Since file events might be picked up more than once,
     # we simply verify that one of the tasks matches our expectation.
     found = False
-    print(f"{manager.celery_app.tasks=}")
     for task in manager.celery_app.tasks:
         _, kwargs = task
-        print(kwargs)
+        
         if kwargs.get("img_file") == str(new_file):
             found = True
             assert kwargs["settings"] == payload["settings"]
