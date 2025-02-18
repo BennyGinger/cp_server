@@ -37,5 +37,6 @@ def segment_task(request: Request, payload: PayLoadSegement) -> dict:
             "key_label": payload.key_label,
             "do_denoise": payload.do_denoise,
         })
-        
+        logger.debug(f"Sent task to process image: {img_file}")
+    
     return {"message": f"Processing images in {directory} with settings: {payload.settings}",}
