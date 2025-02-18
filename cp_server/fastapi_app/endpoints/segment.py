@@ -23,6 +23,8 @@ def segment_task(request: Request, payload: PayLoadSegement) -> dict:
     for img_file in directory.rglob("*.tif"):
         # Check that parent dir has the same name as the src_folder
         if img_file.parent.name != payload.src_folder:
+            logger.debug(f"{img_file.parent.name=}")
+            logger.debug(f"{payload.src_folder=}")
             continue
         
         # Ignore non-key_label images
