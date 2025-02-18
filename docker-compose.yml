@@ -17,7 +17,8 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - /media/ben/Analysis/Python/Test_mount:/app/data
+      - /home/eblab/data_dir:/data
+      - ./:/app
     environment:
       # Environment variable used by your app to know where the Celery broker is.
       CELERY_BROKER_URL: "redis://redis:6379/0"
@@ -34,7 +35,8 @@ services:
         USER_UID: "${USER_UID}"
         USER_GID: "${USER_GID}"
     volumes:
-      - /media/ben/Analysis/Python/Test_mount:/app/data
+      - /home/eblab/data_dir:/data
+      - ./:/app
     environment:
       # Pass the same broker URL so the Celery worker can connect to Redis.
       CELERY_BROKER_URL: "redis://redis:6379/0"

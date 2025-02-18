@@ -30,7 +30,7 @@ def segment_task(request: Request, payload: PayLoadSegement) -> dict:
             continue
         
         # Execute celery's task
-        celery_app.send_task("cp_server.task_server.celery_task.process_images", kwargs={
+        celery_app.send_task("cp_server.tasks_server.celery_tasks.process_images", kwargs={
             "settings": payload.settings,
             "img_file": str(img_file),
             "dst_folder": payload.dst_folder,

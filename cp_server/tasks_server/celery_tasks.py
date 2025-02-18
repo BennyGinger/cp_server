@@ -12,7 +12,7 @@ PIPELINE_TYPE = {"refseg": "BioSensor Pipeline",
                 "_z": "ImageAnalysis Pipeline",}
 
 
-@shared_task(name="cp_server.task_server.celery_task.save_masks_task")
+@shared_task(name="cp_server.tasks_server.celery_tasks.save_masks_task")
 def save_masks_task(masks: np.ndarray, img_file: str, dst_folder: str, key_label: str)-> None:
     """Save the masks. Note that the image (ndarray) is encoded as a base64 string"""
     
@@ -20,7 +20,7 @@ def save_masks_task(masks: np.ndarray, img_file: str, dst_folder: str, key_label
     celery_logger.debug(f"Decoding masks inside save_masks_task {masks.shape=} and {masks.dtype=}")
     return save_mask(masks, img_file, dst_folder, key_label)
 
-@shared_task(name="cp_server.task_server.celery_task.save_img_task")
+@shared_task(name="cp_server.tasks_server.celery_tasks.save_img_task")
 def save_img_task(img: np.ndarray, img_file: str)-> None:
     """Save the image. Note that the image (ndarray) is encoded as a base64 string"""
     
@@ -28,7 +28,7 @@ def save_img_task(img: np.ndarray, img_file: str)-> None:
     celery_logger.debug(f"Decoding img inside save_img_task {img.shape=} and {img.dtype=}")
     return save_img(img, img_file)
 
-@shared_task(name="cp_server.task_server.celery_task.remove_bg")
+@shared_task(name="cp_server.tasks_server.celery_tasks.remove_bg")
 def remove_bg(img: np.ndarray, img_file: str, **kwargs)-> np.ndarray:
     """Apply background subtraction to the image. Note that the image (ndarray) is encoded as a base64 string"""
     
@@ -45,7 +45,7 @@ def remove_bg(img: np.ndarray, img_file: str, **kwargs)-> np.ndarray:
     save_img_task.delay(bg_img, img_file)
     return bg_img
     
-@shared_task(name="cp_server.task_server.celery_task.segment")
+@shared_task(name="cp_server.tasks_server.celery_tasks.segment")
 def segment(img: np.ndarray, settings: dict, img_file: str, dst_folder: str, key_label: str, do_denoise: bool=True)-> np.ndarray:
     """Segment the image using Cellpose. Note that the image (ndarray) is encoded as a base64 string"""
     
@@ -66,7 +66,7 @@ def segment(img: np.ndarray, settings: dict, img_file: str, dst_folder: str, key
     return masks
 
 ################# Main task #################
-@shared_task(name="cp_server.task_server.celery_task.process_images")
+@shared_task(name="cp_server.tasks_server.celery_tasks.process_images")
 def process_images(settings: dict[str, dict], img_file: str, dst_folder: str, key_label: str, do_denoise: bool=True, **kwargs)-> str:
     """Process images with background subtraction and segmentation. Note that the image (ndarray) is encoded as a base64 string"""
     
