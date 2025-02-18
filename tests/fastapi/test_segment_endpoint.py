@@ -51,7 +51,7 @@ def test_segment_endpoint(setup_fake_env, payload):
 
     # Check if the task was called with the expected arguments.
     for task_name, kwargs in dummy_celery.tasks:
-        assert task_name == "cp_server.task_server.celery_task.process_images"
+        assert task_name == "cp_server.tasks_server.celery_tasks.process_images"
         # Check the passed args:
         assert kwargs["settings"] == payload["settings"]
         assert kwargs["dst_folder"] == payload["dst_folder"]
