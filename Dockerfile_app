@@ -34,6 +34,8 @@ RUN uv pip install -r pyproject.toml --extra api
 
 # Expose the port your FastAPI app will run on (adjust if needed)
 RUN chown -R fastapiuser:fastapigroup /app
+RUN mkdir /data
+RUN chown -R fastapiuser:fastapigroup /data
 USER fastapiuser
 EXPOSE 8000
 

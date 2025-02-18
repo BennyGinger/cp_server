@@ -18,7 +18,7 @@ services:
       - "8000:8000"
     volumes:
       - /home/eblab/data_dir:/data
-      - ./:/app
+      # - ./:/app
     environment:
       # Environment variable used by your app to know where the Celery broker is.
       CELERY_BROKER_URL: "redis://redis:6379/0"
@@ -36,7 +36,7 @@ services:
         USER_GID: "${USER_GID:-1000}"
     volumes:
       - /home/eblab/data_dir:/data
-      - ./:/app
+      # - ./:/app
     environment:
       # Pass the same broker URL so the Celery worker can connect to Redis.
       CELERY_BROKER_URL: "redis://redis:6379/0"

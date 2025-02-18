@@ -47,5 +47,7 @@ RUN uv pip install -r pyproject.toml --extra celery
 
 # Start the Celery worker (example command)
 RUN chown -R celeryuser:celerygroup /app
+RUN mkdir /data
+RUN chown -R celeryuser:celerygroup /data
 USER celeryuser
 CMD ["celery", "-A", "cp_server.tasks_server.celery_app:celery_app", "-Q", "gpu_tasks", "--concurrency=10","worker", "--loglevel=info"]
