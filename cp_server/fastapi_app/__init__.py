@@ -22,6 +22,8 @@ logging.getLogger("numba").setLevel(logging.WARNING)
 logging.getLogger("python_multipart").setLevel(logging.WARNING)
 logging.getLogger("httpcore").setLevel(logging.WARNING)
 logging.getLogger("celery").setLevel(logging.WARNING)
+logging.getLogger("watchdog").setLevel(logging.WARNING)
+logging.getLogger("watchdog.observers").setLevel(logging.WARNING)
 
 
 logger = logging.getLogger("cp_server.fastapi_app")

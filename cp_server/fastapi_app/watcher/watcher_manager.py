@@ -7,6 +7,7 @@ from cp_server.fastapi_app import logger
 
 class FileCreatedHandler(FileSystemEventHandler):
     def __init__(self, celery_app: Celery, settings: dict, dst_folder: str, key_label: str, do_denoise: bool):
+        super().__init__(patterns=["*.tif"], ignore_directories=True, case_sensitive=False)
         self.celery_app = celery_app
         self.settings = settings
         self.dst_folder = dst_folder
@@ -14,19 +15,17 @@ class FileCreatedHandler(FileSystemEventHandler):
         self.do_denoise = do_denoise
 
     def on_created(self, event):
-        # Only act on files, not directories.
-        if not event.is_directory:
-            logger.info(f"New file detected: {event.src_path}")
-            self.celery_app.send_task(
-                'cp_server.tasks_server.celery_tasks.process_images',
-                kwargs={
-                    "settings": self.settings,
-                    "img_file": event.src_path,
-                    "dst_folder": self.dst_folder,
-                    "key_label": self.key_label,
-                    "do_denoise": self.do_denoise,
-                }
-            )
+        logger.info(f"New .tif file detected: {event.src_path}")
+        self.celery_app.send_task(
+            'cp_server.tasks_server.celery_tasks.process_images',
+            kwargs={
+                "settings": self.settings,
+                "img_file": event.src_path,
+                "dst_folder": self.dst_folder,
+                "key_label": self.key_label,
+                "do_denoise": self.do_denoise,
+            }
+        )
 
 class FileWatcherManager:
     def __init__(self, celery_app: Celery) -> None:
