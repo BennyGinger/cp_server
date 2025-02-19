@@ -15,6 +15,8 @@ class TifFileHandler(PatternMatchingEventHandler):
 
     def on_created(self, event):
         logger.info(f"New .tif file detected: {event.src_path}")
+        # Wait briefly to ensure the file is fully written
+        time.sleep(2)
         self.celery_app.send_task(
             'cp_server.tasks_server.celery_tasks.process_images',
             kwargs={
