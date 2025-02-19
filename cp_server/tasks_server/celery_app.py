@@ -33,6 +33,7 @@ def create_celery_app(include_tasks: bool = False)-> Celery:
     # Only load tasks if we're running as a worker
     if include_tasks:
         app.conf.update(include=["cp_server.tasks_server.celery_tasks"],)
+        app.conf.task_default_queue = "celery"
         app.conf.task_routes = {
             "cp_server.tasks_server.celery_tasks.segment": {"queue": "gpu_tasks"}
         }

@@ -50,4 +50,3 @@ RUN chown -R celeryuser:celerygroup /app
 RUN mkdir /data
 RUN chown -R celeryuser:celerygroup /data
 USER celeryuser
-CMD ["celery", "-A", "cp_server.tasks_server.celery_app:celery_app", "worker", "-Q", "gpu_tasks", "--concurrency=10", "--loglevel=info"]

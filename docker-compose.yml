@@ -27,7 +27,7 @@ services:
       - redis
     restart: on-failure
 
-  celery:
+  celery-default:
     build:
       context: .
       dockerfile: Dockerfile_celery
@@ -36,18 +36,36 @@ services:
         USER_GID: "${USER_GID:-1000}"
     volumes:
       - /home/eblab/data_dir:/data
-      # - ./:/app
     environment:
-      # Pass the same broker URL so the Celery worker can connect to Redis.
       CELERY_BROKER_URL: "redis://redis:6379/0"
       CELERY_BACKEND_URL: "redis://redis:6379/1"
+    command: celery -A cp_server.tasks_server.celery_app:celery_app worker -Q celery --loglevel=info
+    depends_on:
+      - redis
+    restart: on-failure
+  
+  celery-gpu:
+    build:
+      context: .
+      dockerfile: Dockerfile_celery
+      args:
+        USER_UID: "${USER_UID:-1000}"
+        USER_GID: "${USER_GID:-1000}"
+    volumes:
+      - /home/eblab/data_dir:/data
+    environment:
+      CELERY_BROKER_URL: "redis://redis:6379/0"
+      CELERY_BACKEND_URL: "redis://redis:6379/1"
+    command: celery -A cp_server.tasks_server.celery_app:celery_app worker -Q gpu_tasks --concurrency=10 --loglevel=info
     deploy:
       resources:
         reservations:
           devices:
             - driver: "nvidia"
-              count: all       # can be an integer or "all"
+              count: all
               capabilities: ["gpu"]
     depends_on:
       - redis
     restart: on-failure
+  
+  
