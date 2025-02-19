@@ -11,8 +11,8 @@ router = APIRouter()
 async def setup_file_watcher(request: Request, payload: PayLoadWatcher) -> dict:
     watcher_manager: FileWatcherManager = request.app.state.watcher_manager
     try:
-        watcher_manager.start_watcher(**payload.model_dump())
-        #await asyncio.to_thread(watcher_manager.start_watcher, **payload.model_dump())
+        #watcher_manager.start_watcher(**payload.model_dump())
+        await asyncio.to_thread(watcher_manager.start_watcher, **payload.model_dump())
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     return {"message": f"File watcher setup for directory: {payload.directory}"}

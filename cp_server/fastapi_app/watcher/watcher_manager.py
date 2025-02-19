@@ -1,11 +1,10 @@
-import time
-from pathlib import Path
 from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
+from watchdog.events import PatternMatchingEventHandler
+from pathlib import Path
 from celery import Celery
 from cp_server.fastapi_app import logger
 
-class FileCreatedHandler(FileSystemEventHandler):
+class TifFileHandler(PatternMatchingEventHandler):
     def __init__(self, celery_app: Celery, settings: dict, dst_folder: str, key_label: str, do_denoise: bool):
         super().__init__(patterns=["*.tif"], ignore_directories=True, case_sensitive=False)
         self.celery_app = celery_app
@@ -38,7 +37,7 @@ class FileWatcherManager:
             logger.error(f"Provided directory does not exist: {directory}")
             raise ValueError("Provided directory does not exist")
         
-        event_handler = FileCreatedHandler(self.celery_app, settings, dst_folder, key_label, do_denoise)
+        event_handler = TifFileHandler(self.celery_app, settings, dst_folder, key_label, do_denoise)
         self.observer = Observer()
         self.observer.schedule(event_handler, str(path), recursive=False)
         self.observer.start()
@@ -51,35 +50,3 @@ class FileWatcherManager:
             logger.info("Watcher stopped.")
         else:
             logger.warning("No watcher to stop.")
-
-# Example usage (for testing purposes)
-if __name__ == "__main__":
-    import sys
-
-    class DummyCelery:
-        def __init__(self):
-            self.tasks = []
-
-        def send_task(self, name, kwargs):
-            self.tasks.append((name, kwargs))
-            print("Task sent:", name, kwargs)
-
-    # Set up a dummy celery app and payload
-    celery_fake = DummyCelery()
-    payload = {
-        "settings": {"example": {"option": "value"}},
-        "dst_folder": "/tmp",
-        "key_label": "test",
-        "do_denoise": False,
-    }
-    directory_to_watch = "/path/to/watch"  # Adjust this path accordingly
-
-    manager = FileWatcherManager(celery_fake)
-    try:
-        manager.start_watcher(directory_to_watch, **payload)
-        # Run indefinitely until interrupted
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        manager.stop_watcher()
-        sys.exit(0)
