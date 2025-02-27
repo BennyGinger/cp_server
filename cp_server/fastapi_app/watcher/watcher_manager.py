@@ -1,12 +1,12 @@
 import time
 import os
 from watchdog.observers import Observer
-from watchdog.events import PatternMatchingEventHandler
+from watchdog.events import PatternMatchingEventHandler, FileCreatedEvent
 from pathlib import Path
 from celery import Celery
 from cp_server.fastapi_app import logger
 
-def is_file_stable(filepath, interval=1.0, retries=10):
+def is_file_stable(filepath: str, interval: int=1, retries: int=10)-> bool:
     """Check if file size remains the same over a given interval."""
     previous_size = -1
     for _ in range(retries):
@@ -27,21 +27,18 @@ class TifFileHandler(PatternMatchingEventHandler):
         self.key_label = key_label
         self.do_denoise = do_denoise
 
-    def on_created(self, event):
-            logger.info(f"New .tif file detected: {event.src_path}")
-            if is_file_stable(event.src_path):
-                self.celery_app.send_task(
-                    'cp_server.tasks_server.celery_tasks.process_images',
-                    kwargs={
-                        "settings": self.settings,
+    def on_created(self, event: FileCreatedEvent)-> None:
+        logger.info(f"New .tif file detected: {event.src_path}")
+        if is_file_stable(event.src_path):
+            self.celery_app.send_task(
+                'cp_server.tasks_server.celery_tasks.process_images',
+                kwargs={"settings": self.settings,
                         "img_file": event.src_path,
                         "dst_folder": self.dst_folder,
                         "key_label": self.key_label,
-                        "do_denoise": self.do_denoise,
-                    }
-                )
-            else:
-                logger.error(f"File {event.src_path} did not stabilize, skipping processing.")
+                        "do_denoise": self.do_denoise,})
+        else:
+            logger.error(f"File {event.src_path} did not stabilize, skipping processing.")
 
 class FileWatcherManager:
     def __init__(self, celery_app: Celery) -> None:

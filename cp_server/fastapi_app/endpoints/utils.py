@@ -18,3 +18,7 @@ class PayLoadSegement(BaseModel):
     dst_folder: str
     key_label: str
     do_denoise: bool = True
+    
+    
+class PayLoadStopWatcher(BaseModel):
+    directory: str

@@ -2,7 +2,7 @@ import asyncio
 from fastapi import APIRouter, HTTPException, Request
 
 from cp_server.fastapi_app.watcher.watcher_manager import FileWatcherManager
-from cp_server.fastapi_app.endpoints.utils import PayLoadWatcher
+from cp_server.fastapi_app.endpoints.utils import PayLoadWatcher, PayLoadStopWatcher
 
 router = APIRouter()
 
@@ -18,10 +18,10 @@ async def setup_file_watcher(request: Request, payload: PayLoadWatcher) -> dict:
     return {"message": f"File watcher setup for directory: {payload.directory}"}
 
 @router.post("/stop-file-watcher")
-async def stop_file_watcher(request: Request, directory: str) -> dict:
+async def stop_file_watcher(request: Request, payload: PayLoadStopWatcher) -> dict:
     watcher_manager: FileWatcherManager = request.app.state.watcher_manager
     try:
         watcher_manager.stop_watcher()
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
-    return {"message": f"File watcher stopped for directory: {directory}"}
+    return {"message": f"File watcher stopped for directory: {payload.directory}"}
