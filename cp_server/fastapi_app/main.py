@@ -14,10 +14,13 @@ app = FastAPI()
 logger.info("-----------------------------------------------")
 logger.info("Starting the Cellpose server...")
 
-# Initiate the file watcher manager and celery app
+# Initiate a minimal celery app, to send tasks to the celery worker
 logger.info("Initiating the file watcher manager...")
 min_celery_app = create_celery_app()
-app.state.watcher_manager = FileWatcherManager(min_celery_app)
+app.state.celery_app = min_celery_app
+
+# Initiate the file watcher manager to centralize the file watching logic
+app.state.watcher_manager = FileWatcherManager()
 
 # Include the routers
 app.include_router(app_utils_router)

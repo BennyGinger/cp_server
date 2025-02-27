@@ -15,7 +15,7 @@ def segment_task(request: Request, payload: PayLoadSegement) -> dict:
     """Start a Celery task to process images with Cellpose."""
     
     # Get the source and destination directories
-    celery_app: Celery = request.app.state.watcher_manager.celery_app
+    celery_app: Celery = request.app.state.celery_app
     directory = Path(payload.directory)
     
     logger.info(f"Starting image processing task from {directory}")

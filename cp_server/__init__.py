@@ -16,3 +16,20 @@ ROOT_DIR = find_project_root(Path(__file__).resolve())
 # Append "logs" folder to the project root
 LOGS_DIR = ROOT_DIR.joinpath("logs")  
 LOGS_DIR.mkdir(parents=True, exist_ok=True)
+
+
+# TODO: Separate each celery dockerfile
+# TODO: add the save_atomic on the client side:
+# def imwrite_atomic(final_path: str, image_data, **kwargs):
+#     """
+#     Atomically write a TIFF image.
+    
+#     The image is first written to a temporary file (with a .tmp extension)
+#     and then renamed to the final filename. Since os.rename is atomic on the same
+#     filesystem, the file watcher will only see the final file once it is completely written.
+#     """
+#     temp_path = final_path + ".tmp"
+#     tifffile.imwrite(temp_path, image_data, **kwargs)
+#     os.rename(temp_path, final_path)
+# TODO: add the trackfile watcher
+# TODO: Implement the tindercells
