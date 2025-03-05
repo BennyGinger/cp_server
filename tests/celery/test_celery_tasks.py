@@ -147,7 +147,7 @@ def test_process_images(monkeypatch):
         do_denoise=do_denoise,
         extra_kwarg="value",
     )
-    assert result == f"Processing images with workflow {img_file}"
+    assert result == f"Image {img_file} was sent to be segmented"
     # Ensure that chain was called with two tasks (remove_bg and segment)
     args = captured_args.get("args", ())
     assert len(args) == 2
