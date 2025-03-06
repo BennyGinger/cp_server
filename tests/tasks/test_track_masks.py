@@ -18,6 +18,7 @@ def test_track_masks_complete():
     tracked = track_masks(masks.copy(), stitch_threshold=0.25)
     # Since the track is complete, the output should be unchanged.
     expected = np.stack([frame0, frame1])
+    assert tracked.shape == expected.shape
     np.testing.assert_array_equal(tracked, expected)
 
 def test_track_masks_incomplete():

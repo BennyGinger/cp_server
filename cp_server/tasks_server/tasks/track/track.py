@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from cp_server.tasks_server.tasks.track.track_utils import stitch_frames, trim_incomplete_track
+from cp_server.tasks_server.tasks.track.track_utils import stitch_frames, trim_incomplete_tracks
 
 
 def track_masks(masks: np.ndarray, stitch_threshold: float=0.25) -> np.ndarray:
@@ -17,6 +17,6 @@ def track_masks(masks: np.ndarray, stitch_threshold: float=0.25) -> np.ndarray:
     """
     
     stitched_masks = stitch_frames(masks, stitch_threshold)
-    stitched_masks = trim_incomplete_track(stitched_masks)
+    trimmed_mask = trim_incomplete_tracks(stitched_masks)
     
-    return stitched_masks
+    return trimmed_mask

@@ -99,21 +99,29 @@ def _label_overlap(m1: np.ndarray, m2: np.ndarray)-> np.ndarray:
         overlap[m1[i], m2[i]] += 1
     return overlap
 
-def trim_incomplete_track(array: np.ndarray)-> np.ndarray:
-    """Function to trim the incomplete tracks from the mask stack.
-    Modifies the input array in place.
-    
+def trim_incomplete_tracks(mask: np.ndarray) -> np.ndarray:
+    """
+    Trim incomplete tracks from the mask stack.
+
+    This function returns a new 3D mask array (tyx format) where only the objects 
+    present in every frame are kept. Incomplete tracks (objects not found in all frames)
+    are set to 0.
+
     Args:
-        array (np.ndarray): 3D Mask array in tyx format.
+        mask (np.ndarray): 3D mask array in tyx format.
+
     Returns:
-        np.ndarray: The list of objects removed."""
-    # Make a list of unique objects
-    lst_obj = [np.unique(frame) for frame in array]
-    lst_obj = np.concatenate(lst_obj) # Flatten the list
-    # Count the number of occurences of each object
-    obj,cnt = np.unique(lst_obj,return_counts=True)
-    # Create a list of obj to remove
-    obj_to_remove = obj[cnt!=array.shape[0]]
-    array_to_remove = np.isin(array,obj_to_remove)
-    array[array_to_remove] = 0
-    return obj_to_remove
+        np.ndarray: The trimmed mask array.
+    """
+    # Determine the complete set of objects (present in every frame)
+    complete_objs = set(np.unique(mask[0]))
+    for frame in mask[1:]:
+        complete_objs.intersection_update(np.unique(frame))
+    
+    # Create a copy of the mask to avoid modifying the original input
+    trimmed_mask = mask.copy()
+    
+    # Set to 0 any object not present in all frames
+    trimmed_mask[~np.isin(trimmed_mask, list(complete_objs))] = 0
+    
+    return trimmed_mask

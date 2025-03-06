@@ -106,7 +106,7 @@ def track_cells(img_files: list[str], stitch_threshold: float)-> str:
     stitched_masks = track_masks(masks, stitch_threshold)
     celery_logger.debug(f"Stitched masks of shape {stitched_masks.shape=}")
     
-    # Save the stitched masks
+    # Overwrite the original masks with the stitched ones
     for i, img_file in enumerate(img_files):
         save_masks_task.delay(stitched_masks[i], img_file)
     return f"Images starting with {img_files[0]} were sent to be tracked"
