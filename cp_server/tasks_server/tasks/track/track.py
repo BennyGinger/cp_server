@@ -1,6 +1,7 @@
 # Copied the function stitch3D from cellpose, to avoid having to install all the dependencies for the package.
 
 import numpy as np
+from skimage.segmentation import relabel_sequential
 
 from cp_server.tasks_server.tasks.track.track_utils import stitch_frames, trim_incomplete_tracks
 
@@ -18,5 +19,6 @@ def track_masks(masks: np.ndarray, stitch_threshold: float=0.25) -> np.ndarray:
     
     stitched_masks = stitch_frames(masks, stitch_threshold)
     trimmed_mask = trim_incomplete_tracks(stitched_masks)
+    
     
     return trimmed_mask

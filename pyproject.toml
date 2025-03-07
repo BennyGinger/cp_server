@@ -20,17 +20,15 @@ cp-server = "cp_server.fastapi_app:main"
 [project.optional-dependencies]
 celery = [
     "cellpose>=3.1.0",
-    "smo>=2.0.2",
 ]
 api = [
     "fastapi[all]>=0.115.6",
     "watchdog>=2.1.9",
 ]
-all = [
-    "cellpose>=3.1.0",
-    "fastapi[all]>=0.115.6",
+
+celery-default = [
+    "scikit-image>=0.25.2",
     "smo>=2.0.2",
-    "watchdog>=2.1.9",
 ]
 
 [build-system]
