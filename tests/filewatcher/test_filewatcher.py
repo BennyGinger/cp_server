@@ -1,18 +1,15 @@
 import pytest
-from pathlib import Path
-from unittest.mock import MagicMock
 
 # Import the classes under test.
 from cp_server.fastapi_app.watcher.watcher_manager import FileWatcherManager
-from cp_server.fastapi_app.watcher.event_handler import SegmentFileHandler
-from watchdog.events import PatternMatchingEventHandler, FileCreatedEvent
+from watchdog.events import PatternMatchingEventHandler
 
 ###########################
 # Dummy Classes for Tests #
 ###########################
 
-# A dummy observer to simulate watchdog.observers.Observer
 class DummyObserver:
+    """A dummy observer to simulate watchdog.observers.Observer"""
     def __init__(self):
         self.scheduled = False
         self.started = False
@@ -33,8 +30,8 @@ class DummyObserver:
     def join(self):
         self.joined = True
 
-# A dummy event handler that extends PatternMatchingEventHandler
 class DummyEventHandler(PatternMatchingEventHandler):
+    """A dummy event handler that extends PatternMatchingEventHandler"""
     def __init__(self):
         super().__init__(patterns=["*.tif"], ignore_directories=True, case_sensitive=False)
 
@@ -112,54 +109,9 @@ def test_restart_watcher(tmp_path, monkeypatch):
     # The new observer should be dummy2.
     assert manager.observers[valid_dir] is dummy2
 
-##################################
-# Tests for SegmentFileHandler
-##################################
+def test_stop_watcher_no_watcher():
+    manager = FileWatcherManager()
+    test_dir = '/tmp/nonexistent_dir'
+    with pytest.raises(ValueError, match="No watcher found for this directory"):
+        manager.stop_watcher(test_dir)
 
-def test_segment_file_handler_on_created():
-    """Test that SegmentFileHandler calls celery_app.send_task with the correct parameters."""
-    # Create a dummy celery app with a MagicMock for send_task.
-    dummy_celery_app = MagicMock()
-    settings = {"foo": "bar"}
-    dst_folder = "/destination"
-    key_label = "key"
-    do_denoise = True
-
-    handler = SegmentFileHandler(
-        celery_app=dummy_celery_app,
-        settings=settings,
-        dst_folder=dst_folder,
-        key_label=key_label,
-        do_denoise=do_denoise)
-
-    # Create a dummy file creation event.
-    event = FileCreatedEvent("/path/to/file.tif")
-    handler.on_created(event)
-
-    dummy_celery_app.send_task.assert_called_once_with(
-        'cp_server.tasks_server.celery_tasks.process_images',
-        kwargs={
-            "settings": settings,
-            "img_file": event.src_path,
-            "dst_folder": dst_folder,
-            "key_label": key_label,
-            "do_denoise": do_denoise,})
-    
-    # Retrieve the call arguments.
-    call_args, call_kwargs = dummy_celery_app.send_task.call_args
-
-    # The first positional argument should be the task name.
-    task_name = call_args[0]
-    assert task_name == 'cp_server.tasks_server.celery_tasks.process_images'
-
-    # The kwargs passed to send_task should include our expected "kwargs" dict.
-    expected_kwargs = {
-        "settings": settings,
-        "img_file": event.src_path,
-        "dst_folder": dst_folder,
-        "key_label": key_label,
-        "do_denoise": do_denoise,}
-    
-    # Since send_task is called with a keyword argument 'kwargs', we check that:
-    assert "kwargs" in call_kwargs
-    assert call_kwargs["kwargs"] == expected_kwargs

@@ -31,5 +31,4 @@ LOGS_DIR.mkdir(parents=True, exist_ok=True)
 #     temp_path = final_path + ".tmp"
 #     tifffile.imwrite(temp_path, image_data, **kwargs)
 #     os.rename(temp_path, final_path)
-# TODO: add the trackfile watcher
 # TODO: Implement the tindercells

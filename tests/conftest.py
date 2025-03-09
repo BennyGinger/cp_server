@@ -34,8 +34,14 @@ def payload():
         "key_label": "test",
         "do_denoise": False,}
 
-# A simple dummy celery app that records task submissions.
+@pytest.fixture
+def track_payload():
+    return {
+        "directory": "/tmp/watch",
+        "stitch_threshold": 0.1,}
+
 class DummyCelery:
+    """A simple dummy celery app that records task submissions."""
     def __init__(self):
         self.tasks = []
 

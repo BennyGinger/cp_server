@@ -3,14 +3,18 @@ from celery import Celery
 from fastapi import APIRouter, HTTPException, Request
 
 from cp_server.fastapi_app.watcher.watcher_manager import FileWatcherManager
-from cp_server.fastapi_app.watcher.event_handler import SegmentFileHandler
-from cp_server.fastapi_app.endpoints.utils import PayLoadWatcher, PayLoadStopWatcher
+from cp_server.fastapi_app.watcher.event_handlers import SegmentFileHandler, TrackFileHandler
+from cp_server.fastapi_app.endpoints.utils import StartSegmentHandler, StopDirWatcher, StartTrackingHandler
 
 router = APIRouter()
 
 
-@router.post("/setup-file-watcher")
-async def setup_segment_watcher(request: Request, payload: PayLoadWatcher) -> dict:
+########################################
+###### Start Directory Watcher #########
+########################################
+
+@router.post("/start-segment-watcher")
+async def start_segment_watcher(request: Request, payload: StartSegmentHandler) -> dict:
     # Get the watcher manager and celery_app from the app state
     watcher_manager: FileWatcherManager = request.app.state.watcher_manager
     celery_app: Celery = request.app.state.celery_app
@@ -30,10 +34,34 @@ async def setup_segment_watcher(request: Request, payload: PayLoadWatcher) -> di
                                 event_handler=event_handler)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    return {"message": f"File watcher setup for directory: {payload.directory}"}
+    return {"message": f"File watcher setup for segmenting images in directory: {payload.directory}"}
 
-@router.post("/stop-file-watcher")
-async def stop_file_watcher(request: Request, payload: PayLoadStopWatcher) -> dict:
+
+@router.post("/start-tracking-watcher")
+async def start_tracking_watcher(request: Request, payload: StartTrackingHandler) -> dict:
+    # Get the watcher manager and celery_app from the app state
+    watcher_manager: FileWatcherManager = request.app.state.watcher_manager
+    celery_app: Celery = request.app.state.celery_app
+    
+    # Initialize the file handler:
+    event_handler = TrackFileHandler(celery_app=celery_app, 
+                                     stitch_threshold=payload.stitch_threshold)
+    
+    # Start the watcher
+    try:
+        await asyncio.to_thread(watcher_manager.start_watcher, 
+                                directory=payload.directory, 
+                                event_handler=event_handler)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return {"message": f"File watcher setup for tracking masks in directory: {payload.directory}"}
+
+########################################
+###### Stop Directory Watcher ##########
+########################################
+
+@router.post("/stop-dir-watcher")
+async def stop_directory_watcher(request: Request, payload: StopDirWatcher) -> dict:
     # Get the watcher manager from the app state
     watcher_manager: FileWatcherManager = request.app.state.watcher_manager
     
