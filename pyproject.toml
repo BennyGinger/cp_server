@@ -22,8 +22,8 @@ celery = [
     "cellpose>=3.1.0",
 ]
 api = [
-    "fastapi[all]>=0.115.6",
-    "watchdog>=2.1.9",
+    "fastapi[all]>=0.115.11",
+    "watchdog>=6.0.0",
 ]
 
 celery-default = [
@@ -38,7 +38,10 @@ build-backend = "hatchling.build"
 [dependency-groups]
 dev = [
     "cellpose[gui]>=3.1.0",
-    "flask>=3.1.0",
+    "fastapi[all]>=0.115.11",
     "pytest>=8.3.4",
     "pytest-asyncio>=0.25.3",
+    "scikit-image>=0.25.2",
+    "smo>=2.0.2",
+    "watchdog>=6.0.0",
 ]
