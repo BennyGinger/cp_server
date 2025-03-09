@@ -1,7 +1,8 @@
 import threading
+from pathlib import Path
+
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
-from pathlib import Path
 
 from cp_server.fastapi_app import logger
 

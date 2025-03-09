@@ -22,11 +22,12 @@ celery = [
     "cellpose>=3.1.0",
 ]
 api = [
-    "fastapi[all]>=0.115.11",
+    "fastapi>=0.115.11",
     "watchdog>=6.0.0",
 ]
 
 celery-default = [
+    "numba>=0.61.0",
     "scikit-image>=0.25.2",
     "smo>=2.0.2",
 ]

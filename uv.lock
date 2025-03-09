@@ -181,13 +181,14 @@ dependencies = [
 
 [package.optional-dependencies]
 api = [
-    { name = "fastapi", extra = ["all"] },
+    { name = "fastapi" },
     { name = "watchdog" },
 ]
 celery = [
     { name = "cellpose" },
 ]
 celery-default = [
+    { name = "numba" },
     { name = "scikit-image" },
     { name = "smo" },
 ]
@@ -207,7 +208,8 @@ dev = [
 requires-dist = [
     { name = "celery", specifier = ">=5.4.0" },
     { name = "cellpose", marker = "extra == 'celery'", specifier = ">=3.1.0" },
-    { name = "fastapi", extras = ["all"], marker = "extra == 'api'", specifier = ">=0.115.11" },
+    { name = "fastapi", marker = "extra == 'api'", specifier = ">=0.115.11" },
+    { name = "numba", marker = "extra == 'celery-default'", specifier = ">=0.61.0" },
     { name = "numpy", specifier = ">=2.0.2" },
     { name = "redis", specifier = ">=5.2.1" },
     { name = "scikit-image", marker = "extra == 'celery-default'", specifier = ">=0.25.2" },
