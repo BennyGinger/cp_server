@@ -16,6 +16,7 @@ Welcome to **CP-Server**, a powerful and efficient FastAPI-based server designed
 - **Graceful Shutdown**: Endpoint to gracefully shut down the server.
 - **Docker Support**: Provided with Dockerfiles and docker-compose for easy deployment.
 - **UV Management**: This project was built using the UV dependency management system, so it contains the uv.lock file which can be used to install the exact dependencies used in the project.
+- **Unit Tests**: Contains extensive unit tests for the server, celery tasks and watchers.
 
 ## Installation
 
