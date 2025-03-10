@@ -18,7 +18,6 @@ LOGS_DIR = ROOT_DIR.joinpath("logs")
 LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
 
-# TODO: Separate each celery dockerfile
 # TODO: add the save_atomic on the client side:
 # def imwrite_atomic(final_path: str, image_data, **kwargs):
 #     """

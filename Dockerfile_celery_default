@@ -6,8 +6,8 @@ ARG USER_UID=1000
 ARG USER_GID=1000
 
 # Create a non-root user and group
-RUN groupadd -g $USER_GID fastapigroup && \
-    useradd -u $USER_UID -g fastapigroup fastapiuser
+RUN groupadd -g $USER_GID celerygroup && \
+    useradd -u $USER_UID -g celerygroup celeryuser
 
 # Set the working directory in the container
 WORKDIR /app
@@ -25,16 +25,14 @@ RUN uv venv --python 3.12
 # This makes executables from the venv (like pip) available.
 ENV PATH="/app/.venv/bin:$PATH"
 
-# Install only the "api" extra dependencies defined in your pyproject file
-RUN uv pip install -r pyproject.toml --extra api
+# Install only the "celery-default" extra dependencies defined in pyproject file
+RUN uv pip install -r pyproject.toml --extra celery-default
 
-# Expose the port your FastAPI app will run on (adjust if needed)
-RUN chown -R fastapiuser:fastapigroup /app
+# Give the celeryuser user ownership of the app and data directory
+RUN chown -R celeryuser:celerygroup /app
 RUN mkdir /data
-RUN chown -R fastapiuser:fastapigroup /data
-USER fastapiuser
-EXPOSE 8000
+RUN chown -R celeryuser:celerygroup /data
+USER celeryuser
 
-# Use uvicorn to start your FastAPI app.
-# This example assumes your app instance is named "app" inside a module "main".
-CMD ["uvicorn", "cp_server.fastapi_app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Start the celery default worker
+CMD ["watchmedo", "auto-restart", "--directory=/app/cp_server", "--pattern=*.py", "--recursive", "--", "celery", "-A", "cp_server.tasks_server.celery_app:celery_app", "worker", "-Q", "celery", "--loglevel=info"]

@@ -17,8 +17,8 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - /home/eblab/data_dir:/data
-      # - ./:/app
+      - /home/eblab/data_dir:/data # TODO: Change this to your data directory
+      - ./cp_server:/app/cp_server
     environment:
       # Environment variable used by your app to know where the Celery broker is.
       CELERY_BROKER_URL: "redis://redis:6379/0"
@@ -30,16 +30,16 @@ services:
   celery-default:
     build:
       context: .
-      dockerfile: Dockerfile_celery
+      dockerfile: Dockerfile_celery_default
       args:
         USER_UID: "${USER_UID:-1000}"
         USER_GID: "${USER_GID:-1000}"
     volumes:
-      - /home/eblab/data_dir:/data
+      - /home/eblab/data_dir:/data # TODO: Change this to your data directory
+      - ./cp_server:/app/cp_server
     environment:
       CELERY_BROKER_URL: "redis://redis:6379/0"
       CELERY_BACKEND_URL: "redis://redis:6379/1"
-    command: celery -A cp_server.tasks_server.celery_app:celery_app worker -Q celery --loglevel=info
     depends_on:
       - redis
     restart: on-failure
@@ -52,11 +52,11 @@ services:
         USER_UID: "${USER_UID:-1000}"
         USER_GID: "${USER_GID:-1000}"
     volumes:
-      - /home/eblab/data_dir:/data
+      - /home/eblab/data_dir:/data # TODO: Change this to your data directory
+      - ./cp_server:/app/cp_server
     environment:
       CELERY_BROKER_URL: "redis://redis:6379/0"
       CELERY_BACKEND_URL: "redis://redis:6379/1"
-    command: celery -A cp_server.tasks_server.celery_app:celery_app worker -Q gpu_tasks --concurrency=10 --loglevel=info
     deploy:
       resources:
         reservations:

@@ -1,7 +1,7 @@
 [project]
 name = "cp-server"
 version = "0.1.0"
-description = "A FastAPI-based server for running Cellpose segmentation models. This server allows users to upload images, configure model settings, and receive segmented images as output. It supports GPU acceleration and various Cellpose model types."
+description = "A FastAPI-based server for running different tasks via Celery in the background. These tasks include running Cellpose on images, removing background and simple masks tracking (iou). The server is equipped with a file watcher to automatically process new images and track subsequent masks."
 readme = "README.md"
 authors = [
     { name = "Benoit Roux", email = "benoit.roux@gmail.com" },
@@ -12,6 +12,7 @@ dependencies = [
     "celery>=5.4.0",
     "numpy>=2.0.2",
     "redis>=5.2.1",
+    "watchdog>=6.0.0",
 ]
 
 [project.scripts]
@@ -23,7 +24,6 @@ celery = [
 ]
 api = [
     "fastapi>=0.115.11",
-    "watchdog>=6.0.0",
 ]
 
 celery-default = [
