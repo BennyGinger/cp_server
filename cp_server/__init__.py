@@ -31,3 +31,5 @@ LOGS_DIR.mkdir(parents=True, exist_ok=True)
 #     tifffile.imwrite(temp_path, image_data, **kwargs)
 #     os.rename(temp_path, final_path)
 # TODO: Implement the tindercells
+# TODO: Relabel masks after tracking
+
