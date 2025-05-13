@@ -1,12 +1,16 @@
 from pathlib import Path
+import logging
 
 from fastapi import APIRouter, Request
 from celery import Celery
 
-from cp_server.fastapi_app import logger
 from cp_server.fastapi_app.endpoints.utils import PayLoadSegement
 
 
+# Setup logging
+logger = logging.getLogger("cp_server.fastapi_app")
+
+# Create a router for the segment task
 router = APIRouter()
 
 

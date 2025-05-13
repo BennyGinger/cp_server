@@ -1,5 +1,3 @@
-# Copied the function stitch3D from cellpose, to avoid having to install all the dependencies for the package.
-
 import numpy as np
 from skimage.segmentation import relabel_sequential
 

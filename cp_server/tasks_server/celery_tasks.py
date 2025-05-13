@@ -1,8 +1,10 @@
+import logging
+
 from celery import chain, shared_task
 import numpy as np
 import tifffile as tiff
 
-from cp_server.tasks_server import celery_logger
+from cp_server.logging import setup_logging
 from cp_server.tasks_server.tasks.bg_sub.bg_sub import apply_bg_sub
 from cp_server.tasks_server.tasks.segementation.cp_seg import run_seg
 from cp_server.tasks_server.tasks.saving.save_arrays import save_mask, save_img
@@ -12,6 +14,10 @@ from cp_server.tasks_server.tasks.track.track import track_masks
 PIPELINE_TYPE = {"refseg": "BioSensor Pipeline",
                 "_z": "ImageAnalysis Pipeline",}
 
+
+# Setup logging
+setup_logging()
+celery_logger = logging.getLogger("cp_server.celery_app")
 
 @shared_task(name="cp_server.tasks_server.celery_tasks.save_masks_task")
 def save_masks_task(masks: np.ndarray, img_file: str, dst_folder: str, key_label: str)-> None:

@@ -19,10 +19,13 @@ services:
     volumes:
       - /home/eblab/data_dir:/data # TODO: Change this to your data directory
       - ./cp_server:/app/cp_server
+      - /home/eblab/logs:/shared/logs
     environment:
       # Environment variable used by your app to know where the Celery broker is.
       CELERY_BROKER_URL: "redis://redis:6379/0"
       CELERY_BACKEND_URL: "redis://redis:6379/1"
+      SERVICE_NAME: fastapi
+      LOG_DIR: /shared/logs
     depends_on:
       - redis
     restart: on-failure
@@ -37,9 +40,12 @@ services:
     volumes:
       - /home/eblab/data_dir:/data # TODO: Change this to your data directory
       - ./cp_server:/app/cp_server
+      - /home/eblab/logs:/shared/logs
     environment:
       CELERY_BROKER_URL: "redis://redis:6379/0"
       CELERY_BACKEND_URL: "redis://redis:6379/1"
+      SERVICE_NAME: celery-default
+      LOG_DIR: /shared/logs
     depends_on:
       - redis
     restart: on-failure
@@ -54,9 +60,12 @@ services:
     volumes:
       - /home/eblab/data_dir:/data # TODO: Change this to your data directory
       - ./cp_server:/app/cp_server
+      - /home/eblab/logs:/shared/logs # TODO: Add this folder to the server
     environment:
       CELERY_BROKER_URL: "redis://redis:6379/0"
       CELERY_BACKEND_URL: "redis://redis:6379/1"
+      SERVICE_NAME: celery-gpu
+      LOG_DIR: /shared/logs
     deploy:
       resources:
         reservations:
@@ -67,5 +76,3 @@ services:
     depends_on:
       - redis
     restart: on-failure
-  
-  
