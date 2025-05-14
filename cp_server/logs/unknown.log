@@ -1,5 +1,0 @@
-2025-05-13 17:44:37,791 - httpx - INFO - HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
-2025-05-13 17:44:37,796 - httpx - INFO - HTTP Request: POST http://testserver/segment "HTTP/1.1 200 OK"
-2025-05-13 17:44:37,803 - httpx - INFO - HTTP Request: POST http://testserver/start-segment-watcher "HTTP/1.1 200 OK"
-2025-05-13 17:44:37,808 - httpx - INFO - HTTP Request: POST http://testserver/start-tracking-watcher "HTTP/1.1 200 OK"
-2025-05-13 17:44:37,813 - httpx - INFO - HTTP Request: POST http://testserver/stop-dir-watcher "HTTP/1.1 200 OK"
