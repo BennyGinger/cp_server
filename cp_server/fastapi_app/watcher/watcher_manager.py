@@ -1,13 +1,14 @@
 import threading
 from pathlib import Path
-import logging
 
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
 
+from cp_server.logging import get_logger
+
 
 # Setup logging
-logger = logging.getLogger("cp_server.fastapi_app")
+logger = get_logger('file_watcher')
 
 
 class FileWatcherManager:

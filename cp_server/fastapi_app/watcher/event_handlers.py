@@ -1,14 +1,15 @@
 from collections import defaultdict
 from pathlib import Path
 import re
-import logging
 
 from watchdog.events import PatternMatchingEventHandler, FileCreatedEvent
 from celery import Celery
 
+from cp_server.logging import get_logger
+
 
 # Setup logging
-logger = logging.getLogger("cp_server.fastapi_app")
+logger = get_logger('event_handlers')
 
 
 class SegmentFileHandler(PatternMatchingEventHandler):

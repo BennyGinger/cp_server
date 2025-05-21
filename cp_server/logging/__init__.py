@@ -1,72 +1,58 @@
+# cp_server/logging.py
 import os
-from pathlib import Path
-from logging.config import dictConfig
-from celery.signals import after_setup_logger, after_setup_task_logger
+import logging
+
+SERVICE_NAME = os.getenv("SERVICE_NAME", "cp_server")
+
+def get_logger(name: str = None) -> logging.Logger:
+    base = SERVICE_NAME
+    return logging.getLogger(f"{base}.{name}") if name else logging.getLogger(base)
 
 
-# 1) Define a safe default inside your package
-_default_logs_dir = Path(__file__).resolve().parent.parent / "logs"
+# TODO: Use the following code to set up logging in your application.
+# from pathlib import Path
+# import logging
+# from logging.handlers import RotatingFileHandler
+# from celery.signals import after_setup_logger, after_setup_task_logger
+# from cp_server.logging import SERVICE_NAME
 
-# 2) Try to use the env-var if set
-_env_logs = os.getenv("LOG_DIR")
-if _env_logs:
-    _candidate = Path(_env_logs)
-else:
-    _candidate = _default_logs_dir
+# # 1) Prepare your log directory
+# log_dir = Path("/var/log") / "a1_pipeline"
+# log_dir.mkdir(parents=True, exist_ok=True)
 
-# 3) Ensure we have a writable directory
-try:
-    _candidate.mkdir(parents=True, exist_ok=True)
-    LOGS_DIR = _candidate
-except (PermissionError, OSError):
-    # fallback to package-local logs
-    _default_logs_dir.mkdir(parents=True, exist_ok=True)
-    LOGS_DIR = _default_logs_dir
+# # 2) Common formatter & console handler
+# fmt = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+# datefmt = "%Y-%m-%d %H:%M:%S"
+# formatter = logging.Formatter(fmt, datefmt=datefmt)
 
-SERVICE_NAME = os.getenv("SERVICE_NAME", "unknown")
+# ch = logging.StreamHandler()
+# ch.setLevel(logging.INFO)
+# ch.setFormatter(formatter)
+# logging.getLogger().addHandler(ch)
+# logging.getLogger().setLevel(logging.DEBUG)
 
-LOG_CONFIG = {
-    "version": 1,
-    "formatters": {
-        "default": {"format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"},
-    },
-    "handlers": {
-        "file": {
-            "class":    "logging.FileHandler",
-            "formatter":"default",
-            "filename": str(LOGS_DIR / f"{SERVICE_NAME}.log"),
-            "level":    "DEBUG",
-        },
-        "stdout": {
-            "class":    "logging.StreamHandler",
-            "formatter":"default",
-            "stream":   "ext://sys.stdout",
-            "level":    "DEBUG",
-        },
-    },
-    "root": {
-        "handlers": ["file", "stdout"],
-        "level":    "DEBUG",
-    },
-    "loggers": {
-            # suppress noisy libraries
-            "numba": {"level": "WARNING"},
-            "celery": {"level": "WARNING"},
-            "kombu": {"level": "WARNING"},
-            "python_multipart": {"level": "WARNING"},
-            "httpcore": {"level": "WARNING"},
-            "watchdog": {"level": "WARNING"},
-            # add more here as needed
-        },
-    }
+# # 3) File handlers for cp_server and cp_server.celery
+# fh_main = RotatingFileHandler(
+#     filename=log_dir / f"{SERVICE_NAME}.log",
+#     maxBytes=10_000_000, backupCount=5, encoding="utf-8"
+# )
+# fh_main.setLevel(logging.DEBUG)
+# fh_main.setFormatter(formatter)
+# logging.getLogger(SERVICE_NAME).addHandler(fh_main)
 
-def setup_logging():
-    """Call this in non-Celery contexts (FastAPI, scripts, etc.)."""
-    dictConfig(LOG_CONFIG)
+# fh_cel = RotatingFileHandler(
+#     filename=log_dir / f"{SERVICE_NAME}_celery.log",
+#     maxBytes=5_000_000, backupCount=3, encoding="utf-8"
+# )
+# fh_cel.setLevel(logging.DEBUG)
+# fh_cel.setFormatter(formatter)
+# logging.getLogger(f"{SERVICE_NAME}.celery").addHandler(fh_cel)
 
-# Celery workers hijack the root logger, so we re-apply our config when they start:
-@after_setup_logger.connect
-@after_setup_task_logger.connect
-def _configure_celery_logger(logger, *args, **kwargs) -> None:
-    """This function is called when the Celery logger is set up. It configures the logger to use the same configuration as the rest of the application in the background."""
-    dictConfig(LOG_CONFIG)
+# # 4) Re-apply after Celery starts
+# @after_setup_logger.connect
+# @after_setup_task_logger.connect
+# def _reconfig_celery(logger, *args, **kwargs):
+#     # Redis is just the broker; log records still flow over Python logging.
+#     # This hook makes sure your handlers get wired *after* Celery hijacks the root.
+#     logging.getLogger().handlers = logging.getLogger().handlers  # no-op, handlers are already in place
+#     # if you wanted to adjust levels/filters post-startup, you could do it here
