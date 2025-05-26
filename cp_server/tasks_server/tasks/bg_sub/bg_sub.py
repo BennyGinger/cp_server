@@ -3,7 +3,9 @@ from smo import SMO
 
 
 def apply_bg_sub(img: np.ndarray, sigma: float=0.0, size: int=7)-> np.ndarray:
-    """Apply background subtraction to the image"""
+    """
+    Apply background subtraction to the image
+    """
     
     smo = SMO(shape=img.shape, sigma=sigma, size=size)
     

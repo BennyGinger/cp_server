@@ -1,48 +1,79 @@
 import logging
+from pathlib import Path
+import os
+from urllib.parse import urlparse
 
+import redis
 from celery import chain, shared_task
 import numpy as np
 import tifffile as tiff
 
-from cp_server.logging import setup_logging
 from cp_server.tasks_server.tasks.bg_sub.bg_sub import apply_bg_sub
 from cp_server.tasks_server.tasks.segementation.cp_seg import run_seg
-from cp_server.tasks_server.tasks.saving.save_arrays import save_mask, save_img
+from cp_server.tasks_server.tasks.saving.save_arrays import generate_mask_path, save_mask, save_img
 from cp_server.tasks_server.tasks.track.track import track_masks
 
 
-PIPELINE_TYPE = {"refseg": "BioSensor Pipeline",
-                "_z": "ImageAnalysis Pipeline",}
-
+# Initialize Redis client from CELERY_BROKER_URL environment variable
+url = os.environ["CELERY_BROKER_URL"]  # e.g. redis://redis:6379/0
+parse_url = urlparse(url)
+redis_client = redis.Redis(host=parse_url.hostname, port=parse_url.port, db=int(parse_url.path.lstrip("/")))
 
 # Setup logging
-setup_logging()
-celery_logger = logging.getLogger("cp_server.celery_app")
+celery_logger = logging.getLogger(__name__)
+
+
+###########################
+# Orchestration tasks     #
+###########################
+@shared_task(name="cp_server.tasks_server.celery_tasks.mark_one_done")
+def mark_one_done(_, run_id: str) -> None:
+    """
+    Celery callback: decrement the pending counter; if zero, fire final task.
+    """
+    remaining = redis_client.decr(f"pending_tracks:{run_id}")
+    celery_logger.info(f"[run {run_id}] Tracks remaining: {remaining}")
+    if remaining == 0:
+        all_tracks_finished.delay(run_id)
+
+@shared_task(name="cp_server.tasks_server.celery_tasks.all_tracks_finished")
+def all_tracks_finished(run_id: str) -> str:
+    """
+    Runs once when the last track_cells completes for this run_id.
+    """
+    celery_logger.info(f"All tracking done for run {run_id}")
+    # TODO: kick off next pipeline stage or send a notification/webhook
+    return f"All tracks finished for {run_id}"  
+
+###########################
+# File processing tasks   #
+###########################
 
 @shared_task(name="cp_server.tasks_server.celery_tasks.save_masks_task")
-def save_masks_task(masks: np.ndarray, img_file: str, dst_folder: str, key_label: str)-> None:
-    """Save the masks. Note that the image (ndarray) is encoded as a base64 string"""
-    
+def save_masks_task(masks: np.ndarray, img_file: str, dst_folder: str)-> None:
+    """
+    Save the masks. Note that the image (ndarray) is encoded as a base64 string
+    """
     # Decode the masks
     celery_logger.debug(f"Decoding masks inside save_masks_task {masks.shape=} and {masks.dtype=}")
-    return save_mask(masks, img_file, dst_folder, key_label)
+    return save_mask(masks, img_file, dst_folder)
 
 @shared_task(name="cp_server.tasks_server.celery_tasks.save_img_task")
 def save_img_task(img: np.ndarray, img_file: str)-> None:
-    """Save the image. Note that the image (ndarray) is encoded as a base64 string"""
-    
+    """
+    Save the image. Note that the image (ndarray) is encoded as a base64 string
+    """
     # Decode the image
     celery_logger.debug(f"Decoding img inside save_img_task {img.shape=} and {img.dtype=}")
     return save_img(img, img_file)
 
 @shared_task(name="cp_server.tasks_server.celery_tasks.remove_bg")
 def remove_bg(img: np.ndarray, img_file: str, **kwargs)-> np.ndarray:
-    """Apply background subtraction to the image. Note that the image (ndarray) is encoded as a base64 string"""
-    
-    # Log the settings
+    """
+    Apply background subtraction to the image. Note that the image (ndarray) is encoded as a base64 string
+    """
+    # Debug log the image file and settings
     celery_logger.debug(f"Removing background from {img_file}")
-    
-    # Decode the image
     celery_logger.debug(f"Decoding img inside remove_bg {img.shape=} and {img.dtype=}")
     
     # Apply the background subtraction
@@ -53,14 +84,19 @@ def remove_bg(img: np.ndarray, img_file: str, **kwargs)-> np.ndarray:
     return bg_img
     
 @shared_task(name="cp_server.tasks_server.celery_tasks.segment")
-def segment(img: np.ndarray, settings: dict, img_file: str, dst_folder: str, key_label: str, do_denoise: bool=True)-> np.ndarray:
-    """Segment the image using Cellpose. Note that the image (ndarray) is encoded as a base64 string"""
-    
+def segment(img: np.ndarray, 
+            settings: dict, 
+            img_file: str, 
+            dst_folder: str, 
+            run_id: str, 
+            do_denoise: bool=True, 
+            round: int = 1)-> np.ndarray:
+    """
+    Segment the image using Cellpose. Note that the image (ndarray) is encoded as a base64 string
+    """
     # Log the settings
     msg_settings = {**settings['model'], **settings['segmentation']}
     celery_logger.info(f"Segmenting image {img_file} with settings: {msg_settings}")
-    
-    # Decode the image
     celery_logger.debug(f"Decoding img inside segment {img.shape=} and {img.dtype=}")
     
     # Run the segmentation
@@ -69,8 +105,24 @@ def segment(img: np.ndarray, settings: dict, img_file: str, dst_folder: str, key
     
     # Encode the mask and save it in the background
     celery_logger.info(f"Segmentation completed for {img_file}. Saving masks in {dst_folder}")
-    save_masks_task.delay(masks, img_file, dst_folder, key_label)
+    save_masks_task.delay(masks, img_file, dst_folder)
+    
+    # Extract fovID and timepoint from the image file name
+    mask_path = generate_mask_path(img_file, dst_folder)
+    fov_id, time_id = mask_path.stem.split("_mask_") # On the assumption that files look like: "fovID_mask_1.tif"
+    
+    # Register the run_id and fov_id in Redis
+    hkey = f"masks:{run_id}:{fov_id}"
+    redis_client.hset(hkey, time_id, mask_path)
+    
+    # Round 2: pair and trigger tracking
+    if round == 2:
+        pass    
+    
+    
     return masks
+
+
 
 
 ################# Main tasks #################
