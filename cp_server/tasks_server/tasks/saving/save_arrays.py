@@ -25,7 +25,7 @@ def extract_fov_id(img_file: str) -> str:
     return Path(img_file).stem.split("_")[0]
 
 
-def save_mask(masks: np.ndarray, img_file: str, dst_folder: str)-> None:
+def save_mask(mask: np.ndarray, mask_path: str)-> None:
     """
     Save the masks to a TIFF file. The masks are expected to be a 2D or 3D numpy array
     where each pixel value corresponds to a label of an object in the image.
@@ -36,7 +36,7 @@ def save_mask(masks: np.ndarray, img_file: str, dst_folder: str)-> None:
         dst_folder (str): The destination folder where the mask will be saved.
     """
     # Determine mask type based on the number of objects
-    max_label = int(masks.max())
+    max_label = int(mask.max())
     if max_label <= np.iinfo(np.uint8).max:
         dtype = np.uint8
     elif max_label <= np.iinfo(np.uint16).max:
@@ -47,8 +47,7 @@ def save_mask(masks: np.ndarray, img_file: str, dst_folder: str)-> None:
         raise ValueError(f"Too many objects in the mask: {max_label}. Cannot save as a mask.")
     
     # Save the masks
-    save_path = generate_mask_path(img_file, dst_folder) 
-    tiff.imwrite(str(save_path), masks.astype(dtype), compression='zlib')
+    tiff.imwrite(mask_path, mask.astype(dtype), compression='zlib')
     
 def save_img(img: np.ndarray, img_file: str)-> None:
     """

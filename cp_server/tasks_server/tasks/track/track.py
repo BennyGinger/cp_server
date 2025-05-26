@@ -5,7 +5,8 @@ from cp_server.tasks_server.tasks.track.track_utils import stitch_frames, trim_i
 
 
 def track_masks(masks: np.ndarray, stitch_threshold: float=0.25) -> np.ndarray:
-    """Track cells over time by stitching 2D masks into a time sequence using a stitch_threshold on IOU. Incomplete tracks are also automatically trimmed.
+    """
+    Track cells over time by stitching 2D masks into a time sequence using a stitch_threshold on IOU. Incomplete tracks are also automatically trimmed.
 
     Args:
         masks (ndarray): stack of masks, where masks[t] is a 2D array of masks at time t.
@@ -19,4 +20,4 @@ def track_masks(masks: np.ndarray, stitch_threshold: float=0.25) -> np.ndarray:
     trimmed_mask = trim_incomplete_tracks(stitched_masks)
     
     
-    return trimmed_mask
+    return relabel_sequential(trimmed_mask)[0]

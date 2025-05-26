@@ -1,20 +1,28 @@
 import warnings
+from typing import TYPE_CHECKING
 
 import numpy as np
-from cellpose.denoise import CellposeDenoiseModel
-from cellpose.models import CellposeModel
+
+if TYPE_CHECKING:
+    from cellpose.denoise import CellposeDenoiseModel
+    from cellpose.models import CellposeModel
 
 # Suppress FutureWarning messages from cellpose
 warnings.filterwarnings("ignore", category=FutureWarning, module="cellpose")                
 
 
-def run_seg(settings: dict, img: np.ndarray, do_denoise: bool=True)-> np.ndarray:
+def run_seg(model_settings: dict[str, any],
+            cp_settings: dict[str, any],
+            img: np.ndarray, 
+            do_denoise: bool=True,
+            ) -> np.ndarray:
     
     # Unpack settings
-    model_settings, cp_settings = unpack_settings(settings, do_denoise)
+    model_settings = _update_model_parameters(model_settings, do_denoise)
+    cp_settings = _update_cp_settings(cp_settings, do_denoise)
     
     # Initialize Cellpose model
-    model = initialize_cellpose_model(do_denoise, model_settings)
+    model = _initialize_cellpose_model(do_denoise, model_settings)
     
     # Run segmentation
     masks = segment_image(img, cp_settings, model)
@@ -23,39 +31,51 @@ def run_seg(settings: dict, img: np.ndarray, do_denoise: bool=True)-> np.ndarray
 
 
 ##################### Helper functions #####################
-def unpack_settings(settings: dict, do_denoise: bool)-> tuple[dict,dict]:
-    """Unpack the settings for the model and segmentation"""
-    
-    # Unpack settings
-    mod_set: dict = settings.get("model", {})
-    cp_set: dict = settings.get("segmentation", {})
-    
-    # No denoise, remove restore_type
+def _update_model_parameters(mod_set: dict[str, any],
+                            do_denoise: bool=True,
+                            ) -> dict[str, any]:
+    """
+    Validate the model settings and add restore_type if needed.
+    """
     if not do_denoise:
         if "restore_type" in mod_set:
             del mod_set["restore_type"]
-        
-        return mod_set, cp_set
+        return mod_set
     
-    # Add denoise model if not present
     if "restore_type" not in mod_set:
         mod_set["restore_type"] = "denoise_cyto3" if mod_set["model_type"] == "cyto3" else "denoise_cyto2"
-        
-    # Catch the channels bug from cellpose: default val is None, but denoise model requires a list
-    if "channels" not in cp_set or cp_set["channels"] is None:
-        cp_set["channels"] = [0, 0]
+        return mod_set
     
-    return mod_set, cp_set
+def _update_cp_settings(cp_set: dict[str, any],
+                          do_denoise: bool=True,
+                          ) -> dict[str, any]:
+     """
+     Validate the Cellpose settings and add channels if needed.
+     """
+     if not do_denoise:
+          return cp_set
+     
+     # Catch the channels bug from cellpose: default val is None, but denoise model requires a list
+     if "channels" not in cp_set or cp_set["channels"] is None:
+          cp_set["channels"] = [0, 0]
+     
+     return cp_set
 
-def initialize_cellpose_model(do_denoise: bool, model_settings: dict)-> CellposeModel | CellposeDenoiseModel:
-    """Initialize the Cellpose model"""
+def _initialize_cellpose_model(do_denoise: bool, model_settings: dict)-> CellposeModel | CellposeDenoiseModel:
+    """
+    Initialize the Cellpose model, with lazy import to avoid unnecessary dependencies.
+    """
     
     if do_denoise:
+        from cellpose.denoise import CellposeDenoiseModel
         return CellposeDenoiseModel(**model_settings)
+    from cellpose.models import CellposeModel
     return CellposeModel(**model_settings)
 
 def segment_image(img: np.ndarray, cp_settings: dict, model: CellposeModel | CellposeDenoiseModel)-> np.ndarray:
-    """Run the segmentation on the image"""
+    """
+    Run the segmentation on the image
+    """
     
     return model.eval(img, **cp_settings)[0]
 
