@@ -3,7 +3,7 @@ import os
 from kombu.serialization import register
 from celery import Celery
 
-from cp_server.tasks_server.celery_app_utils import custom_encoder, custom_decoder
+from cp_server.tasks_server.serialization_utils import custom_encoder, custom_decoder
 
 
 CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
@@ -11,14 +11,23 @@ CELERY_BACKEND_URL = os.getenv("CELERY_BACKEND_URL", "redis://localhost")
 
 
 # Register the custom serializer
-register(
-    'custom_ndarray',        
+register('custom_ndarray',        
     encoder=custom_encoder,  
     decoder=custom_decoder,  
     content_type='application/x-custom-ndarray',
     content_encoding='utf-8')
 
-def create_celery_app(include_tasks: bool = False)-> Celery:
+
+def create_celery_app(include_tasks: bool = False) -> Celery:
+    """
+    Create and configure a Celery application instance. It is meant to be used as a singleton.
+    This function sets up the Celery app with the specified broker and backend URLs, and registers a custom serializer for handling numpy arrays.
+    It can also include the tasks module if specified, when running as a worker.
+    Args:
+        include_tasks (bool): If True, include the tasks module in the Celery app.
+    Returns:
+        Celery: Configured Celery application instance.
+    """
     app = Celery(
         "cp_server-tasks",
         broker=CELERY_BROKER_URL,
@@ -34,9 +43,7 @@ def create_celery_app(include_tasks: bool = False)-> Celery:
     if include_tasks:
         app.conf.update(include=["cp_server.tasks_server.celery_tasks"],)
         app.conf.task_default_queue = "celery"
-        app.conf.task_routes = {
-            "cp_server.tasks_server.celery_tasks.segment": {"queue": "gpu_tasks"}
-        }
+        app.conf.task_routes = {"cp_server.tasks_server.celery_tasks.segment": {"queue": "gpu_tasks"}}
     return app
 
 

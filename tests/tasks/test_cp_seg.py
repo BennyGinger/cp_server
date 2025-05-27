@@ -3,7 +3,7 @@ from cellpose.denoise import CellposeDenoiseModel
 import numpy as np
 import pytest
 
-from cp_server.tasks_server.tasks.segementation.cp_seg import _initialize_cellpose_model, unpack_settings, segment_image
+from cp_server.tasks_server.tasks.segementation.cp_seg import _initialize_cellpose_model, unpack_settings, _segment_image
 
 
 @pytest.fixture
@@ -90,7 +90,7 @@ def test_segment_2Dimage(img, settings, do_denoise):
     
     model = _initialize_cellpose_model(do_denoise, model_settings)
     
-    masks = segment_image(img, cp_settings, model)
+    masks = _segment_image(img, cp_settings, model)
     
     assert masks.shape == img.shape
 
@@ -103,6 +103,6 @@ def test_segment_3Dimage(img_zstack, settings, threeD_settings):
     
     model = _initialize_cellpose_model(do_denoise=do_denoise, model_settings=model_settings)
     
-    masks = segment_image(img_zstack, cp_settings, model)
+    masks = _segment_image(img_zstack, cp_settings, model)
     
     assert masks.shape == img_zstack.shape

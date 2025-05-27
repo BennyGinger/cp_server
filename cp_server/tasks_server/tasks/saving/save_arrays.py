@@ -6,26 +6,32 @@ import tifffile as tiff
 
 
 def generate_mask_path(img_file: str, dst_folder: str) -> Path:
+    """
+    Generate the path where the mask will be saved based on the image file name and destination folder.
+    The assumption is that the coming file name is in the format '<FOVID>_refseg_[1-9].tif', so the mask will be saved as '<FOVID>_mask_[1-9].tif'.
+    Args:
+        img_file (str): The path to the image file.
+        dst_folder (str): The destination folder where the mask will be saved.
+    Returns:
+        Path: The path where the mask will be saved.
+    """
     save_dir = Path(img_file).parent.parent.joinpath(dst_folder)
     save_dir.mkdir(exist_ok=True)
     mask_path = save_dir.joinpath(img_file.name.replace("refseg", "mask"))
     return mask_path
 
-def extract_fov_id(img_file: str) -> str:
+def extract_fov_id(img_file: str) -> tuple[str, str]:
     """
     Extract the field of view (FOV) ID from the image file name.
-    The FOV ID is expected to be the part of the file name before the first underscore.
-    
+    The assumption is that the coming file name is in the format '<FOVID>_mask_[1-9].tif', so the FOV ID and timepoint will be extracted.
     Args:
         img_file (str): The path to the image file.
-        
     Returns:
-        str: The extracted FOV ID.
+        tuple[str, str]: A tuple containing the FOV ID and timepoint extracted from the image file name.
     """
-    return Path(img_file).stem.split("_")[0]
+    return Path(img_file).stem.split("_mask_")
 
-
-def save_mask(mask: np.ndarray, mask_path: str)-> None:
+def save_mask(mask: np.ndarray, mask_path: str) -> None:
     """
     Save the masks to a TIFF file. The masks are expected to be a 2D or 3D numpy array
     where each pixel value corresponds to a label of an object in the image.
@@ -49,7 +55,7 @@ def save_mask(mask: np.ndarray, mask_path: str)-> None:
     # Save the masks
     tiff.imwrite(mask_path, mask.astype(dtype), compression='zlib')
     
-def save_img(img: np.ndarray, img_file: str)-> None:
+def save_img(img: np.ndarray, img_file: str) -> None:
     """
     Save the image to a TIFF file. The image is expected to be a 2D or 3D numpy array.
     Files are automatically compressed using zlib.

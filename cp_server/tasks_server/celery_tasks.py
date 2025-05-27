@@ -1,5 +1,4 @@
 import logging
-from pathlib import Path
 import os
 from urllib.parse import urlparse
 
@@ -10,7 +9,7 @@ import tifffile as tiff
 
 from cp_server.tasks_server.tasks.bg_sub.bg_sub import apply_bg_sub
 from cp_server.tasks_server.tasks.segementation.cp_seg import run_seg
-from cp_server.tasks_server.tasks.saving.save_arrays import generate_mask_path, save_mask, save_img
+from cp_server.tasks_server.tasks.saving.save_arrays import extract_fov_id, generate_mask_path, save_mask, save_img
 from cp_server.tasks_server.tasks.track.track import track_masks
 
 
@@ -119,7 +118,7 @@ def segment(img: np.ndarray,
     save_masks_task.delay(mask, str(mask_path))
     
     # Extract fovID and timepoint from the image file name
-    fov_id, time_id = mask_path.stem.split("_mask_") # On the assumption that files look like: "fovID_mask_1.tif"
+    fov_id, time_id = extract_fov_id(img_file)
     celery_logger.debug(f"Extracted fov_id: {fov_id} and time_id: {time_id} from {mask_path}")
     
     # Register the run_id and fov_id in Redis
@@ -164,7 +163,6 @@ def track_cells(mask_paths: list[str],
     for mask, path in zip(stitched_masks, mask_paths):
         save_masks_task.delay(mask, path)
 
-
 ################# Main tasks #################
 @shared_task(name="cp_server.tasks_server.celery_tasks.process_images")
 def process_images(mod_settings: dict[str, any],
@@ -180,6 +178,12 @@ def process_images(mod_settings: dict[str, any],
                    ) -> str:
     """
     Process images with background subtraction and segmentation. Note that the image (ndarray) is encoded as a base64 string.
+    This function orchestrates the workflow of removing background, segmenting the image, and tracking cells if necessary.
+    It initializes the tracking counter in Redis if this is the second round of processing and total_fovs is provided.
+    It also saves the processed images and masks to the specified destination folder.
+    The function is designed to be called by a Celery worker, and it uses the `chain` feature to create a workflow of tasks.
+    During round 2, tracking will be triggered automatically once two masks for the same field of view (FOV) are available (see `segment` task).
+    
     Args:
         mod_settings (dict): Model settings for Cellpose.
         cp_settings (dict): Segmentation settings for Cellpose.
