@@ -20,11 +20,12 @@ def process_images_endpoint(request: Request, payload: ProcessRequest) -> dict[s
     """
     Endpoint to process images using the provided payload.
     This endpoint accepts a payload containing:
-    - `img_file`: A string path to an image file, a directory containing images, or a list of image paths.
     - `mod_settings`: Settings for the model.
     - `cp_settings`: Settings for the Cellpose processing.
+    - `img_file`: A string path to an image file, a directory containing images, or a list of image paths (str).
     - `dst_folder`: Destination folder where processed images will be saved.
     - `round`: The round number for processing.
+    - `run_id`: Unique identifier for the processing run.
     - `total_fovs`: Optional total number of fields of view.
     - `do_denoise`: Whether to apply denoising (default is True).
     - `stitch_threshold`: Threshold for stitching masks (default is 0.75).
@@ -38,25 +39,13 @@ def process_images_endpoint(request: Request, payload: ProcessRequest) -> dict[s
     
     :return: A dictionary with task IDs and count of tasks sent.
     
-    :raises HTTPException: If the destination folder is not provided or does not exist.
-    :raises ValueError: If the provided image paths are invalid or do not exist. 
-    """
+"""
     # Get the source and destination directories
     celery_app: Celery = request.app.state.celery_app
     
-    if not payload.dst_folder:
-        raise HTTPException(status_code=400, detail="Provide a destination folder in dst_folder")
-    
-    if not Path(payload.dst_folder).exists():
-        Path(payload.dst_folder).mkdir(parents=True, exist_ok=True)
-    
-    # Validate run_id
-    if not payload.run_id:
-        raise HTTPException(status_code=400, detail="run_id is required for processing")
-    
+    # Initialize the counter for pending tracks
     if payload.round == 2:
-        total_fovs = payload.total_fovs or len(payload.image_paths)
-        redis_client.setnx(f"pending_tracks:{payload.run_id}", total_fovs)
+        redis_client.setnx(f"pending_tracks:{payload.run_id}", payload.total_fovs)
         redis_client.expire(f"pending_tracks:{payload.run_id}", 24 * 3600)
     
     logger.info(f"Enqueuing {len(payload.image_paths)} images for processing (round={payload.round})")
@@ -79,9 +68,18 @@ def get_process_status(run_id: str) -> dict:
     Check remaining tracks for a given run_id.
     Returns 404 if run_id is not found in Redis.
     """
-    key = f"pending_tracks:{run_id}"
-    if not redis_client.exists(key):
-        raise HTTPException(status_code=404, detail=f"run_id '{run_id}' not found")
-
-    rem = redis_client.get(key)
-    return {"run_id": run_id, "status": "processing", "remaining": int(rem)}
+    pending_key  = f"pending_tracks:{run_id}"
+    finished_key = f"finished:{run_id}"
+    
+    # 1) If we have a finished flag, report done
+    if redis_client.exists(finished_key):
+        return {"run_id": run_id, "status": "finished", "remaining": 0}
+    
+    # 2) If we still have a pending counter, report processing
+    if redis_client.exists(pending_key):
+        rem = int(redis_client.get(pending_key))
+        return {"run_id": run_id, "status": "processing", "remaining": rem}
+    
+    # 3) Neither key exists → invalid run_id
+    raise HTTPException(status_code=404,
+                        detail=f"run_id '{run_id}' not found")

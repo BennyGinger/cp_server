@@ -50,6 +50,12 @@ def all_tracks_finished(run_id: str) -> str:
     for key in redis_client.scan_iter(match=pattern):
         redis_client.delete(key)
         celery_logger.debug(f"Deleted Redis key {key.decode()}")
+    
+    # 3) Create a finish flag
+    finish_key = f"finished:{run_id}"
+    redis_client.set(finish_key, 1)
+    redis_client.expire(finish_key, 12 * 3600) # Set an expiration time of 12 hours
+    
     return f"Run {run_id} completed successfully. All tracks finished."  
 
 ###########################
