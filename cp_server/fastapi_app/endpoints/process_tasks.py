@@ -5,6 +5,7 @@ from celery import Celery
 
 from cp_server.fastapi_app.endpoints.utils import ProcessRequest
 from cp_server.logging import get_logger
+from cp_server.tasks_server.celery_tasks import redis_client
 
 
 # Setup logging
@@ -15,7 +16,7 @@ router = APIRouter()
 
 
 @router.post("/process")
-def process_images_endpoint(request: Request, payload: ProcessRequest) -> dict:
+def process_images_endpoint(request: Request, payload: ProcessRequest) -> dict[str, any]:
     """
     Endpoint to process images using the provided payload.
     This endpoint accepts a payload containing:
@@ -49,20 +50,38 @@ def process_images_endpoint(request: Request, payload: ProcessRequest) -> dict:
     if not Path(payload.dst_folder).exists():
         Path(payload.dst_folder).mkdir(parents=True, exist_ok=True)
     
-    logger.info(f"Enqueuing {len(payload.image_paths)} images for processing (round={payload.round})")
+    # Validate run_id
+    if not payload.run_id:
+        raise HTTPException(status_code=400, detail="run_id is required for processing")
     
     if payload.round == 2:
         total_fovs = payload.total_fovs or len(payload.image_paths)
+        redis_client.setnx(f"pending_tracks:{payload.run_id}", total_fovs)
+        redis_client.expire(f"pending_tracks:{payload.run_id}", 24 * 3600)
+    
+    logger.info(f"Enqueuing {len(payload.image_paths)} images for processing (round={payload.round})")
     
     # Process the paths
     task_ids = []
     for path in payload.image_paths:
         params = payload.model_dump()
         params["img_file"] = path
-        params['total_fovs'] = total_fovs if payload.round == 2 else None
         task = celery_app.send_task(
             "cp_server.tasks_server.celery_tasks.process_images",
             kwargs=params)
         task_ids.append(task.id)
 
     return {"task_ids": task_ids, "count": len(task_ids)}
+
+@router.get("/process/{run_id}/status")
+def get_process_status(run_id: str) -> dict:
+    """
+    Check remaining tracks for a given run_id.
+    Returns 404 if run_id is not found in Redis.
+    """
+    key = f"pending_tracks:{run_id}"
+    if not redis_client.exists(key):
+        raise HTTPException(status_code=404, detail=f"run_id '{run_id}' not found")
+
+    rem = redis_client.get(key)
+    return {"run_id": run_id, "status": "processing", "remaining": int(rem)}

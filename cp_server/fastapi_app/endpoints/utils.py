@@ -13,6 +13,7 @@ class ProcessRequest(BaseModel):
     img_file: str | list[str]
     dst_folder: str
     round: int
+    run_id: str
     total_fovs: Optional[int] = None
     do_denoise: bool = True
     stitch_threshold: float = 0.75
