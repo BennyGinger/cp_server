@@ -4,7 +4,6 @@ import numpy as np
 import tifffile as tiff
 
 
-
 def generate_mask_path(img_file: str, dst_folder: str) -> Path:
     """
     Generate the path where the mask will be saved based on the image file name and destination folder.
