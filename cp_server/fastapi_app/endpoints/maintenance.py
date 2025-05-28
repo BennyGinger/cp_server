@@ -1,7 +1,10 @@
-# Create a router for the segment task
 from fastapi import APIRouter
 
 from cp_server.tasks_server.celery_tasks import redis_client
+from cp_server.logger import get_logger
+
+
+logger = get_logger('maintenance')
 
 router = APIRouter()
 
@@ -19,5 +22,6 @@ def cleanup_stale_keys(host_prefix: str) -> dict[str, int]:
         pattern = f"{prefix}{host_prefix}-*"
         for key in redis_client.scan_iter(match=pattern):
             redis_client.delete(key)
+            logger.debug(f"Deleted Redis key {key.decode()}")
             removed += 1
     return {"deleted": removed}

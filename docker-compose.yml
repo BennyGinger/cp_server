@@ -8,8 +8,6 @@ x-common_setup: &common_setup
     args:
       USER_UID: "${USER_UID:-1000}"
       USER_GID: "${USER_GID:-1000}"
-  ports:
-    - "8000:8000"
   volumes:
     - "${DATA_DIR}:/data"
     - ./cp_server:/app/cp_server
@@ -35,6 +33,8 @@ services:
 ######################################
   fastapi:
     <<: *common_setup
+    ports:
+    - "8000:8000"
     environment:
       <<: *common_setup.environment
       SERVICE_NAME: fastapi
