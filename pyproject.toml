@@ -10,9 +10,8 @@ authors = [
 requires-python = ">=3.12"
 dependencies = [
     "celery>=5.4.0",
-    "numpy>=2.0.2",
+    "numpy<2.0.0",
     "redis>=5.2.1",
-    "watchdog>=6.0.0",
 ]
 
 [project.scripts]
@@ -44,5 +43,4 @@ dev = [
     "pytest-asyncio>=0.25.3",
     "scikit-image>=0.25.2",
     "smo>=2.0.2",
-    "watchdog>=6.0.0",
 ]

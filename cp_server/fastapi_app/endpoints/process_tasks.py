@@ -4,7 +4,7 @@ from fastapi import APIRouter, Request, HTTPException
 from celery import Celery
 
 from cp_server.fastapi_app.endpoints.utils import ProcessRequest
-from cp_server.logging import get_logger
+from cp_server.logger import get_logger
 from cp_server.tasks_server.celery_tasks import redis_client
 
 

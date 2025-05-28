@@ -1,64 +1,61 @@
 version: '3.9'
 
+# Define your anchor with all the shared bits
+x-common_setup: &common_setup
+  build:
+    context: .
+    dockerfile: Dockerfile_app
+    args:
+      USER_UID: "${USER_UID:-1000}"
+      USER_GID: "${USER_GID:-1000}"
+  ports:
+    - "8000:8000"
+  volumes:
+    - "${DATA_DIR}:/data"
+    - ./cp_server:/app/cp_server
+  environment:
+    CELERY_BROKER_URL: "${CELERY_BROKER_URL}"
+    CELERY_BACKEND_URL: "${CELERY_BACKEND_URL}"
+  depends_on:
+    - redis
+  restart: on-failure
+
 services:
+#######################################
+############## Redis ##################
+#######################################
   redis:
     image: redis:latest
     ports:
       - "6380:6379"
     restart: on-failure
 
+######################################
+############# FastAPI ################
+######################################
   fastapi:
-    build:
-      context: .
-      dockerfile: Dockerfile_app
-      args:
-        USER_UID: "${USER_UID:-1000}"
-        USER_GID: "${USER_GID:-1000}"
-    ports:
-      - "8000:8000"
-    volumes:
-      - /home/eblab/data_dir:/data # TODO: Change this to your data directory
-      - ./cp_server:/app/cp_server
+    <<: *common_setup
     environment:
-      # Environment variable used by your app to know where the Celery broker is.
-      CELERY_BROKER_URL: "redis://redis:6379/0"
-      CELERY_BACKEND_URL: "redis://redis:6379/1"
+      <<: *common_setup.environment
       SERVICE_NAME: fastapi
-    depends_on:
-      - redis
-    restart: on-failure
-
+      
+#######################################
+########### Celery Workers ############
+#######################################
   celery-default:
+    <<: *common_setup
     build:
-      context: .
       dockerfile: Dockerfile_celery_default
-      args:
-        USER_UID: "${USER_UID:-1000}"
-        USER_GID: "${USER_GID:-1000}"
-    volumes:
-      - /home/eblab/data_dir:/data # TODO: Change this to your data directory
-      - ./cp_server:/app/cp_server
     environment:
-      CELERY_BROKER_URL: "redis://redis:6379/0"
-      CELERY_BACKEND_URL: "redis://redis:6379/1"
+      <<: *common_setup.environment
       SERVICE_NAME: celery-default
-    depends_on:
-      - redis
-    restart: on-failure
   
   celery-gpu:
+    <<: *common_setup
     build:
-      context: .
       dockerfile: Dockerfile_celery
-      args:
-        USER_UID: "${USER_UID:-1000}"
-        USER_GID: "${USER_GID:-1000}"
-    volumes:
-      - /home/eblab/data_dir:/data # TODO: Change this to your data directory
-      - ./cp_server:/app/cp_server
     environment:
-      CELERY_BROKER_URL: "redis://redis:6379/0"
-      CELERY_BACKEND_URL: "redis://redis:6379/1"
+      <<: *common_setup.environment
       SERVICE_NAME: celery-gpu
     deploy:
       resources:
@@ -67,6 +64,3 @@ services:
             - driver: "nvidia"
               count: all
               capabilities: ["gpu"]
-    depends_on:
-      - redis
-    restart: on-failure
