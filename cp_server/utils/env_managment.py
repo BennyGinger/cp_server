@@ -1,7 +1,7 @@
 import os
 import sys
-from pathlib import Path
 
+from cp_server import ROOT
 from cp_server.logger import get_logger
 
 
@@ -19,10 +19,6 @@ CELERY_BACKEND_URL=redis://redis:6379/1
 USER_UID=1000
 USER_GID=1000
 """
-
-ROOT = Path(__file__).parent.parent.resolve()
-if not ROOT.exists():
-    raise FileNotFoundError(f"Root directory {ROOT!r} does not exist. Please check your setup.")
 
 logger = get_logger(__name__)
 

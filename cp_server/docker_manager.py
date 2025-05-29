@@ -1,12 +1,16 @@
 import subprocess
 import shutil
 
+from cp_server import ROOT
 from cp_server.logger import get_logger
-from cp_server.env_managment import ROOT, update_env_file
+from cp_server.utils.env_managment import update_env_file
+
+
+# Ensure the .env file is updated with the current user UID and GID
+update_env_file()
 
 # Setup logging
 logger = get_logger(__name__)
-
 
 
 COMPOSE_FILE = ROOT.joinpath("docker-compose.yml")
@@ -30,9 +34,6 @@ def compose_up() -> None:
     If the `docker-compose` command is not found, it will raise an error.
     """
     logger.info("Bringing up Docker Compose…")
-    
-    # Ensure the .env file is updated with the current user UID and GID
-    update_env_file()
     
     # always tear down stale state first
     compose_down()

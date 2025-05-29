@@ -1,6 +1,10 @@
-# cp_server/logging.py
 import os
 import logging
+
+from gem_logging import configure_logging
+
+
+configure_logging()
 
 SERVICE_NAME = os.getenv("SERVICE_NAME", "cp_server")
 
