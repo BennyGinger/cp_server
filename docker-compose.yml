@@ -23,7 +23,7 @@ services:
 ############## Redis ##################
 #######################################
   redis:
-    image: redis:latest
+    image: redis:latest # TODO: Use a specific version
     ports:
       - "6380:6379"
     restart: on-failure
