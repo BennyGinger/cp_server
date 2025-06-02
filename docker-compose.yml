@@ -1,6 +1,9 @@
-version: '3.9'
+# 1) Anchor just the shared environment variables
+x-common_env: &common_env
+  CELERY_BROKER_URL: "${CELERY_BROKER_URL}"
+  CELERY_BACKEND_URL: "${CELERY_BACKEND_URL}"
 
-# Define your anchor with all the shared bits
+# 2) Anchor the rest of the shared setup—but refer to *common_env for its environment:
 x-common_setup: &common_setup
   build:
     context: .
@@ -11,9 +14,7 @@ x-common_setup: &common_setup
   volumes:
     - "${DATA_DIR}:/data"
     - ./cp_server:/app/cp_server
-  environment:
-    CELERY_BROKER_URL: "${CELERY_BROKER_URL}"
-    CELERY_BACKEND_URL: "${CELERY_BACKEND_URL}"
+  environment: *common_env
   depends_on:
     - redis
   restart: on-failure
@@ -36,7 +37,7 @@ services:
     ports:
     - "8000:8000"
     environment:
-      <<: *common_setup.environment
+      <<: *common_env
       SERVICE_NAME: fastapi
       
 #######################################
@@ -47,7 +48,7 @@ services:
     build:
       dockerfile: Dockerfile_celery_default
     environment:
-      <<: *common_setup.environment
+      <<: *common_env
       SERVICE_NAME: celery-default
   
   celery-gpu:
@@ -55,7 +56,7 @@ services:
     build:
       dockerfile: Dockerfile_celery
     environment:
-      <<: *common_setup.environment
+      <<: *common_env
       SERVICE_NAME: celery-gpu
     deploy:
       resources:

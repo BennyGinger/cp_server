@@ -1,4 +1,4 @@
-FROM python:3.12.10.slim
+FROM python:3.12-slim
 
 # Define build arguments with default fallback values
 ARG USER_UID=1000

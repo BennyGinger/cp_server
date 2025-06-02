@@ -1,4 +1,4 @@
-# Use the official Python 3.12.8 slim image
+# Start from NVIDIA’s CUDA runtime (Ubuntu 22.04 / “Jammy”)
 FROM nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04
 
 # Define build arguments with default fallback values
@@ -11,18 +11,26 @@ RUN groupadd -g $USER_GID celerygroup && \
 
 # Install required packages: software-properties-common to add PPAs, curl, and Python 3.12 along with its venv and distutils packages.
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y \
-    software-properties-common && \
-    add-apt-repository ppa:deadsnakes/ppa -y && \
-    apt-get update && \
-    apt-get install -y \
-      python3.12 \
-      python3.12-venv \
-      curl && \
+# 1) Install prerequisites for adding PPAs
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      software-properties-common \
+      ca-certificates \
+      gnupg && \
     rm -rf /var/lib/apt/lists/*
 
-# Install pip for Python 3.12 using get-pip.py
-RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.12
+# 2) Add the Deadsnakes PPA’s GPG key & repository
+RUN apt-get update && \
+    add-apt-repository ppa:deadsnakes/ppa -y && \
+    apt-get update
+
+# 3) Install Python 3.12 and its venv package
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      python3.12 \
+      python3.12-venv \
+      python3-pip && \
+    rm -rf /var/lib/apt/lists/*
 
 # Set the working directory in the container
 WORKDIR /app

@@ -3,12 +3,23 @@ import os
 from kombu.serialization import register
 from celery import Celery
 
+from cp_server.logger import get_logger
 from cp_server.tasks_server.serialization_utils import custom_encoder, custom_decoder
 
 
 CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
 CELERY_BACKEND_URL = os.getenv("CELERY_BACKEND_URL", "redis://localhost")
 
+# 1) Instantiate Celery (Celery will configure its own handlers at this moment)
+celery_app = Celery(
+    "cp_server-tasks",
+    broker=CELERY_BROKER_URL,
+    backend=CELERY_BACKEND_URL,
+    broker_connection_retry_on_startup=True
+)
+
+# 2) Immediately re‐attach RedisLogHandler (so it stays alive even after hijack)
+get_logger(__name__).info("Setting RedisLogHandler for Celery app")
 
 # Register the custom serializer
 register('custom_ndarray',        
@@ -17,6 +28,11 @@ register('custom_ndarray',
     content_type='application/x-custom-ndarray',
     content_encoding='utf-8')
 
+celery_app.conf.update(
+    task_serializer='custom_ndarray',
+    result_serializer='custom_ndarray',
+    accept_content=['application/x-custom-ndarray'],
+)
 
 def create_celery_app(include_tasks: bool = False) -> Celery:
     """
@@ -28,23 +44,10 @@ def create_celery_app(include_tasks: bool = False) -> Celery:
     Returns:
         Celery: Configured Celery application instance.
     """
-    app = Celery(
-        "cp_server-tasks",
-        broker=CELERY_BROKER_URL,
-        backend=CELERY_BACKEND_URL,
-        broker_connection_retry_on_startup=True)
-    
-    # Set the custom serializer as the default
-    app.conf.update(task_serializer='custom_ndarray',
-                    result_serializer='custom_ndarray',
-                    accept_content=['application/x-custom-ndarray'])
-
     # Only load tasks if we're running as a worker
     if include_tasks:
-        app.conf.update(include=["cp_server.tasks_server.celery_tasks"],)
-        app.conf.task_default_queue = "celery"
-        app.conf.task_routes = {"cp_server.tasks_server.celery_tasks.segment": {"queue": "gpu_tasks"}}
-    return app
+        celery_app.conf.update(include=["cp_server.tasks_server.celery_tasks"],)
+        celery_app.conf.task_default_queue = "celery"
+        celery_app.conf.task_routes = {"cp_server.tasks_server.celery_tasks.segment": {"queue": "gpu_tasks"}}
+    return celery_app
 
-
-celery_app = create_celery_app(include_tasks=True)

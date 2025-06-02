@@ -1,7 +1,6 @@
 import subprocess
 import shutil
 
-from cp_server import ROOT
 from cp_server.logger import get_logger
 from cp_server.utils.env_managment import update_env_file
 
@@ -13,10 +12,14 @@ update_env_file()
 logger = get_logger(__name__)
 
 
-COMPOSE_FILE = ROOT.joinpath("docker-compose.yml")
-COMPOSE_CMD = shutil.which("docker-compose") or shutil.which("docker compose")
-BASE_CMD = [COMPOSE_CMD, "-f", str(COMPOSE_FILE)]
-
+def _get_base_cmd():
+    """
+    Lazily import ROOT here, and compute the compose command + -f <file>.
+    """
+    from cp_server import ROOT
+    compose_file = ROOT.joinpath("docker-compose.yml")
+    compose_cmd = shutil.which("docker-compose") or shutil.which("docker compose")
+    return [compose_cmd, "-f", str(compose_file)]
 
 def compose_down() -> None:
     """
@@ -24,7 +27,8 @@ def compose_down() -> None:
     This function will stop and remove all containers defined in the Docker Compose file.
     """
     logger.info("Tearing down Docker Compose…")
-    subprocess.run([*BASE_CMD, "down"], check=False)
+    base_cmd = _get_base_cmd()
+    subprocess.run([*base_cmd, "down"], check=False)
     logger.info("Compose is down.")
 
 def compose_up() -> None:
@@ -37,8 +41,10 @@ def compose_up() -> None:
     
     # always tear down stale state first
     compose_down()
+    
+    base_cmd = _get_base_cmd()
     try:
-        subprocess.run([*BASE_CMD, "up", "-d", "--remove-orphans"], check=True)
+        subprocess.run([*base_cmd, "up", "-d", "--remove-orphans"], check=True)
     except subprocess.CalledProcessError as e:
         logger.error("Compose up failed (exit code %s)", e.returncode)
         raise

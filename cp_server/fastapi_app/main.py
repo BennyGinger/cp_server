@@ -7,19 +7,16 @@ from cp_server.tasks_server.celery_app import create_celery_app
 from cp_server.logger import get_logger
 
 
-# Setup logging
-
-logger = get_logger()
 
 # Create the FastAPI app
 app = FastAPI()
 
-# Set the logger
+# Setup logging
+logger = get_logger()
 logger.info("-----------------------------------------------")
 logger.info("Starting the Cellpose server...")
 
 # Initiate a minimal celery app, to send tasks to the celery worker
-logger.info("Initiating the file watcher manager...")
 min_celery_app = create_celery_app()
 app.state.celery_app = min_celery_app
 

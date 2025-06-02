@@ -10,7 +10,6 @@ authors = [
 requires-python = ">=3.12"
 dependencies = [
     "celery>=5.4.0",
-    "gem-logging",
     "numpy<2.0.0",
     "redis>=5.2.1",
 ]
@@ -45,6 +44,3 @@ dev = [
     "scikit-image>=0.25.2",
     "smo>=2.0.2",
 ]
-
-[tool.uv.sources]
-gem-logging = { path = "../GEM_Logging", editable = true }

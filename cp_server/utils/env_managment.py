@@ -15,6 +15,12 @@ DATA_DIR=/home/eblab/data_dir
 CELERY_BROKER_URL=redis://redis:6379/0
 CELERY_BACKEND_URL=redis://redis:6379/1
 
+# Redis configuration for logging:
+REDIS_HOST=redis
+REDIS_PORT=6379
+# Use DB=2 so that Celery's DB=0 (broker) and DB=1 (results) stay separate:
+REDIS_DB=2
+
 # These will be filled in by the script:
 USER_UID=1000
 USER_GID=1000
