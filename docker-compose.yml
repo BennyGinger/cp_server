@@ -1,63 +1,75 @@
-# 1) Anchor just the shared environment variables
-x-common_env: &common_env
-  CELERY_BROKER_URL: "${CELERY_BROKER_URL}"
-  CELERY_BACKEND_URL: "${CELERY_BACKEND_URL}"
-
-# 2) Anchor the rest of the shared setup—but refer to *common_env for its environment:
-x-common_setup: &common_setup
-  build:
-    context: .
-    dockerfile: Dockerfile_app
-    args:
-      USER_UID: "${USER_UID:-1000}"
-      USER_GID: "${USER_GID:-1000}"
-  volumes:
-    - "${DATA_DIR}:/data"
-    - ./cp_server:/app/cp_server
-  environment: *common_env
-  depends_on:
-    - redis
-  restart: on-failure
-
 services:
-#######################################
-############## Redis ##################
-#######################################
+  #######################################
+  ############## Redis ##################
+  #######################################
   redis:
-    image: redis:latest # TODO: Use a specific version
+    image: redis:latest  # TODO: Use a specific version
     ports:
       - "6380:6379"
     restart: on-failure
 
-######################################
-############# FastAPI ################
-######################################
+  ######################################
+  ############# FastAPI ################
+  ######################################
   fastapi:
-    <<: *common_setup
-    ports:
-    - "8000:8000"
+    build:
+      context: .
+      dockerfile: Dockerfile_app
+      args:
+        USER_UID: "${USER_UID:-1000}"
+        USER_GID: "${USER_GID:-1000}"
+    volumes:
+      - "${DATA_DIR}:/data"
+      - ./cp_server:/app/cp_server
     environment:
-      <<: *common_env
+      CELERY_BROKER_URL: "${CELERY_BROKER_URL}"
+      CELERY_BACKEND_URL: "${CELERY_BACKEND_URL}"
       SERVICE_NAME: fastapi
-      
-#######################################
-########### Celery Workers ############
-#######################################
+    depends_on:
+      - redis
+    restart: on-failure
+    ports:
+      - "8000:8000"
+
+  #######################################
+  ########### Celery Workers ############
+  #######################################
+
   celery-default:
-    <<: *common_setup
     build:
+      context: .
       dockerfile: Dockerfile_celery_default
+      args:
+        USER_UID: "${USER_UID:-1000}"
+        USER_GID: "${USER_GID:-1000}"
+    volumes:
+      - "${DATA_DIR}:/data"
+      - ./cp_server:/app/cp_server
     environment:
-      <<: *common_env
+      CELERY_BROKER_URL: "${CELERY_BROKER_URL}"
+      CELERY_BACKEND_URL: "${CELERY_BACKEND_URL}"
       SERVICE_NAME: celery-default
-  
+    depends_on:
+      - redis
+    restart: on-failure
+
   celery-gpu:
-    <<: *common_setup
     build:
+      context: .
       dockerfile: Dockerfile_celery
+      args:
+        USER_UID: "${USER_UID:-1000}"
+        USER_GID: "${USER_GID:-1000}"
+    volumes:
+      - "${DATA_DIR}:/data"
+      - ./cp_server:/app/cp_server
     environment:
-      <<: *common_env
+      CELERY_BROKER_URL: "${CELERY_BROKER_URL}"
+      CELERY_BACKEND_URL: "${CELERY_BACKEND_URL}"
       SERVICE_NAME: celery-gpu
+    depends_on:
+      - redis
+    restart: on-failure
     deploy:
       resources:
         reservations:

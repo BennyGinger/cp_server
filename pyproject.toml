@@ -12,6 +12,7 @@ dependencies = [
     "celery>=5.4.0",
     "numpy<2.0.0",
     "redis>=5.2.1",
+    "watchdog>=6.0.0",
 ]
 
 [project.scripts]
@@ -23,6 +24,7 @@ celery = [
 ]
 api = [
     "fastapi>=0.115.11",
+    "uvicorn>=0.34.0",
 ]
 
 celery-default = [
