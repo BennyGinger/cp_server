@@ -7,7 +7,7 @@ from celery import chain, shared_task
 import numpy as np
 import tifffile as tiff
 
-from cp_server.logger import get_logger
+from cp_server.logger.redis_logger import get_logger
 from cp_server.tasks_server.tasks.bg_sub.bg_sub import apply_bg_sub
 from cp_server.tasks_server.tasks.segementation.cp_seg import run_seg
 from cp_server.tasks_server.tasks.saving.save_arrays import extract_fov_id, generate_mask_path, save_mask, save_img

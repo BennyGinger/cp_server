@@ -1,10 +1,10 @@
+import logging
 from fastapi import APIRouter
 
 from cp_server.tasks_server.celery_tasks import redis_client
-from cp_server.logger import get_logger
 
 
-logger = get_logger('maintenance')
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
