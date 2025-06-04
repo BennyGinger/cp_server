@@ -7,7 +7,7 @@ from celery import chain, shared_task
 import numpy as np
 import tifffile as tiff
 
-from cp_server.logger.redis_logger import get_logger
+from cp_server.logger import get_logger
 from cp_server.tasks_server.tasks.bg_sub.bg_sub import apply_bg_sub
 from cp_server.tasks_server.tasks.segementation.cp_seg import run_seg
 from cp_server.tasks_server.tasks.saving.save_arrays import extract_fov_id, generate_mask_path, save_mask, save_img
@@ -20,7 +20,7 @@ parse_url = urlparse(url)
 redis_client = redis.Redis(host=parse_url.hostname, port=parse_url.port, db=int(parse_url.path.lstrip("/")))
 
 # Setup logging
-celery_logger = get_logger(__name__)
+logger = get_logger(__name__)
 
 
 ###########################
@@ -32,7 +32,7 @@ def mark_one_done(run_id: str) -> Optional[str]:
     Celery callback: decrement the pending counter; if zero, fire final task.
     """
     remaining = redis_client.decr(f"pending_tracks:{run_id}")
-    celery_logger.info(f"Tracks remaining: {remaining}")
+    logger.info(f"Tracks remaining: {remaining}")
     if remaining == 0:
         all_tracks_finished.delay(run_id)
 
@@ -42,14 +42,14 @@ def all_tracks_finished(run_id: str) -> str:
     Runs once when the last track_cells completes for this run_id.
     """
     # 1) Delete the pending counter
-    celery_logger.info(f"All tracking done for all FOVs for {run_id}")
+    logger.info(f"All tracking done for all FOVs for {run_id}")
     redis_client.delete(f"pending_tracks:{run_id}")  # Clear the pending counter
     
     # 2) Delete all per-FOV hashes
     pattern = f"masks:{run_id}:*"
     for key in redis_client.scan_iter(match=pattern):
         redis_client.delete(key)
-        celery_logger.debug(f"Deleted Redis key {key.decode()}")
+        logger.debug(f"Deleted Redis key {key.decode()}")
     
     # 3) Create a finish flag
     finish_key = f"finished:{run_id}"
@@ -70,7 +70,7 @@ def save_img_task(img: np.ndarray,
     Save the image. Note that the image (ndarray) is encoded as a base64 string
     """
     # Decode the image
-    celery_logger.debug(f"Decoding img inside save_img_task {img.shape=} and {img.dtype=}")
+    logger.debug(f"Decoding img inside save_img_task {img.shape=} and {img.dtype=}")
     return save_img(img, img_path)
 
 @shared_task(name="cp_server.tasks_server.celery_tasks.remove_bg")
@@ -83,8 +83,8 @@ def remove_bg(img: np.ndarray,
     Apply background subtraction to the image. Note that the image (ndarray) is encoded as a base64 string
     """
     # Debug log the image file and settings
-    celery_logger.debug(f"Removing background from {img_path}")
-    celery_logger.debug(f"Decoding img inside remove_bg {img.shape=} and {img.dtype=}")
+    logger.debug(f"Removing background from {img_path}")
+    logger.debug(f"Decoding img inside remove_bg {img.shape=} and {img.dtype=}")
     
     # Apply the background subtraction
     bg_img = apply_bg_sub(img, sigma, size)
@@ -106,27 +106,27 @@ def segment(img: np.ndarray,
     Segment the image using Cellpose. Note that the image (ndarray) is encoded as a base64 string
     """
     # Log the settings
-    celery_logger.info(f"Initializing segmentation for {img_file} with settings: {mod_settings}")
-    celery_logger.info(f"Segmentation parameters are: {cp_settings}")
-    celery_logger.debug(f"Decoding img inside segment {img.shape=} and {img.dtype=}")
+    logger.info(f"Initializing segmentation for {img_file} with settings: {mod_settings}")
+    logger.info(f"Segmentation parameters are: {cp_settings}")
+    logger.debug(f"Decoding img inside segment {img.shape=} and {img.dtype=}")
     
     # Run the segmentation
     mask = run_seg(mod_settings, cp_settings, img, do_denoise)
-    celery_logger.debug(f"Created cp masks of {mask.shape=}")
+    logger.debug(f"Created cp masks of {mask.shape=}")
     
     # Encode the mask and save it in the background
-    celery_logger.info(f"Segmentation completed for {img_file}. Saving masks in {dst_folder}")
+    logger.info(f"Segmentation completed for {img_file}. Saving masks in {dst_folder}")
     mask_path = generate_mask_path(img_file, dst_folder)
     save_mask(mask, str(mask_path))
     
     # Extract fovID and timepoint from the image file name
     fov_id, time_id = extract_fov_id(img_file)
-    celery_logger.debug(f"Extracted fov_id: {fov_id} and time_id: {time_id} from {mask_path}")
+    logger.debug(f"Extracted fov_id: {fov_id} and time_id: {time_id} from {mask_path}")
     
     # Register the run_id and fov_id in Redis
     hkey = f"masks:{run_id}:{fov_id}"
     redis_client.hset(hkey, time_id, str(mask_path))
-    celery_logger.info(f"Stored mask for {fov_id} time {time_id}")
+    logger.info(f"Stored mask for {fov_id} time {time_id}")
     return hkey
     
 @shared_task(name="cp_server.tasks_server.celery_tasks.check_and_track")
@@ -138,7 +138,7 @@ def check_and_track(hkey: str, stitch_threshold: float) -> None:
     try:
         # 1) See how many masks we have
         count = redis_client.hlen(hkey)
-        celery_logger.debug(f"Redis hlen({hkey}) = {count}")
+        logger.debug(f"Redis hlen({hkey}) = {count}")
 
         if count == 2:
             # 2) Parse run_id and fov_id out of the key name
@@ -147,27 +147,26 @@ def check_and_track(hkey: str, stitch_threshold: float) -> None:
             # 3) Grab the two mask paths
             raw_vals = redis_client.hvals(hkey)
             paths = [p.decode() for p in raw_vals]
-            celery_logger.info(f"Found 2 masks for {fov_id} in run {run_id}: {paths}")
+            logger.info(f"Found 2 masks for {fov_id} in run {run_id}: {paths}")
 
             # 4) Clean up the hash so we don't double-track
             redis_client.delete(hkey)
-            celery_logger.debug(f"Deleted Redis hash {hkey}")
+            logger.debug(f"Deleted Redis hash {hkey}")
 
             # 5) Fire off tracking, with a safe callback
             track_cells.apply_async(
                 args=[paths, stitch_threshold],
-                link=mark_one_done.si(run_id)
-            )
+                link=mark_one_done.si(run_id))
 
     except redis.RedisError as e:
         # Log full stack so you know what happened
-        celery_logger.exception(f"Redis error in check_and_track for key {hkey}: {e}")
+        logger.exception(f"Redis error in check_and_track for key {hkey}: {e}")
         # Re-raise if you want Celery to retry this task
         raise
 
     except Exception as e:
         # Catch anything else unexpected
-        celery_logger.exception(f"Unexpected error in check_and_track for key {hkey}: {e}")
+        logger.exception(f"Unexpected error in check_and_track for key {hkey}: {e}")
         raise    
     
 @shared_task(name="cp_server.tasks_server.celery_tasks.track_cells")
@@ -180,16 +179,16 @@ def track_cells(mask_paths: list[str],
     """
     
     # Log
-    celery_logger.info(f"Tracking cells in {len(mask_paths)} images with stitch_threshold {stitch_threshold}")
+    logger.info(f"Tracking cells in {len(mask_paths)} images with stitch_threshold {stitch_threshold}")
     
     # Load the stack of masks
     masks = [tiff.imread(path) for path in mask_paths]
     masks = np.array(masks).astype(np.uint16)
-    celery_logger.debug(f"Loaded masks of shape {masks.shape=}")
+    logger.debug(f"Loaded masks of shape {masks.shape=}")
     
     # Track the cells and trim the masks
     stitched_masks = track_masks(masks, stitch_threshold)
-    celery_logger.debug(f"Stitched masks of shape {stitched_masks.shape=}")
+    logger.debug(f"Stitched masks of shape {stitched_masks.shape=}")
     
     # Overwrite the original masks with the stitched ones
     for mask, path in zip(stitched_masks, mask_paths):
@@ -229,12 +228,12 @@ def process_images(mod_settings: dict[str, any],
         size (int, optional): Size parameter for background subtraction. Defaults to 7."""
     
     # Starting point of the log
-    celery_logger.info(f"Received image file: {img_file}")
-    celery_logger.info(f"Setting denoise to {do_denoise}, round {round}")
+    logger.info(f"Received image file: {img_file}")
+    logger.info(f"Setting denoise to {do_denoise}, round {round}")
     
     # load the image
     img = tiff.imread(img_file)
-    celery_logger.debug(f"{img.shape=} and {img.dtype=}")
+    logger.debug(f"{img.shape=} and {img.dtype=}")
 
     # Create the workflow
     chain(remove_bg.s(
@@ -251,5 +250,5 @@ def process_images(mod_settings: dict[str, any],
                 do_denoise=do_denoise),
             check_and_track.s(stitch_threshold=stitch_threshold),
           ).apply_async()
-    celery_logger.info(f"Workflow created for {img_file}")
+    logger.info(f"Workflow created for {img_file}")
     return f"Image {img_file} was sent to be segmented"

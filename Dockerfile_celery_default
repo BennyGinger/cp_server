@@ -29,8 +29,9 @@ RUN uv pip install -r pyproject.toml --extra celery-default
 
 # Give the celeryuser user ownership of the app and data directory
 RUN chown -R celeryuser:celerygroup /app
-RUN mkdir /data
-RUN chown -R celeryuser:celerygroup /data
+RUN mkdir /data /logs \
+    && chown -R celeryuser:celerygroup /data /logs
+
 USER celeryuser
 
 # Start the celery default worker

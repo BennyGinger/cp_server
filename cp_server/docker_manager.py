@@ -1,22 +1,22 @@
 import subprocess
 import shutil
 
-from cp_server.logger import get_logger
-from cp_server.utils.env_managment import update_env_file
-
-
-# Ensure the .env file is updated with the current user UID and GID
-update_env_file()
+# Ensure that the env file exists
+from cp_server.config import ROOT
+from cp_server.utils.env_managment import propagate_env_vars
+propagate_env_vars(ROOT)
 
 # Setup logging
+from cp_server.logger import get_logger
 logger = get_logger(__name__)
 
 
-def _get_base_cmd():
+def _get_base_cmd() -> list[str]:
     """
-    Lazily import ROOT here, and compute the compose command + -f <file>.
+    Get the base command for Docker Compose.
+    This function checks for the `docker-compose` or `docker compose` command
+    and returns the command with the path to the Docker Compose file.
     """
-    from cp_server import ROOT
     compose_file = ROOT.joinpath("docker-compose.yml")
     compose_cmd = shutil.which("docker-compose") or shutil.which("docker compose")
     return [compose_cmd, "-f", str(compose_file)]

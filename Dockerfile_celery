@@ -1,4 +1,3 @@
-# Start from NVIDIA’s CUDA runtime (Ubuntu 22.04 / “Jammy”)
 FROM nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04
 
 # Define build arguments with default fallback values
@@ -51,10 +50,11 @@ ENV PATH="/app/.venv/bin:$PATH"
 # Install only the "celery" extra dependencies defined in pyproject file
 RUN uv pip install -r pyproject.toml --extra celery
 
-# Give the celeryuser user ownership of the app and data directory
+# Set the folder structure and permissions
 RUN chown -R celeryuser:celerygroup /app
-RUN mkdir /data
-RUN chown -R celeryuser:celerygroup /data
+RUN mkdir /data /logs \
+    && chown -R celeryuser:celerygroup /data /logs
+
 USER celeryuser
 
 # Start the celery default worker
