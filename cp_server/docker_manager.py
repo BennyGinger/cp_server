@@ -1,15 +1,16 @@
+import logging
+from pathlib import Path
 import subprocess
 import shutil
 
-# Ensure that the env file exists
-from cp_server.config import ROOT
 from cp_server.utils.env_managment import propagate_env_vars
+
+# Can't use `get_logger` from gem_screening.logger because there is no SERVICE_NAME defined in this module. Fallback to basic logging setup.
+logger = logging.getLogger("cp_server.compose_manager")
+
+# 'Grab' the env vars if any, and propagate them to the .env file
+ROOT = Path(__file__).parent.parent.resolve()
 propagate_env_vars(ROOT)
-
-# Setup logging
-from cp_server.logger.base_log import get_logger
-logger = get_logger("compose_manager")
-
 
 def _get_base_cmd() -> list[str]:
     """

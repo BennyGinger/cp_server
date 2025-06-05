@@ -1,3 +1,4 @@
+# cp_server/utils/env_managment.py
 import os
 import sys
 from pathlib import Path
@@ -58,11 +59,9 @@ def propagate_env_vars(root: Path) -> None:
     # Ensure the .env file exists
     env_path = root.joinpath(".env")
     if not env_path.exists():
-        # write the template out
         env_path.write_text(TEMPLATE)
         raise FileNotFoundError(
-            f".env not found. A template has been created at {env_path}. "
-            "Please edit DATA_DIR (and other fields) before rerunning.")
+            f".env not found; template created at {env_path}. Please update it and rerun.")
     
     # Ensure the .env file is writable
     if not os.access(env_path, os.W_OK):

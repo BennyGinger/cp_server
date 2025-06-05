@@ -30,8 +30,8 @@ services:
       REDIS_DB: "${REDIS_DB:-2}"
       LOG_LEVEL: "${LOG_LEVEL:-INFO}"
       LOGFILE_NAME: "${LOGFILE_NAME:-app.log}"
-      HOST_LOG_FOLDER: /logs
       SERVICE_NAME: fastapi
+      RUNNING_AS_CELERY: "false"
     depends_on:
       - redis
     restart: on-failure
@@ -61,8 +61,8 @@ services:
       REDIS_DB: "${REDIS_DB:-2}"
       LOG_LEVEL: "${LOG_LEVEL:-INFO}"
       LOGFILE_NAME: "${LOGFILE_NAME:-app.log}"
-      HOST_LOG_FOLDER: /logs
       SERVICE_NAME: celery-default
+      RUNNING_AS_CELERY: "true"
     depends_on:
       - redis
     restart: on-failure
@@ -86,8 +86,8 @@ services:
       REDIS_DB: "${REDIS_DB:-2}"
       LOG_LEVEL: "${LOG_LEVEL:-INFO}"
       LOGFILE_NAME: "${LOGFILE_NAME:-app.log}"
-      HOST_LOG_FOLDER: /logs
       SERVICE_NAME: celery-gpu
+      RUNNING_AS_CELERY: "true"
     depends_on:
       - redis
     restart: on-failure

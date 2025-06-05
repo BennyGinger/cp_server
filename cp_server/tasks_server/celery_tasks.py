@@ -1,27 +1,19 @@
-import os
 from typing import Optional
-from urllib.parse import urlparse
 
-import redis
 from celery import chain, shared_task
 import numpy as np
 import tifffile as tiff
 
-from cp_server.logger.celery_log import get_celery_logger
+from cp_server.tasks_server import get_logger
 from cp_server.tasks_server.tasks.bg_sub.bg_sub import apply_bg_sub
 from cp_server.tasks_server.tasks.segementation.cp_seg import run_seg
 from cp_server.tasks_server.tasks.saving.save_arrays import extract_fov_id, generate_mask_path, save_mask, save_img
 from cp_server.tasks_server.tasks.track.track import track_masks
+from cp_server.tasks_server.redis_com import redis_client, RedisError
 
-
-# Initialize Redis client from CELERY_BROKER_URL environment variable
-url = os.environ["CELERY_BROKER_URL"]  # e.g. redis://redis:6379/0
-parse_url = urlparse(url)
-redis_client = redis.Redis(host=parse_url.hostname, port=parse_url.port, db=int(parse_url.path.lstrip("/")))
 
 # Setup logging
-logger = get_celery_logger('tasks')
-
+logger = get_logger('tasks')
 
 ###########################
 # Orchestration tasks     #
@@ -158,7 +150,7 @@ def check_and_track(hkey: str, stitch_threshold: float) -> None:
                 args=[paths, stitch_threshold],
                 link=mark_one_done.si(run_id))
 
-    except redis.RedisError as e:
+    except RedisError as e:
         # Log full stack so you know what happened
         logger.exception(f"Redis error in check_and_track for key {hkey}: {e}")
         # Re-raise if you want Celery to retry this task
