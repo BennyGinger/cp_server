@@ -7,8 +7,8 @@ from cp_server.utils.env_managment import propagate_env_vars
 propagate_env_vars(ROOT)
 
 # Setup logging
-from cp_server.logger import get_logger
-logger = get_logger(__name__)
+from cp_server.logger.base_log import get_logger
+logger = get_logger("compose_manager")
 
 
 def _get_base_cmd() -> list[str]:

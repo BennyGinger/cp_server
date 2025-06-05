@@ -3,7 +3,7 @@ import os
 from kombu.serialization import register
 from celery import Celery
 
-from cp_server.logger import get_logger
+from cp_server.logger.celery_log import get_celery_logger
 from cp_server.tasks_server.serialization_utils import custom_encoder, custom_decoder
 
 
@@ -12,7 +12,7 @@ CELERY_BACKEND_URL = os.getenv("CELERY_BACKEND_URL", "redis://localhost")
 
 
 # Set up logging for the Celery app
-logger = get_logger(__name__)
+logger = get_celery_logger('app')
 logger.info("Initializing Celery app...")
 
 # Register the custom serializer
