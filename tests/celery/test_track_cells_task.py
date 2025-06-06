@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 
-from cp_server.tasks_server.celery_tasks import track_cells
+from cp_server.tasks_server.tasks.celery_main_task import track_cells
 
 
 @pytest.fixture
@@ -13,7 +13,7 @@ def dummy_save_calls():
 # Patch external dependencies before each test
 @pytest.fixture(autouse=True)
 def patch_dependencies(monkeypatch, dummy_save_calls):
-    import cp_server.tasks_server.celery_tasks as celery_tasks
+    import cp_server.tasks_server.tasks.celery_main_task as celery_main_task
     
     class DummyTiff:
         """Dummy replacement for tiff.imread that returns a predictable 2x2 mask"""
@@ -32,13 +32,13 @@ def patch_dependencies(monkeypatch, dummy_save_calls):
         return masks + 10
     
     # Patch tiff.imread to use our dummy function
-    monkeypatch.setattr(celery_tasks.tiff, "imread", DummyTiff.imread)
+    monkeypatch.setattr(celery_main_task.tiff, "imread", DummyTiff.imread)
     
     # Patch track_masks to use our dummy implementation
-    monkeypatch.setattr(celery_tasks, "track_masks", dummy_track_masks)
+    monkeypatch.setattr(celery_main_task, "track_masks", dummy_track_masks)
     
     # Patch save_masks_task.delay to record its calls instead of performing async work.
-    monkeypatch.setattr(celery_tasks.save_masks_task, "delay", lambda mask, file: dummy_save_calls.append((mask, file)))
+    monkeypatch.setattr(celery_main_task.save_masks_task, "delay", lambda mask, file: dummy_save_calls.append((mask, file)))
 
 def test_track_cells_returns_message():
     img_files = ["img1.tif", "img2.tif"]

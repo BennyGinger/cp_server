@@ -2,7 +2,7 @@
 import numpy as np
 import tifffile as tiff
 
-from cp_server.tasks_server.celery_tasks import process_images
+from cp_server.tasks_server.tasks.celery_main_task import process_images
 
 
 def test_process_images(monkeypatch):

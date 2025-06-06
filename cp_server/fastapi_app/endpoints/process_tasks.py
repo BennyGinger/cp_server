@@ -1,9 +1,10 @@
+from typing import Any
 from fastapi import APIRouter, Request, HTTPException
 from celery import Celery
 
 from cp_server.fastapi_app.endpoints.utils import ProcessRequest
 from cp_server.fastapi_app import get_logger
-from cp_server.tasks_server.celery_tasks import redis_client
+from cp_server.tasks_server.utils.redis_com import redis_client
 
 
 # Setup logging
@@ -14,7 +15,7 @@ router = APIRouter()
 
 
 @router.post("/process")
-def process_images_endpoint(request: Request, payload: ProcessRequest) -> dict[str, any]:
+def process_images_endpoint(request: Request, payload: ProcessRequest) -> dict[str, Any]:
     """
     Endpoint to process images using the provided payload.
     This endpoint accepts a payload containing:

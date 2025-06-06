@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Any
 
 from pydantic import BaseModel, ConfigDict, model_validator
 
@@ -26,8 +26,8 @@ class ProcessRequest(BaseModel):
     This model uses Pydantic's model validators to ensure that the input files are valid
     and that the necessary parameters are provided.
     """
-    mod_settings: dict[str, any]
-    cp_settings: dict[str, any]
+    mod_settings: dict[str, Any]
+    cp_settings: dict[str, Any]
     img_file: str | list[str]
     dst_folder: str
     round: int
@@ -43,7 +43,7 @@ class ProcessRequest(BaseModel):
     model_config = ConfigDict(model_dump_exclude={"image_paths", "total_fovs"})
         
     @model_validator(mode="before")
-    def validate_input_files(cls, values: dict[str, any]) -> dict[str, any]:
+    def validate_input_files(cls, values: dict[str, Any]) -> dict[str, Any]:
         input_files = values.get("img_file")
         
         paths: list[str] = []
@@ -65,7 +65,7 @@ class ProcessRequest(BaseModel):
         return values
 
     @model_validator(mode="after")
-    def validate_run_id(cls, values: dict[str, any]) -> dict[str, any]:
+    def validate_run_id(cls, values: dict[str, Any]) -> dict[str, Any]:
         run_id = values.get("run_id")
         
         if not run_id:
@@ -74,7 +74,7 @@ class ProcessRequest(BaseModel):
         return values
     
     @model_validator(mode="after")
-    def validate_dst_folder(cls, values: dict[str, any]) -> dict[str, any]:
+    def validate_dst_folder(cls, values: dict[str, Any]) -> dict[str, Any]:
         dst_folder = values.get("dst_folder")
         
         if not dst_folder:
@@ -87,7 +87,7 @@ class ProcessRequest(BaseModel):
         return values
     
     @model_validator(mode="after")
-    def validate_total_fovs(cls, values: dict[str, any]) -> dict[str, any]:
+    def validate_total_fovs(cls, values: dict[str, Any]) -> dict[str, Any]:
         total_fovs = values.get("total_fovs")
         if values.get("round") == 2 and total_fovs is None:
             raise ValueError("total_fovs is required for round 2 processing")

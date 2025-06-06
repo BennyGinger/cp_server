@@ -1,6 +1,6 @@
 import numpy as np
 
-from cp_server.tasks_server.celery_tasks import save_img_task, remove_bg
+from cp_server.tasks_server.tasks.celery_main_task import save_img_task, remove_bg
 
 
 def test_save_img_task(monkeypatch):

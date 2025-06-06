@@ -39,4 +39,4 @@ EXPOSE 8000
 
 # Use uvicorn to start your FastAPI app.
 # This example assumes your app instance is named "app" inside a module "main".
-CMD ["uvicorn", "cp_server.fastapi_app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload", "--log-config", "/dev/null"]
+CMD ["uvicorn", "cp_server.fastapi_app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

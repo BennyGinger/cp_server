@@ -177,6 +177,7 @@ dependencies = [
     { name = "celery" },
     { name = "numpy" },
     { name = "redis" },
+    { name = "tifffile" },
     { name = "watchdog" },
 ]
 
@@ -187,6 +188,9 @@ api = [
 ]
 celery = [
     { name = "cellpose" },
+    { name = "numba" },
+    { name = "scikit-image" },
+    { name = "smo" },
 ]
 celery-default = [
     { name = "numba" },
@@ -209,11 +213,15 @@ requires-dist = [
     { name = "celery", specifier = ">=5.4.0" },
     { name = "cellpose", marker = "extra == 'celery'", specifier = ">=3.1.0" },
     { name = "fastapi", marker = "extra == 'api'", specifier = ">=0.115.11" },
+    { name = "numba", marker = "extra == 'celery'", specifier = ">=0.61.0" },
     { name = "numba", marker = "extra == 'celery-default'", specifier = ">=0.61.0" },
     { name = "numpy", specifier = "<2.0.0" },
     { name = "redis", specifier = ">=5.2.1" },
+    { name = "scikit-image", marker = "extra == 'celery'", specifier = ">=0.25.2" },
     { name = "scikit-image", marker = "extra == 'celery-default'", specifier = ">=0.25.2" },
+    { name = "smo", marker = "extra == 'celery'", specifier = ">=2.0.2" },
     { name = "smo", marker = "extra == 'celery-default'", specifier = ">=2.0.2" },
+    { name = "tifffile", specifier = ">=2025.2.18" },
     { name = "uvicorn", marker = "extra == 'api'", specifier = ">=0.34.0" },
     { name = "watchdog", specifier = ">=6.0.0" },
 ]

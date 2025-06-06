@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-from cp_server.tasks_server.serialization_utils import custom_decoder, custom_encoder
+from cp_server.tasks_server.utils.serialization_utils import custom_decoder, custom_encoder
 
 
 @pytest.mark.parametrize("array", [np.random.randint(0, 65536, (256, 256), dtype=np.uint16),
