@@ -4,6 +4,10 @@ import sys
 from pathlib import Path
 
 
+LOGFILE_NAME = os.getenv("LOGFILE_NAME", "combined_server.log")
+HOST_LOG_FOLDER = os.getenv("HOST_LOG_FOLDER", "../logs")
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+
 TEMPLATE = """\
 # ⚠️ Please review and customize this file before running again ⚠️
 
@@ -83,8 +87,8 @@ def propagate_env_vars(root: Path) -> None:
     lines["USER_GID"] = str(gid)
     
     # Override the LOGS setups
-    lines["LOGFILE_NAME"] = os.getenv("LOGFILE_NAME", "combined_server.log")
-    lines["LOG_LEVEL"] = os.getenv("LOG_LEVEL", "INFO").upper()
+    lines["LOGFILE_NAME"] = LOGFILE_NAME
+    lines["LOG_LEVEL"] = LOG_LEVEL
     
     # Write back
     tmp_path = env_path.with_suffix(".env.tmp")

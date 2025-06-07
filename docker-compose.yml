@@ -61,7 +61,7 @@ services:
       REDIS_DB: "${REDIS_DB:-2}"
       LOG_LEVEL: "${LOG_LEVEL:-INFO}"
       LOGFILE_NAME: "${LOGFILE_NAME:-app.log}"
-      SERVICE_NAME: celery-default
+      SERVICE_NAME: celery
       RUNNING_AS_CELERY: "true"
     depends_on:
       - redis
@@ -86,7 +86,7 @@ services:
       REDIS_DB: "${REDIS_DB:-2}"
       LOG_LEVEL: "${LOG_LEVEL:-INFO}"
       LOGFILE_NAME: "${LOGFILE_NAME:-app.log}"
-      SERVICE_NAME: celery-gpu
+      SERVICE_NAME: celery
       RUNNING_AS_CELERY: "true"
     depends_on:
       - redis

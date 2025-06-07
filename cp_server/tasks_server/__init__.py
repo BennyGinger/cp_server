@@ -89,7 +89,7 @@ def _configure_logging(logger: logging.Logger, *args, **kwargs) -> None:
         })
 
         # Optional: a quick sanity‐check message
-        _celery_logger = logging.getLogger("celery.logging")
+        _celery_logger = logging.getLogger(f"{SERVICE_NAME}.logging")
         _celery_logger.info(
             "Celery logging configured (console + %s) at level %s",
             LOGFILE_PATH, LOG_LEVEL)

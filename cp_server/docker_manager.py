@@ -4,7 +4,7 @@ import subprocess
 import shutil
 import threading
 
-from cp_server.utils.env_managment import propagate_env_vars
+from cp_server.utils.env_managment import propagate_env_vars, HOST_LOG_FOLDER, LOGFILE_NAME
 
 # Can't use `get_logger` from gem_screening.logger because there is no SERVICE_NAME defined in this module. Fallback to basic logging setup.
 logger = logging.getLogger("cp_server.compose_manager")
@@ -33,29 +33,32 @@ def compose_down() -> None:
     subprocess.run([*base_cmd, "down"], check=False)
     logger.info("Compose is down.")
 
-def _stream_compose_logs():
+def _stream_compose_logs() -> None:
+    """
+    Stream the logs of the Docker Compose services.
+    This function will run `docker-compose logs -f` and write the logs to a file
+    while also printing them to the console.
+    It will create a log file in the HOST_LOG_FOLDER with the name LOGFILE_NAME.
+    """
     base_cmd = _get_base_cmd()
-    cmd = [*base_cmd, "logs", "-f"]
+    log_path = Path(HOST_LOG_FOLDER).joinpath(LOGFILE_NAME)
     proc = subprocess.Popen(
-        cmd,
+        [*base_cmd, "logs", "-f"],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,
     )
-    for raw in proc.stdout:
-        line = raw.rstrip()
-        if 'fastapi' in line:
-            # Skip fastapi logs, they are not relevant for the pipeline
-            continue
-        # 1) Show on pipeline’s console:
-        print(line)
-        # 2) Also write into the pipeline’s logfile:
-        logger = logging.getLogger("compose_manager")
-        logger.info(line)
+    with log_path.open("a", encoding="utf-8") as f:
+        for line in proc.stdout:
+            # 1) Print raw, so you see Docker’s own timestamp+prefix
+            print(line, end="")
+            # 2) Mirror the exact same line into your logfile
+            f.write(line)
+            f.flush() # Ensure the file is flushed after each line, meaning it is written immediately
     proc.wait()
-    
 
-def compose_up(stream_log: bool = False) -> None:
+
+def compose_up(stream_log: bool) -> None:
     """
     Bring up the Docker Compose environment.
     This function will tear down any stale state first and then bring up the Docker Compose services.
@@ -100,7 +103,7 @@ class ComposeManager:
         pass
     ```
     """
-    def __init__(self, stream_log: bool = False) -> None:
+    def __init__(self, stream_log: bool = True) -> None:
         self.stream_log = stream_log
     
     def __enter__(self) -> None:
