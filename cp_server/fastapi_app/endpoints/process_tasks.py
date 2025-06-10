@@ -59,7 +59,7 @@ def process_images_endpoint(request: Request, payload: ProcessRequest) -> dict[s
             kwargs=params)
         task_ids.append(task.id)
 
-    return {"task_ids": task_ids, "count": len(task_ids)}
+    return {"run_id": payload.run_id, "task_ids": task_ids, "count": len(task_ids)}
 
 @router.get("/process/{run_id}/status")
 def get_process_status(run_id: str) -> dict:
