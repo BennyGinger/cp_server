@@ -15,7 +15,7 @@ def test_track_masks_complete():
                        [0, 1]], dtype=np.uint16)
     masks = np.stack([frame0, frame1])
     
-    tracked = track_masks(masks.copy(), stitch_threshold=0.25)
+    tracked = track_masks(masks.copy(), track_stitch_threshold=0.25)
     # Since the track is complete, the output should be unchanged.
     expected = np.stack([frame0, frame1])
     assert tracked.shape == expected.shape
@@ -32,7 +32,7 @@ def test_track_masks_incomplete():
     frame1 = np.zeros((2, 2), dtype=np.int32)  # cell missing in frame1
     masks = np.stack([frame0, frame1])
     
-    tracked = track_masks(masks.copy(), stitch_threshold=0.25)
+    tracked = track_masks(masks.copy(), track_stitch_threshold=0.25)
     # Incomplete track should be removed (set to background 0 in all frames).
     expected = np.stack([np.zeros((2, 2), dtype=np.int32),
                          np.zeros((2, 2), dtype=np.int32)])
@@ -53,7 +53,7 @@ def test_track_masks_mixed_tracks():
                        [0, 1, 0]], dtype=np.int32)
     masks = np.stack([frame0, frame1])
     
-    tracked = track_masks(masks.copy(), stitch_threshold=0.25)
+    tracked = track_masks(masks.copy(), track_stitch_threshold=0.25)
     # Only label 1 is present in all frames. Label 2 should be trimmed.
     expected_frame0 = np.array([[0, 1, 0],
                                 [0, 1, 0]], dtype=np.int32)

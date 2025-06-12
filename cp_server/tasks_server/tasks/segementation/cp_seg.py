@@ -62,6 +62,10 @@ def _update_cp_settings(cp_set: dict[str, any],
      """
      Validate the Cellpose settings and add channels if needed.
      """
+     # Convert 3d_stitch_threshold to stitch_threshold if needed
+     if "3D_stitch_threshold" in cp_set:
+          cp_set["stitch_threshold"] = cp_set.pop("3d_stitch_threshold")
+     
      if not do_denoise:
           return cp_set
      

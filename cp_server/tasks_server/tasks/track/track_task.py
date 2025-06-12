@@ -11,7 +11,7 @@ logger = get_logger(__name__)
 
 @shared_task(name="cp_server.tasks_server.tasks.track.track_cells")
 def track_cells(mask_paths: list[str], 
-                stitch_threshold: float,
+                track_stitch_threshold: float,
                 ) -> None:
     """
     Task to track cells in a time series of images. Masks are stitched together based on a threshold for IOU (Intersection Over Union).
@@ -19,7 +19,7 @@ def track_cells(mask_paths: list[str],
     """
     
     # Log
-    logger.info(f"Tracking cells in {len(mask_paths)} images with stitch_threshold {stitch_threshold}")
+    logger.info(f"Tracking cells in {len(mask_paths)} images with track_stitch_threshold {track_stitch_threshold}")
     
     # Load the stack of masks
     masks = [tiff.imread(path) for path in mask_paths]
@@ -27,7 +27,7 @@ def track_cells(mask_paths: list[str],
     logger.debug(f"Loaded masks of shape {masks.shape=}")
     
     # Track the cells and trim the masks
-    stitched_masks = track_masks(masks, stitch_threshold)
+    stitched_masks = track_masks(masks, track_stitch_threshold)
     logger.debug(f"Stitched masks of shape {stitched_masks.shape=}")
     
     # Overwrite the original masks with the stitched ones

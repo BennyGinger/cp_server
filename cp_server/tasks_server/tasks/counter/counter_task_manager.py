@@ -42,7 +42,7 @@ def all_tracks_finished(run_id: str) -> str:
     return f"Run {run_id} completed successfully. All tracks finished."  
 
 @shared_task(name="cp_server.tasks_server.tasks.counter.counter_task_manager.check_and_track")
-def check_and_track(hkey: str, stitch_threshold: float) -> None:
+def check_and_track(hkey: str, track_stitch_threshold: float) -> None:
     """
     Check if there are two masks for the same FOV in Redis. If so, trigger the tracking task.
     Wrapped in try/except to catch Redis errors.
@@ -67,7 +67,7 @@ def check_and_track(hkey: str, stitch_threshold: float) -> None:
 
             # 5) Fire off tracking, with a safe callback
             track_cells.apply_async(
-                args=[paths, stitch_threshold],
+                args=[paths, track_stitch_threshold],
                 link=mark_one_done.si(run_id))
 
     except RedisError as e:

@@ -1,6 +1,5 @@
 from typing import Any
 from celery import chain, shared_task
-import tifffile as tiff
 
 from cp_server.tasks_server import get_logger
 from cp_server.tasks_server.tasks.bg_sub.bg_sub_task import remove_bg
@@ -14,56 +13,52 @@ logger = get_logger('tasks')
 @shared_task(name="cp_server.tasks_server.tasks.celery_main_task.process_images")
 def process_images(mod_settings: dict[str, Any],
                    cp_settings: dict[str, Any], 
-                   img_file: str, 
+                   img_path: str, 
                    dst_folder: str, 
                    round: int,
                    run_id: str,
                    do_denoise: bool=True,
-                   stitch_threshold: float=0.75, 
+                   track_stitch_threshold: float=0.75, 
                    sigma: float=0.0, 
                    size: int=7,
                    ) -> str:
     """
-    Process images with background subtraction and segmentation. Note that the image (ndarray) is encoded as a base64 string.
-    This function orchestrates the workflow of removing background, segmenting the image, and tracking cells if necessary.
-    It initializes the tracking counter in Redis if this is the second round of processing and total_fovs is provided.
-    It also saves the processed images and masks to the specified destination folder.
-    The function is designed to be called by a Celery worker, and it uses the `chain` feature to create a workflow of tasks.
-    During round 2, tracking will be triggered automatically once two masks for the same field of view (FOV) are available (see `segment` task).
+    Process an image by removing the background, segmenting and tracking it using Cellpose and IoU tracking.
+    This task is designed to be run in a Celery worker, where background subtraction and segmentation are always performed.
+    Tracking is only triggered if round is 2 or above. The image is loaded from the provided file path, and the results are saved
+    in the specified destination folder. The function logs the process and returns a message indicating the status of the operation.
     
     Args:
         mod_settings (dict): Model settings for Cellpose.
         cp_settings (dict): Segmentation settings for Cellpose.
-        img_file (str): Path to the image file to be processed.
+        img_path (str): Path to the image file to be processed.
         dst_folder (str): Destination folder where the masks will be saved.
         round (int): The current round of processing (1 or 2).
+        run_id (str): Unique identifier for the processing run.
         do_denoise (bool, optional): Whether to apply denoising. Defaults to True.
-        stitch_threshold (float, optional): Threshold for stitching masks. Defaults to 0.25.
+        track_stitch_threshold (float, optional): Threshold for stitching masks. Defaults to 0.25.
         sigma (float, optional): Sigma value for background subtraction. Defaults to 0.0.
         size (int, optional): Size parameter for background subtraction. Defaults to 7."""
     
     # Starting point of the log
-    logger.info(f"Received image file: {img_file}")
+    logger.info(f"Received image file: {img_path}")
     logger.info(f"Setting denoise to {do_denoise}, round {round}")
     
-    # load the image
-    img = tiff.imread(img_file)
-    logger.debug(f"{img.shape=} and {img.dtype=}")
-
-    # Create the workflow
+    #### Create the workflows ####
     chain(remove_bg.s(
-                img=img, 
-                img_path=img_file, 
+                img_path=img_path, 
                 sigma=sigma, 
                 size=size),
-          segment.s(
+        segment.s(
                 mod_settings=mod_settings,
                 cp_settings=cp_settings,
-                img_file=img_file,
+                img_file=img_path,
                 dst_folder=dst_folder, 
                 run_id=run_id,
                 do_denoise=do_denoise),
-            check_and_track.s(stitch_threshold=stitch_threshold),
-          ).apply_async()
-    logger.info(f"Workflow created for {img_file}")
-    return f"Image {img_file} was sent to be segmented"
+            check_and_track.s(track_stitch_threshold=track_stitch_threshold,),
+        ).apply_async()
+    logger.info(f"Workflow created for {img_path}")
+    return f"Image {img_path} was sent to be segmented"
+
+    

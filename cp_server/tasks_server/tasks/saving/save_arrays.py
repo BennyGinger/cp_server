@@ -1,8 +1,12 @@
 from pathlib import Path
+import re
 
 import numpy as np
 import tifffile as tiff
 
+
+IMG_MARKERS = ("refseg", "measure")
+MASK_NAME = 'mask'
 
 def generate_mask_path(img_file: str, dst_folder: str) -> Path:
     """
@@ -16,8 +20,16 @@ def generate_mask_path(img_file: str, dst_folder: str) -> Path:
     """
     save_dir = Path(img_file).parent.parent.joinpath(dst_folder)
     save_dir.mkdir(exist_ok=True)
-    mask_path = save_dir.joinpath(img_file.name.replace("refseg", "mask"))
-    return mask_path
+    
+    # Extract the name of the image file and replace the marker with 'mask'
+    name = img_file.name
+    for marker in IMG_MARKERS:
+        if f"_{marker}_" in name:
+            name = name.replace(marker, MASK_NAME)
+            break
+    else:
+        raise ValueError(f"No expected marker in {img_file.name!r}")
+    return save_dir.joinpath(name)
 
 def extract_fov_id(img_file: str) -> tuple[str, str]:
     """

@@ -4,7 +4,7 @@ from skimage.segmentation import relabel_sequential
 
 
 ############### Main Function ################
-def track_masks(masks: np.ndarray, stitch_threshold: float=0.25) -> np.ndarray:
+def track_masks(masks: np.ndarray, track_stitch_threshold: float=0.25) -> np.ndarray:
     """
     Track cells over time by stitching 2D masks into a time sequence using a stitch_threshold on IOU. Incomplete tracks are also automatically trimmed.
 
@@ -15,7 +15,7 @@ def track_masks(masks: np.ndarray, stitch_threshold: float=0.25) -> np.ndarray:
     Returns:
         ndarray: stitched masks.
     """
-    stitched_masks = _stitch_frames(masks, stitch_threshold)
+    stitched_masks = _stitch_frames(masks, track_stitch_threshold)
     trimmed_mask = _trim_incomplete_tracks(stitched_masks)
     return relabel_sequential(trimmed_mask)[0]
 
@@ -23,7 +23,7 @@ def track_masks(masks: np.ndarray, stitch_threshold: float=0.25) -> np.ndarray:
 ################# Stitching and IOU Functions ################
 
 # Copied the function stitch3D from cellpose, to avoid having to install all the dependencies for the package.
-def _stitch_frames(masks: np.ndarray, stitch_threshold: float) -> np.ndarray:
+def _stitch_frames(masks: np.ndarray, track_stitch_threshold: float) -> np.ndarray:
     """Stitch 2D masks into a continuous time sequence by matching masks across frames using a specified IOU threshold.
 
     Args:
@@ -47,7 +47,7 @@ def _stitch_frames(masks: np.ndarray, stitch_threshold: float) -> np.ndarray:
             istitch = np.append(np.array(0), istitch)
             masks[i + 1] = istitch[masks[i + 1]]
         else:
-            iou[iou < stitch_threshold] = 0.0
+            iou[iou < track_stitch_threshold] = 0.0
             iou[iou < iou.max(axis=0)] = 0.0
             istitch = iou.argmax(axis=1) + 1
             ino = np.nonzero(iou.max(axis=1) == 0.0)[0]
@@ -153,7 +153,7 @@ if __name__ == "__main__":
     img_path = Path("/media/ben/Analysis/Python/Images/Image_tests/dst_test/_z1_t10.tif_masks.tif")
     masks = imread(img_path)
     
-    tracked_masks = track_masks(masks, stitch_threshold=0.75)
+    tracked_masks = track_masks(masks, track_stitch_threshold=0.75)
     
     # Save the tracked masks to a new file
     save_path = img_path.parent.joinpath(img_path.name.replace("_masks", "_tracked_masks"))

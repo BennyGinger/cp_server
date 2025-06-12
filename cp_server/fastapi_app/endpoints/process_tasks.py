@@ -2,7 +2,7 @@ from typing import Any
 from fastapi import APIRouter, Request, HTTPException
 from celery import Celery
 
-from cp_server.fastapi_app.endpoints.utils import ProcessRequest
+from cp_server.fastapi_app.endpoints.utils import ProcessRequest, BackgroundRequest
 from cp_server.fastapi_app import get_logger
 from cp_server.tasks_server.utils.redis_com import redis_client
 
@@ -21,13 +21,13 @@ def process_images_endpoint(request: Request, payload: ProcessRequest) -> dict[s
     This endpoint accepts a payload containing:
     - `mod_settings`: Settings for the model.
     - `cp_settings`: Settings for the Cellpose processing.
-    - `img_file`: A string path to an image file, a directory containing images, or a list of image paths (str).
+    - `img_path`: A string path to an image file, a directory containing images, or a list of image paths (str).
     - `dst_folder`: Destination folder where processed images will be saved.
     - `round`: The round number for processing.
     - `run_id`: Unique identifier for the processing run.
     - `total_fovs`: Optional total number of fields of view.
     - `do_denoise`: Whether to apply denoising (default is True).
-    - `stitch_threshold`: Threshold for stitching masks (default is 0.75).
+    - `track_stitch_threshold`: Threshold for stitching masks during tracking (default is 0.75).
     - `sigma`: Sigma value for background subtraction (default is 0.0).
     - `size`: Size parameter for background subtraction (default is 7).
     This endpoint will send tasks to a Celery worker to process the images.
@@ -55,11 +55,44 @@ def process_images_endpoint(request: Request, payload: ProcessRequest) -> dict[s
         params = payload.model_dump()
         params["img_file"] = path
         task = celery_app.send_task(
-            "cp_server.tasks_server.celery_tasks.process_images",
+            "cp_server.tasks_server.tasks.celery_main_task.process_images",
             kwargs=params)
         task_ids.append(task.id)
 
     return {"run_id": payload.run_id, "task_ids": task_ids, "count": len(task_ids)}
+
+@router.post("/process_bg_sub")
+def process_bg_sub_endpoint(request: Request, payload: BackgroundRequest) -> dict[str, Any]:
+    """
+    Endpoint to process background subtraction for images.
+    This endpoint accepts a payload containing:
+    - `img_path`: A string path to an image file, a directory containing images, or a list of image paths (str).
+    - `sigma`: Sigma value for background subtraction (default is 0.0).
+    - `size`: Size parameter for background subtraction (default is 7).
+    
+    This endpoint will send tasks to a Celery worker to process the images.
+    It returns a dictionary with the task IDs and the count of tasks sent.
+    
+    :param request: The FastAPI request object.
+    :param payload: The payload containing the background subtraction parameters.
+    
+    :return: A dictionary with task IDs and count of tasks sent.
+    """
+    celery_app: Celery = request.app.state.celery_app
+    
+    logger.info(f"Enqueuing {len(payload.image_paths)} images for background subtraction")
+    
+    # Process the paths
+    task_ids = []
+    for path in payload.image_paths:
+        params = payload.model_dump()
+        params["img_file"] = path
+        task = celery_app.send_task(
+            "cp_server.tasks_server.tasks.bg_sub.remove_bg",
+            kwargs=params)
+        task_ids.append(task.id)
+
+    return {"task_ids": task_ids, "count": len(task_ids)}
 
 @router.get("/process/{run_id}/status")
 def get_process_status(run_id: str) -> dict:
