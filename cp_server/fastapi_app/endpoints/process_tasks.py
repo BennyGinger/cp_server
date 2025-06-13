@@ -19,17 +19,15 @@ def process_images_endpoint(request: Request, payload: ProcessRequest) -> dict[s
     """
     Endpoint to process images using the provided payload.
     This endpoint accepts a payload containing:
-    - `mod_settings`: Settings for the model.
-    - `cp_settings`: Settings for the Cellpose processing.
-    - `img_path`: A string path to an image file, a directory containing images, or a list of image paths (str).
-    - `dst_folder`: Destination folder where processed images will be saved.
-    - `round`: The round number for processing.
-    - `run_id`: Unique identifier for the processing run.
-    - `total_fovs`: Optional total number of fields of view.
-    - `do_denoise`: Whether to apply denoising (default is True).
-    - `track_stitch_threshold`: Threshold for stitching masks during tracking (default is 0.75).
+    - `img_path`: A string path to an image file.
     - `sigma`: Sigma value for background subtraction (default is 0.0).
     - `size`: Size parameter for background subtraction (default is 7).
+    - `cellpose_settings`: Model and segmentation settings for Cellpose.
+    - `dst_folder`: Destination folder where processed images will be saved.
+    - `run_id`: Unique identifier for the processing run.
+    - `total_fovs`: Total number of fields of view, used to set the number of pending tracks in Redis. Not included in the model dump.
+    - `track_stitch_threshold`: Threshold for stitching masks during tracking. Optional, default is 0.75.
+    - `round`: The round number for processing, build from the image path if not provided. Defaults to None. Not included in the model dump.
     This endpoint will send tasks to a Celery worker to process the images.
     It returns a dictionary with the task IDs and the count of tasks sent.
     
@@ -50,23 +48,19 @@ def process_images_endpoint(request: Request, payload: ProcessRequest) -> dict[s
     logger.info(f"Enqueuing {len(payload.image_paths)} images for processing (round={payload.round})")
     
     # Process the paths
-    task_ids = []
-    for path in payload.image_paths:
-        params = payload.model_dump()
-        params["img_file"] = path
-        task = celery_app.send_task(
+    params = payload.model_dump()
+    task = celery_app.send_task(
             "cp_server.tasks_server.tasks.celery_main_task.process_images",
             kwargs=params)
-        task_ids.append(task.id)
 
-    return {"run_id": payload.run_id, "task_ids": task_ids, "count": len(task_ids)}
+    return {"run_id": payload.run_id, "task_ids": task.id}
 
 @router.post("/process_bg_sub")
-def process_bg_sub_endpoint(request: Request, payload: BackgroundRequest) -> dict[str, Any]:
+def process_bg_sub_endpoint(request: Request, payload: BackgroundRequest) -> str:
     """
     Endpoint to process background subtraction for images.
     This endpoint accepts a payload containing:
-    - `img_path`: A string path to an image file, a directory containing images, or a list of image paths (str).
+    - `img_path`: A string path to an image file.
     - `sigma`: Sigma value for background subtraction (default is 0.0).
     - `size`: Size parameter for background subtraction (default is 7).
     
@@ -76,26 +70,22 @@ def process_bg_sub_endpoint(request: Request, payload: BackgroundRequest) -> dic
     :param request: The FastAPI request object.
     :param payload: The payload containing the background subtraction parameters.
     
-    :return: A dictionary with task IDs and count of tasks sent.
+    :return: Task ID of the background subtraction task.
     """
     celery_app: Celery = request.app.state.celery_app
     
     logger.info(f"Enqueuing {len(payload.image_paths)} images for background subtraction")
     
     # Process the paths
-    task_ids = []
-    for path in payload.image_paths:
-        params = payload.model_dump()
-        params["img_file"] = path
-        task = celery_app.send_task(
+    params = payload.model_dump()
+    task = celery_app.send_task(
             "cp_server.tasks_server.tasks.bg_sub.remove_bg",
             kwargs=params)
-        task_ids.append(task.id)
 
-    return {"task_ids": task_ids, "count": len(task_ids)}
+    return task.id
 
 @router.get("/process/{run_id}/status")
-def get_process_status(run_id: str) -> dict:
+def get_process_status(run_id: str) -> dict[str, Any]:
     """
     Check remaining tracks for a given run_id.
     Returns 404 if run_id is not found in Redis.

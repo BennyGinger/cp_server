@@ -11,12 +11,22 @@ if TYPE_CHECKING:
 # Suppress FutureWarning messages from cellpose
 warnings.filterwarnings("ignore", category=FutureWarning, module="cellpose")                
 
+
+MOD_SETS = {"model_type": "cyto2",
+                "restore_type": "denoise_cyto2",
+                "gpu": True,}
+
+EVAL_SETS = {"channels": None,
+               "diameter": 60,
+               "flow_threshold": 0.4,
+               "cellprob_threshold": 0.0,
+               "z_axis": None,
+               "do_3D": False,
+               "3D_stitch_threshold": 0,}
+
+
 # TODO: Update to cellpose 4.0
-def run_seg(model_settings: dict[str, any],
-            cp_settings: dict[str, any],
-            img: np.ndarray, 
-            do_denoise: bool=True,
-            ) -> np.ndarray:
+def run_seg(cellpose_settings: dict[str, any], img: np.ndarray) -> np.ndarray:
     """
     Run segmentation on the image using Cellpose.
     Args:
@@ -26,25 +36,48 @@ def run_seg(model_settings: dict[str, any],
         do_denoise (bool): Whether to use denoising model or not. Default is True.
     Returns:
         np.ndarray: The segmented masks."""
+    
     # Unpack settings
-    model_settings = _update_model_parameters(model_settings, do_denoise)
-    cp_settings = _update_cp_settings(cp_settings, do_denoise)
+    do_denoise = cellpose_settings.pop("do_denoise", True)
+    mod_sets, eval_sets = _unpack_cellpose_settings(cellpose_settings, do_denoise)
     
     # Initialize Cellpose model
-    model = _initialize_cellpose_model(do_denoise, model_settings)
+    model = _initialize_cellpose_model(do_denoise, mod_sets)
     
     # Run segmentation
-    masks = _segment_image(img, cp_settings, model)
-    
-    return masks
+    return _segment_image(img, eval_sets, model)
 
 
 ##################### Helper functions #####################
-def _update_model_parameters(mod_set: dict[str, any],
-                            do_denoise: bool=True,
-                            ) -> dict[str, any]:
+def _unpack_cellpose_settings(cellpose_settings: dict[str, any], do_denoise: bool) -> tuple[dict[str, any], dict[str, any]]:
+    """
+    Unpack the Cellpose settings into model and segmentation settings.
+    Args:
+        cellpose_settings (dict): The settings dictionary containing both model and segmentation parameters.
+        do_denoise (bool): Whether to use the denoising model or not.
+    Returns:
+        tuple: A tuple containing two dictionaries:
+            - mod_sets: Model settings for Cellpose.
+            - eval_sets: Run settings for Cellpose.
+    """
+    mod_sets = MOD_SETS.copy()
+    eval_sets = EVAL_SETS.copy()
+    
+    for sets in (eval_sets, mod_sets):
+        # pick out only the overrides that belong in this dict
+        overrides = {k: v for k, v in cellpose_settings.items() if k in sets}
+        sets.update(overrides)
+    
+    return _update_model_parameters(mod_sets, do_denoise), _update_eval_settings(eval_sets, do_denoise)
+
+def _update_model_parameters(mod_set: dict[str, any], do_denoise: bool=True) -> dict[str, any]:
     """
     Validate the model settings and add restore_type if needed.
+    Args:
+        mod_set (dict): The settings dictionary containing Cellpose model parameters.
+        do_denoise (bool): Whether to use the denoising model or not.
+    Returns:
+        dict: The updated model settings for Cellpose.
     """
     if not do_denoise:
         if "restore_type" in mod_set:
@@ -56,11 +89,14 @@ def _update_model_parameters(mod_set: dict[str, any],
         return mod_set
     return mod_set
     
-def _update_cp_settings(cp_set: dict[str, any],
-                          do_denoise: bool=True,
-                          ) -> dict[str, any]:
+def _update_eval_settings(cp_set: dict[str, any], do_denoise: bool=True) -> dict[str, any]:
      """
-     Validate the Cellpose settings and add channels if needed.
+     Validate the eval settings and add channels if needed.
+     Args:
+         cp_set (dict): The settings dictionary containing Cellpose evaluation parameters.
+         do_denoise (bool): Whether to use the denoising model or not.
+     Returns:
+         dict: The updated evaluation settings for Cellpose.
      """
      # Convert 3d_stitch_threshold to stitch_threshold if needed
      if "3D_stitch_threshold" in cp_set:
@@ -86,12 +122,12 @@ def _initialize_cellpose_model(do_denoise: bool, model_settings: dict[str, any])
     from cellpose.models import CellposeModel
     return CellposeModel(**model_settings)
 
-def _segment_image(img: np.ndarray, cp_settings: dict, model: CellposeModel | CellposeDenoiseModel)-> np.ndarray:
+def _segment_image(img: np.ndarray, eval_settings: dict, model: CellposeModel | CellposeDenoiseModel)-> np.ndarray:
     """
     Run the segmentation on the image
     """
     
-    return model.eval(img, **cp_settings)[0]
+    return model.eval(img, **eval_settings)[0]
 
 
 if __name__ == "__main__":

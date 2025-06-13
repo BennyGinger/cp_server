@@ -16,54 +16,18 @@ class BackgroundRequest(BaseModel):
     img_path: str
     sigma: float = 0.0
     size: int = 7
-    # List of image paths to be processed, will not be included in the model dump
-    image_paths: list[str] = []
-
-    model_config = ConfigDict(model_dump_exclude={"image_paths"})
     
     @model_validator(mode="before")
-    def validate_input_files(cls, values: dict[str, Any]) -> dict[str, Any]:
+    def validate_img_path(cls, values: dict[str, Any]) -> dict[str, Any]:
         """
-        Validate the input files provided in img_file.
-        This method checks if the img_file is a string or a list of strings,
-        and retrieves the paths of the images to be processed.
-        The newly formed image_paths list is used to send each file to the processing task.
-        It will not be included in the model dump.
-        Raises:
-            ValueError: If img_file is not a string or a list of strings,
-                        or if the provided paths do not exist.
-            ValueError: If no valid image files are found in the provided paths.
+        Validate that the file path provided in `img_path` is valid.
         """
-        input_files = values.get("img_path")
+        input_file = values.get("img_path")
         
-        paths: list[str] = []
-        if isinstance(input_files, str):
-            paths = cls._get_image_paths(input_files)
-            
-        elif isinstance(input_files, list):
-            if not all(Path(p).exists() for p in input_files):
-                raise ValueError("One or more img_files paths do not exist")
-            paths = input_files
-        else:
-            raise ValueError("img_file must be a string or a list of strings")
-        
-        if not paths:
-            raise ValueError("No valid image files found in the provided paths")
-        
-        values["image_paths"] = paths
+        if not Path(input_file).is_file():
+            raise ValueError(f"Provided img_path is not a valid file path: {input_file}")
         
         return values
-    
-    @classmethod
-    def _get_image_paths(cls, input_files: str) -> list[str]:
-        path = Path(input_files)
-        if path.is_file():
-            paths = [str(path)]
-        elif path.is_dir():
-            paths = [str(p) for p in path.rglob("*.tif") if p.is_file()]
-        else:
-            raise ValueError(f"Provided img_file path is neither a file nor a directory: {input_files}")
-        return paths
 
 class ProcessRequest(BackgroundRequest):
     """
@@ -79,30 +43,36 @@ class ProcessRequest(BackgroundRequest):
         image_paths (list[str]): List of image paths to be processed, will not be included in the model dump.
     
     Attributes:
-        mod_settings (dict): Settings for the model.
-        cp_settings (dict): Settings for the Cellpose processing.
+        cellpose_settings (dict): Model and segmentation settings for Cellpose.
         dst_folder (str): Destination folder where processed images will be saved.
-        round (int): The round number for processing.
         run_id (str): Unique identifier for the processing run.
-        segment_and_track (bool): Whether to perform segmentation and tracking (default is False).
-        total_fovs (Optional[int]): Total number of fields of view, if applicable. It will not be included in the model dump.
-        do_denoise (bool): Whether to apply denoising (default is True).
-        track_stitch_threshold (float): Threshold for stitching masks (default is 0.75).
+        total_fovs (int): Total number of fields of view. It will not be included in the model dump.
+        track_stitch_threshold (float, optional): Threshold for stitching masks during tracking. Default to 0.75.
+        round (int, optional): The round number for processing, build from the image path if not provided. Defaults to None. It will not be included in the model dump.
     This model uses Pydantic's model validators to ensure that the input files are valid
     and that the necessary parameters are provided.
     """
-    mod_settings: dict[str, Any]
-    cp_settings: dict[str, Any]
+    cellpose_settings: dict[str, Any]
     dst_folder: str
-    round: int
     run_id: str
-    segment_and_track: bool = False
-    total_fovs: int = None
-    do_denoise: bool = True
+    total_fovs: int
     track_stitch_threshold: float = 0.75
+    round: int = None
 
-    model_config = ConfigDict(model_dump_exclude={"image_paths", "total_fovs"})
-        
+    model_config = ConfigDict(model_dump_exclude={"total_fovs", "round"})
+    
+    @model_validator(mode="after")
+    def set_round_from_img_path(cls, values: dict[str, Any]) -> dict[str, Any]:
+        # only compute if not provided
+        if values.get("round") is None:
+            stem = Path(values["img_path"]).stem
+            try:
+                # filename format: <fovID>_<category>_<round>.tif
+                values["round"] = int(stem.split("_")[-1])
+            except Exception:
+                raise ValueError(f"Cannot parse round from img_path '{values['img_path']}'")
+        return values
+    
     @model_validator(mode="after")
     def validate_run_id(cls, values: dict[str, Any]) -> dict[str, Any]:
         run_id = values.get("run_id")

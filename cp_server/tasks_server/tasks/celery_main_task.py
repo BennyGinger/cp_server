@@ -11,13 +11,10 @@ logger = get_logger('tasks')
 
 
 @shared_task(name="cp_server.tasks_server.tasks.celery_main_task.process_images")
-def process_images(mod_settings: dict[str, Any],
-                   cp_settings: dict[str, Any], 
-                   img_path: str, 
+def process_images(img_path: str,
+                   cellpose_settings: dict[str, Any],
                    dst_folder: str, 
-                   round: int,
                    run_id: str,
-                   do_denoise: bool=True,
                    track_stitch_threshold: float=0.75, 
                    sigma: float=0.0, 
                    size: int=7,
@@ -29,20 +26,17 @@ def process_images(mod_settings: dict[str, Any],
     in the specified destination folder. The function logs the process and returns a message indicating the status of the operation.
     
     Args:
-        mod_settings (dict): Model settings for Cellpose.
-        cp_settings (dict): Segmentation settings for Cellpose.
         img_path (str): Path to the image file to be processed.
+        cellpose_settings (dict): Model and segmentation settings for Cellpose.
         dst_folder (str): Destination folder where the masks will be saved.
-        round (int): The current round of processing (1 or 2).
+        round (int): The current round of processing.
         run_id (str): Unique identifier for the processing run.
-        do_denoise (bool, optional): Whether to apply denoising. Defaults to True.
-        track_stitch_threshold (float, optional): Threshold for stitching masks. Defaults to 0.25.
+        track_stitch_threshold (float, optional): Threshold for stitching masks during tracking. Defaults to 0.75.
         sigma (float, optional): Sigma value for background subtraction. Defaults to 0.0.
         size (int, optional): Size parameter for background subtraction. Defaults to 7."""
     
     # Starting point of the log
     logger.info(f"Received image file: {img_path}")
-    logger.info(f"Setting denoise to {do_denoise}, round {round}")
     
     #### Create the workflows ####
     chain(remove_bg.s(
@@ -50,13 +44,12 @@ def process_images(mod_settings: dict[str, Any],
                 sigma=sigma, 
                 size=size),
         segment.s(
-                mod_settings=mod_settings,
-                cp_settings=cp_settings,
-                img_file=img_path,
+                cellpose_settings=cellpose_settings, 
+                img_path=img_path, 
                 dst_folder=dst_folder, 
-                run_id=run_id,
-                do_denoise=do_denoise),
-            check_and_track.s(track_stitch_threshold=track_stitch_threshold,),
+                run_id=run_id),
+            check_and_track.s(
+                track_stitch_threshold=track_stitch_threshold),
         ).apply_async()
     logger.info(f"Workflow created for {img_path}")
     return f"Image {img_path} was sent to be segmented"
