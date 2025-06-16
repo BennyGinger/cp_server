@@ -22,7 +22,7 @@ EVAL_SETS = {"channels": None,
                "cellprob_threshold": 0.0,
                "z_axis": None,
                "do_3D": False,
-               "3D_stitch_threshold": 0,}
+               "stitch_threshold_3D": 0,}
 
 
 # TODO: Update to cellpose 4.0
@@ -99,8 +99,8 @@ def _update_eval_settings(cp_set: dict[str, any], do_denoise: bool=True) -> dict
          dict: The updated evaluation settings for Cellpose.
      """
      # Convert 3d_stitch_threshold to stitch_threshold if needed
-     if "3D_stitch_threshold" in cp_set:
-          cp_set["stitch_threshold"] = cp_set.pop("3d_stitch_threshold")
+     if "stitch_threshold_3D" in cp_set:
+          cp_set["stitch_threshold"] = cp_set.pop("stitch_threshold_3D")
      
      if not do_denoise:
           return cp_set
