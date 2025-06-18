@@ -1,5 +1,7 @@
 # Test for segment task
-import numpy as np
+import pytest
+np = pytest.importorskip("numpy")
+pytest.importorskip("celery")
 
 from cp_server.tasks_server.tasks.celery_main_task import save_masks_task, segment
 

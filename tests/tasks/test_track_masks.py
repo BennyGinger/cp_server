@@ -1,4 +1,5 @@
-import numpy as np
+import pytest
+np = pytest.importorskip("numpy")
 
 from cp_server.tasks_server.tasks.track.track import track_masks
 

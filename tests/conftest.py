@@ -1,6 +1,32 @@
 from pathlib import Path
-import numpy as np
+import types
+import sys
 import pytest
+
+# Avoid executing cp_server/__init__ which requires a .env file
+pkg_root = Path(__file__).resolve().parents[1] / "cp_server"
+if "cp_server" not in sys.modules:
+    stub = types.ModuleType("cp_server")
+    stub.__path__ = [str(pkg_root)]
+    sys.modules["cp_server"] = stub
+
+# Provide a minimal stub for cp_server.tasks_server to avoid Celery dependency
+ts_root = pkg_root / "tasks_server"
+tasks_stub = types.ModuleType("cp_server.tasks_server")
+tasks_stub.__path__ = [str(ts_root)]
+import logging
+tasks_stub.get_logger = lambda name=None: logging.getLogger(name or "tasks_server")
+sys.modules.setdefault("cp_server.tasks_server", tasks_stub)
+
+celery_stub = types.ModuleType("cp_server.tasks_server.celery_app")
+def create_celery_app(include_tasks: bool = False):
+    class Dummy:
+        def send_task(self, *a, **k):
+            return type("R", (), {"id": "dummy"})()
+    return Dummy()
+celery_stub.create_celery_app = create_celery_app
+celery_stub.celery_app = create_celery_app()
+sys.modules.setdefault("cp_server.tasks_server.celery_app", celery_stub)
 
 
 @pytest.fixture
@@ -20,10 +46,12 @@ def create_file(temp_dir: Path):
 
 @pytest.fixture
 def img():
+    np = pytest.importorskip("numpy")
     return np.random.randint(0, 65536, (256, 256), dtype=np.uint16)
 
 @pytest.fixture
 def img_zstack():
+    np = pytest.importorskip("numpy")
     return np.random.randint(0, 65536, (10, 256, 256), dtype=np.uint16)
 
 @pytest.fixture

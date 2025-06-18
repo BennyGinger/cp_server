@@ -1,7 +1,9 @@
+import pytest
+pytest.importorskip("cellpose")
+pytest.importorskip("numpy")
 from cellpose.models import CellposeModel
 from cellpose.denoise import CellposeDenoiseModel
 import numpy as np
-import pytest
 
 from cp_server.tasks_server.tasks.segementation.cp_seg import _initialize_cellpose_model, unpack_settings, _segment_image
 

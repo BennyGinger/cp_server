@@ -1,4 +1,5 @@
-import numpy as np
+import pytest
+np = pytest.importorskip("numpy")
 
 from cp_server.tasks_server.tasks.bg_sub.bg_sub import apply_bg_sub
 

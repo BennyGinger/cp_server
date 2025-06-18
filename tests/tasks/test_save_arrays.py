@@ -1,7 +1,7 @@
 from pathlib import Path
-import numpy as np
 import pytest
-import tifffile as tiff
+np = pytest.importorskip("numpy")
+tiff = pytest.importorskip("tifffile")
 
 from cp_server.tasks_server.tasks.saving.save_arrays import save_mask, save_img
 

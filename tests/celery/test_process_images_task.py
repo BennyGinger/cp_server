@@ -1,6 +1,8 @@
 # Test for process_images task
-import numpy as np
-import tifffile as tiff
+import pytest
+np = pytest.importorskip("numpy")
+tiff = pytest.importorskip("tifffile")
+pytest.importorskip("celery")
 
 from cp_server.tasks_server.tasks.celery_main_task import process_images
 

@@ -1,6 +1,7 @@
 # Fixture to capture calls to save_masks_task.delay
-import numpy as np
 import pytest
+np = pytest.importorskip("numpy")
+pytest.importorskip("celery")
 
 from cp_server.tasks_server.tasks.celery_main_task import track_cells
 

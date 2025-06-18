@@ -1,5 +1,5 @@
 import pytest
-import numpy as np
+np = pytest.importorskip("numpy")
 
 from cp_server.tasks_server.utils.serialization_utils import custom_decoder, custom_encoder
 

@@ -1,3 +1,5 @@
+import pytest
+pytest.importorskip("fastapi")
 from cp_server.fastapi_app.main import app
 from fastapi.testclient import TestClient
 

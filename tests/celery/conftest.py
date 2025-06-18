@@ -1,5 +1,10 @@
 import pytest
-from cp_server.tasks_server.celery_app import celery_app
+import importlib.util
+
+if importlib.util.find_spec("celery") is None:
+    pytest.skip("celery not installed", allow_module_level=True)
+else:
+    from cp_server.tasks_server.celery_app import celery_app
 
 
 @pytest.fixture(scope="session", autouse=True)
