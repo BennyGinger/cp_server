@@ -2,9 +2,9 @@ from typing import Any
 from fastapi import APIRouter, Request, HTTPException
 from celery import Celery
 
-from cp_server.fastapi_app.endpoints.utils import ProcessRequest, BackgroundRequest
+from cp_server.fastapi_app.endpoints.request_models import ProcessRequest, BackgroundRequest
 from cp_server.fastapi_app import get_logger
-from cp_server.tasks_server.utils.redis_com import redis_client
+from cp_server.fastapi_app.endpoints import redis_client
 
 
 # Setup logging
@@ -24,7 +24,7 @@ def process_images_endpoint(request: Request, payload: ProcessRequest) -> dict[s
     - `size`: Size parameter for background subtraction (default is 7).
     - `cellpose_settings`: Model and segmentation settings for Cellpose.
     - `dst_folder`: Destination folder where processed images will be saved.
-    - `run_id`: Unique identifier for the processing run.
+    - `well_id`: Unique identifier for the processing well.
     - `total_fovs`: Total number of fields of view, used to set the number of pending tracks in Redis. Not included in the model dump.
     - `track_stitch_threshold`: Threshold for stitching masks during tracking. Optional, default is 0.75.
     - `round`: The round number for processing, build from the image path if not provided. Defaults to None. Not included in the model dump.
@@ -42,8 +42,8 @@ def process_images_endpoint(request: Request, payload: ProcessRequest) -> dict[s
     
     # Initialize the counter for pending tracks
     if payload.round == 2:
-        redis_client.setnx(f"pending_tracks:{payload.run_id}", payload.total_fovs)
-        redis_client.expire(f"pending_tracks:{payload.run_id}", 24 * 3600)
+        redis_client.setnx(f"pending_tracks:{payload.well_id}", payload.total_fovs)
+        redis_client.expire(f"pending_tracks:{payload.well_id}", 24 * 3600)
     
     logger.info(f"Enqueuing {len(payload.image_paths)} images for processing (round={payload.round})")
     
@@ -53,7 +53,7 @@ def process_images_endpoint(request: Request, payload: ProcessRequest) -> dict[s
             "cp_server.tasks_server.tasks.celery_main_task.process_images",
             kwargs=params)
 
-    return {"run_id": payload.run_id, "task_ids": task.id}
+    return {"well_id": payload.well_id, "task_ids": task.id}
 
 @router.post("/process_bg_sub")
 def process_bg_sub_endpoint(request: Request, payload: BackgroundRequest) -> str:
@@ -84,24 +84,24 @@ def process_bg_sub_endpoint(request: Request, payload: BackgroundRequest) -> str
 
     return task.id
 
-@router.get("/process/{run_id}/status")
-def get_process_status(run_id: str) -> dict[str, Any]:
+@router.get("/process/{well_id}/status")
+def get_process_status(well_id: str) -> dict[str, Any]:
     """
-    Check remaining tracks for a given run_id.
-    Returns 404 if run_id is not found in Redis.
+    Check remaining tracks for a given well_id.
+    Returns 404 if well_id is not found in Redis.
     """
-    pending_key  = f"pending_tracks:{run_id}"
-    finished_key = f"finished:{run_id}"
+    pending_key  = f"pending_tracks:{well_id}"
+    finished_key = f"finished:{well_id}"
     
     # 1) If we have a finished flag, report done
     if redis_client.exists(finished_key):
-        return {"run_id": run_id, "status": "finished", "remaining": 0}
+        return {"well_id": well_id, "status": "finished", "remaining": 0}
     
     # 2) If we still have a pending counter, report processing
     if redis_client.exists(pending_key):
         rem = int(redis_client.get(pending_key))
-        return {"run_id": run_id, "status": "processing", "remaining": rem}
+        return {"well_id": well_id, "status": "processing", "remaining": rem}
     
-    # 3) Neither key exists → invalid run_id
+    # 3) Neither key exists → invalid well_id
     raise HTTPException(status_code=404,
-                        detail=f"run_id '{run_id}' not found")
+                        detail=f"well_id '{well_id}' not found")

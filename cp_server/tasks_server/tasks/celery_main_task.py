@@ -14,7 +14,7 @@ logger = get_logger('tasks')
 def process_images(img_path: str,
                    cellpose_settings: dict[str, Any],
                    dst_folder: str, 
-                   run_id: str,
+                   well_id: str,
                    track_stitch_threshold: float=0.75, 
                    sigma: float=0.0, 
                    size: int=7,
@@ -30,7 +30,7 @@ def process_images(img_path: str,
         cellpose_settings (dict): Model and segmentation settings for Cellpose.
         dst_folder (str): Destination folder where the masks will be saved.
         round (int): The current round of processing.
-        run_id (str): Unique identifier for the processing run.
+        well_id (str): Unique identifier for the processing well.
         track_stitch_threshold (float, optional): Threshold for stitching masks during tracking. Defaults to 0.75.
         sigma (float, optional): Sigma value for background subtraction. Defaults to 0.0.
         size (int, optional): Size parameter for background subtraction. Defaults to 7."""
@@ -47,7 +47,7 @@ def process_images(img_path: str,
                 cellpose_settings=cellpose_settings, 
                 img_path=img_path, 
                 dst_folder=dst_folder, 
-                run_id=run_id),
+                well_id=well_id),
             check_and_track.s(
                 track_stitch_threshold=track_stitch_threshold),
         ).apply_async()

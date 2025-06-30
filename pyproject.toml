@@ -6,12 +6,14 @@ readme = "README.md"
 authors = [
     { name = "Benoit Roux", email = "benoit.roux@gmail.com" },
     { name = "Raphael Feurstein", email = "raphael.feurstein@gmail.com" }
-]
+    ]
+
 requires-python = ">=3.12"
 dependencies = [
     "celery>=5.4.0",
     "numpy<2.0.0",
     "redis>=5.2.1",
+    "requests>=2.32.4",
     "tifffile>=2025.2.18",
     "watchdog>=6.0.0",
 ]
@@ -25,17 +27,16 @@ celery = [
     "numba>=0.61.0",
     "scikit-image>=0.25.2",
     "smo>=2.0.2",
-]
+    ]
 api = [
     "fastapi>=0.115.11",
     "uvicorn>=0.34.0",
-]
-
+    ]
 celery-default = [
     "numba>=0.61.0",
     "scikit-image>=0.25.2",
     "smo>=2.0.2",
-]
+    ]
 
 [build-system]
 requires = ["hatchling"]
@@ -49,4 +50,36 @@ dev = [
     "pytest-asyncio>=0.25.3",
     "scikit-image>=0.25.2",
     "smo>=2.0.2",
+    ]
+
+[tool.hatch.build.targets.sdist]
+# By default: pyproject.toml, LICENSE, README, and your package dir (cp_server) are included.
+# Add anything else you need in your source archive here:
+include = [
+  "docker-compose.yml",
+  "Dockerfile_app",
+  "Dockerfile_celery",
+  "Dockerfile_celery_default",
+  # if you had any JSON or YAML configs at the repo root or in a sub-dir, list them here:
+  # "config/**/*.yml",
+  # "config/**/*.json",
+    ]
+
+[tool.hatch.build.targets.wheel]
+# Only ship exactly these paths into your wheel:
+only-include = [
+  "cp_server",               # your python code
+  "docker-compose.yml",
+  "Dockerfile_app",
+  "Dockerfile_celery",
+  "Dockerfile_celery_default",
 ]
+
+# Re-map paths so that cp_server/ becomes the top-level package and other files live
+# at the root of the wheel
+[tool.hatch.build.targets.wheel.sources]
+"cp_server"              = ""   # collapse cp_server/ → <root>/cp_server/
+"docker-compose.yml"     = ""   # place at wheel root
+"Dockerfile_app"         = ""
+"Dockerfile_celery"      = ""
+"Dockerfile_celery_default" = ""

@@ -1,5 +1,10 @@
 FROM python:3.12-slim
 
+# To reduce the security risk
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && rm -rf /var/lib/apt/lists/*
+
 # Define build arguments with default fallback values
 ARG USER_UID=1000
 ARG USER_GID=1000
@@ -29,8 +34,8 @@ RUN uv pip install -r pyproject.toml --extra celery-default
 
 # Give the celeryuser user ownership of the app and data directory
 RUN chown -R celeryuser:celerygroup /app
-RUN mkdir /data /logs \
-    && chown -R celeryuser:celerygroup /data /logs
+RUN mkdir /data \
+    && chown -R celeryuser:celerygroup /data
 
 USER celeryuser
 

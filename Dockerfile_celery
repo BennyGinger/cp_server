@@ -52,8 +52,8 @@ RUN uv pip install -r pyproject.toml --extra celery
 
 # Set the folder structure and permissions
 RUN chown -R celeryuser:celerygroup /app
-RUN mkdir /data /logs \
-    && chown -R celeryuser:celerygroup /data /logs
+RUN mkdir /data \
+    && chown -R celeryuser:celerygroup /data
 
 USER celeryuser
 

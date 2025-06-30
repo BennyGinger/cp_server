@@ -3,16 +3,17 @@ import os
 import sys
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+from cp_server.utils.paths import get_root_path
+
 
 LOGFILE_NAME = os.getenv("LOGFILE_NAME", "combined_server.log")
-HOST_LOG_FOLDER = os.getenv("HOST_LOG_FOLDER", "../logs")
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+BASE_URL = os.getenv("BASE_URL", "localhost")
 
 TEMPLATE = """\
-# ⚠️ Please review and customize this file before running again ⚠️
-
-# Critical, must be determined by the user:
-DATA_DIR=/home/eblab/data_dir
+BASE_URL="localhost"
 
 # You can leave these as-is for most setups:
 CELERY_BROKER_URL=redis://redis:6379/0
@@ -42,7 +43,7 @@ def _get_current_uid_gid(default_uid=1000, default_gid=1000):
     else:
         return os.getuid(), os.getgid()
 
-def propagate_env_vars(root: Path) -> None:
+def sync_dotenv() -> None:
     """
     Ensure the .env file exists and is writable, then propagate environment variables
     from the current environment to the .env file.
@@ -50,27 +51,29 @@ def propagate_env_vars(root: Path) -> None:
         - Create a .env file with a template if it does not exist.
         - Ensure the .env file is writable.
         - Read existing variables from the .env file, if any.
+        - Sets HOST_DIR to be mounted in the Docker containers.
+        - Override BASE_URL with the current value or default.
         - Override USER_UID and USER_GID with the current user's UID and GID.
         - Override LOGFILE_NAME and LOG_LEVEL with values from the environment or defaults.
         - Write the updated variables back to the .env file.
-    This will ensure that each docker container has the correct user and logging configurations
-    for the current user running the script.
+    This will ensure that each docker container has the correct user and logging configurations for the current user running the script.
     
     Raises:
-        FileNotFoundError: If the .env file does not exist at the expected location.
         PermissionError: If the .env file is not writable.
+        ValueError: If HOST_DIR is not set in the environment.
     """
     # Ensure the .env file exists
+    root = get_root_path()
     env_path = root.joinpath(".env")
-    if not env_path.exists():
-        env_path.write_text(TEMPLATE)
-        raise FileNotFoundError(
-            f".env not found; template created at {env_path}. Please update it and rerun.")
     
     # Ensure the .env file is writable
     if not os.access(env_path, os.W_OK):
         raise PermissionError(f"Cannot write to {env_path!r}")
-
+    
+    # If the .env file does not exist, create it with a template
+    if not env_path.exists():
+        env_path.write_text(TEMPLATE)
+    
     # Compute uid/gid
     uid, gid = _get_current_uid_gid()
 
@@ -90,16 +93,21 @@ def propagate_env_vars(root: Path) -> None:
     lines["LOGFILE_NAME"] = LOGFILE_NAME
     lines["LOG_LEVEL"] = LOG_LEVEL
     
+    # Override the BASE_URL
+    lines["BASE_URL"] = BASE_URL
+    
+    # Add the HOST_DIR: ⚠️ MUST BE PROVIDED BY THE USER ⚠️ 
+    host_dir = os.getenv("HOST_DIR", None)
+    if host_dir is None:
+        raise ValueError("HOST_DIR environment variable must be set to the directory you want to mount in the Docker containers.")
+    lines["HOST_DIR"] = host_dir
+    
     # Write back
-    tmp_path = env_path.with_suffix(".env.tmp")
+    tmp_path = env_path.with_suffix(".tmp")
     content = "\n".join(f"{k}={v}" for k, v in lines.items()) + "\n"
     tmp_path.write_text(content, encoding="utf-8")
     tmp_path.rename(env_path)  # atomic rename
+    
+    # Load the updated .env file into the environment
+    load_dotenv(env_path, override=True)
 
-
-if __name__ == "__main__":
-    try:
-        propagate_env_vars()
-    except Exception as e:
-        print(f"Failed to write .env: {e}")
-        sys.exit(1)

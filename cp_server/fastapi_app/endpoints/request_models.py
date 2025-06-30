@@ -45,7 +45,7 @@ class ProcessRequest(BackgroundRequest):
     Attributes:
         cellpose_settings (dict): Model and segmentation settings for Cellpose.
         dst_folder (str): Destination folder where processed images will be saved.
-        run_id (str): Unique identifier for the processing run.
+        well_id (str): Unique identifier for the processing well.
         total_fovs (int): Total number of fields of view. It will not be included in the model dump.
         track_stitch_threshold (float, optional): Threshold for stitching masks during tracking. Default to 0.75.
         round (int, optional): The round number for processing, build from the image path if not provided. Defaults to None. It will not be included in the model dump.
@@ -54,7 +54,7 @@ class ProcessRequest(BackgroundRequest):
     """
     cellpose_settings: dict[str, Any]
     dst_folder: str
-    run_id: str
+    well_id: str
     total_fovs: int
     track_stitch_threshold: float = 0.75
     round: int = None
@@ -67,18 +67,18 @@ class ProcessRequest(BackgroundRequest):
         if values.get("round") is None:
             stem = Path(values["img_path"]).stem
             try:
-                # filename format: <fovID>_<category>_<round>.tif
+                # filename format: <fovID>_<category>_<round>
                 values["round"] = int(stem.split("_")[-1])
             except Exception:
                 raise ValueError(f"Cannot parse round from img_path '{values['img_path']}'")
         return values
     
     @model_validator(mode="after")
-    def validate_run_id(cls, values: dict[str, Any]) -> dict[str, Any]:
-        run_id = values.get("run_id")
+    def validate_well_id(cls, values: dict[str, Any]) -> dict[str, Any]:
+        well_id = values.get("well_id")
         
-        if not run_id:
-            raise ValueError("run_id is required for processing")
+        if not well_id:
+            raise ValueError("well_id is required for processing")
         
         return values
     

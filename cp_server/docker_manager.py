@@ -1,17 +1,25 @@
 import logging
+import os
 from pathlib import Path
 import subprocess
 import shutil
 import threading
+import time
+import requests
 
-from cp_server.utils.env_managment import propagate_env_vars, HOST_LOG_FOLDER, LOGFILE_NAME
+from cp_server.utils.env_managment import sync_dotenv, BASE_URL, LOGFILE_NAME
+from cp_server.utils.paths import get_root_path
 
 # Can't use `get_logger` from gem_screening.logger because there is no SERVICE_NAME defined in this module. Fallback to basic logging setup.
 logger = logging.getLogger("cp_server.compose_manager")
 
 # 'Grab' the env vars if any, and propagate them to the .env file
-ROOT = Path(__file__).parent.parent.resolve()
-propagate_env_vars(ROOT)
+sync_dotenv()
+FASTAPI_URL = f"http://{BASE_URL}:8000"
+host_dir = os.getenv("HOST_DIR",)
+HOST_LOG_FOLDER = Path(host_dir).joinpath("logs")
+if not HOST_LOG_FOLDER.exists():
+    HOST_LOG_FOLDER.mkdir(parents=True, exist_ok=True)
 
 def _get_base_cmd() -> list[str]:
     """
@@ -19,7 +27,8 @@ def _get_base_cmd() -> list[str]:
     This function checks for the `docker-compose` or `docker compose` command
     and returns the command with the path to the Docker Compose file.
     """
-    compose_file = ROOT.joinpath("docker-compose.yml")
+    root = get_root_path()
+    compose_file = root.joinpath("docker-compose.yml")
     compose_cmd = shutil.which("docker-compose") or shutil.which("docker compose")
     return [compose_cmd, "-f", str(compose_file)]
 
@@ -41,7 +50,7 @@ def _stream_compose_logs() -> None:
     It will create a log file in the HOST_LOG_FOLDER with the name LOGFILE_NAME.
     """
     base_cmd = _get_base_cmd()
-    log_path = Path(HOST_LOG_FOLDER).joinpath(LOGFILE_NAME)
+    log_path = HOST_LOG_FOLDER.joinpath(LOGFILE_NAME)
     proc = subprocess.Popen(
         [*base_cmd, "logs", "-f"],
         stdout=subprocess.PIPE,
@@ -57,6 +66,30 @@ def _stream_compose_logs() -> None:
             f.flush() # Ensure the file is flushed after each line, meaning it is written immediately
     proc.wait()
 
+def _wait_for_services(timeout: int = 120, interval: int = 1) -> None:
+    """Poll your health endpoints until they all return 200 or timeout."""
+    endpoints = [
+        "/health/redis",
+        "/health",
+        "/health/celery",
+    ]
+    start = time.time()
+    while time.time() - start < timeout:
+        all_ok = True
+        for url in endpoints:
+            try:
+                r = requests.get(f"{FASTAPI_URL}{url}", timeout=1)
+                if r.status_code != 200:
+                    all_ok = False
+                    break
+            except requests.RequestException:
+                all_ok = False
+                break
+        if all_ok:
+            logger.info("All services healthy.")
+            return
+        time.sleep(interval)
+    raise RuntimeError(f"Services are not healthy after {timeout}s")
 
 def compose_up(stream_log: bool) -> None:
     """
@@ -75,7 +108,10 @@ def compose_up(stream_log: bool) -> None:
     except subprocess.CalledProcessError as e:
         logger.error("Compose up failed (exit code %s)", e.returncode)
         raise
-
+    
+    logger.info("Waiting for service health…")
+    _wait_for_services()
+    
     if stream_log:
         # Start a daemon thread that follows `docker-compose logs -f`
         t = threading.Thread(target=_stream_compose_logs, daemon=True)
@@ -93,14 +129,14 @@ class ComposeManager:
     
     Args:
         stream_log (bool): If True, stream the logs of the Docker Compose services.
-                           Default is False, which means logs will not be streamed.
-    Example:
+                           Default is True.
+    Examples:
     ```python
     from cp_server import ComposeManager
     # Use the context manager to manage Docker Compose lifecycle
     with ComposeManager(stream_log=True):
         # Your code here
-        pass
+        ...
     ```
     """
     def __init__(self, stream_log: bool = True) -> None:

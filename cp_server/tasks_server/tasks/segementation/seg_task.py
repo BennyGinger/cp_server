@@ -14,7 +14,7 @@ def segment(img: np.ndarray,
             cellpose_settings: dict[str, any],
             img_path: str, 
             dst_folder: str,
-            run_id: str, 
+            well_id: str, 
             ) -> None:
     """
     Segment the image using Cellpose. Note that the image (ndarray) is encoded as a base64 string
@@ -23,7 +23,7 @@ def segment(img: np.ndarray,
         cellpose_settings (dict): Settings for the Cellpose model and segmentation.
         img_path (str): Path to the image file.
         dst_folder (str): Destination folder where the masks will be saved.
-        run_id (str): Unique identifier for the processing run.
+        well_id (str): Unique identifier for the processing run.
     """
     # Log the settings
     logger.info(f"Initializing segmentation for {img_path} with settings: {cellpose_settings}")
@@ -42,8 +42,8 @@ def segment(img: np.ndarray,
     fov_id, time_id = extract_fov_id(img_path)
     logger.debug(f"Extracted fov_id: {fov_id} and time_id: {time_id} from {mask_path}")
     
-    # Register the run_id and fov_id in Redis
-    hkey = f"masks:{run_id}:{fov_id}"
+    # Register the well_id and fov_id in Redis
+    hkey = f"masks:{well_id}:{fov_id}"
     redis_client.hset(hkey, time_id, str(mask_path))
     logger.info(f"Stored mask for {fov_id} time {time_id}")
     return hkey

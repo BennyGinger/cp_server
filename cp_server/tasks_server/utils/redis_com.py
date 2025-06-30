@@ -2,7 +2,7 @@
 import os
 from urllib.parse import urlparse
 
-from redis import Redis, RedisError
+from redis import Redis
 
 
 url = os.environ["CELERY_BROKER_URL"]  # e.g. redis://redis:6379/0

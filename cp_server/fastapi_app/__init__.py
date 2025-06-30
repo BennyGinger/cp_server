@@ -1,3 +1,4 @@
+from pathlib import Path
 import os
 import logging
 import logging.config
@@ -7,8 +8,11 @@ LOG_LEVEL     = os.getenv("LOG_LEVEL", "INFO").upper()
 LOGFILE_NAME  = os.getenv("LOGFILE_NAME", "combined_server.log")
 SERVICE_NAME  = os.getenv("SERVICE_NAME", "fastapi_app")
 
-# Inside the container, /logs is volume-mounted to your host’s ./logs/
-LOGFILE_PATH  = os.path.join("/logs", LOGFILE_NAME)
+# Inside the container, as /data/logs
+log_folder = Path("/data/logs")
+if not log_folder.exists():
+    log_folder.mkdir(parents=True, exist_ok=True)
+LOGFILE_PATH  = log_folder.joinpath(LOGFILE_NAME)
 
 # 1) Build a dictConfig that attaches both console and file handlers
 logging.config.dictConfig({

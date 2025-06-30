@@ -19,9 +19,8 @@ services:
         USER_UID: "${USER_UID:-1000}"
         USER_GID: "${USER_GID:-1000}"
     volumes:
-      - "${DATA_DIR}:/data"
-      - ./cp_server:/app/cp_server
-      - "${HOST_LOG_FOLDER}:/logs"
+      - "${HOST_DIR}:/data"
+      - ./cp_server:/app/cp_server 
     environment:
       CELERY_BROKER_URL: "${CELERY_BROKER_URL}"
       CELERY_BACKEND_URL: "${CELERY_BACKEND_URL}"
@@ -29,7 +28,7 @@ services:
       REDIS_PORT: "${REDIS_PORT:-6379}"
       REDIS_DB: "${REDIS_DB:-2}"
       LOG_LEVEL: "${LOG_LEVEL:-INFO}"
-      LOGFILE_NAME: "${LOGFILE_NAME:-app.log}"
+      LOGFILE_NAME: "${LOGFILE_NAME:-combined_server.log}"
       SERVICE_NAME: fastapi
       RUNNING_AS_CELERY: "false"
     depends_on:
@@ -50,9 +49,8 @@ services:
         USER_UID: "${USER_UID:-1000}"
         USER_GID: "${USER_GID:-1000}"
     volumes:
-      - "${DATA_DIR}:/data"
-      - ./cp_server:/app/cp_server
-      - "${HOST_LOG_FOLDER}:/logs"
+      - "${HOST_DIR}:/data"
+      - ./cp_server:/app/cp_server 
     environment:
       CELERY_BROKER_URL: "${CELERY_BROKER_URL}"
       CELERY_BACKEND_URL: "${CELERY_BACKEND_URL}"
@@ -60,7 +58,7 @@ services:
       REDIS_PORT: "${REDIS_PORT:-6379}"
       REDIS_DB: "${REDIS_DB:-2}"
       LOG_LEVEL: "${LOG_LEVEL:-INFO}"
-      LOGFILE_NAME: "${LOGFILE_NAME:-app.log}"
+      LOGFILE_NAME: "${LOGFILE_NAME:-combined_server.log}"
       SERVICE_NAME: celery
       RUNNING_AS_CELERY: "true"
     depends_on:
@@ -75,9 +73,8 @@ services:
         USER_UID: "${USER_UID:-1000}"
         USER_GID: "${USER_GID:-1000}"
     volumes:
-      - "${DATA_DIR}:/data"
+      - "${HOST_DIR}:/data"
       - ./cp_server:/app/cp_server
-      - "${HOST_LOG_FOLDER}:/logs"
     environment:
       CELERY_BROKER_URL: "${CELERY_BROKER_URL}"
       CELERY_BACKEND_URL: "${CELERY_BACKEND_URL}"
@@ -85,7 +82,7 @@ services:
       REDIS_PORT: "${REDIS_PORT:-6379}"
       REDIS_DB: "${REDIS_DB:-2}"
       LOG_LEVEL: "${LOG_LEVEL:-INFO}"
-      LOGFILE_NAME: "${LOGFILE_NAME:-app.log}"
+      LOGFILE_NAME: "${LOGFILE_NAME:-combined_server.log}"
       SERVICE_NAME: celery
       RUNNING_AS_CELERY: "true"
     depends_on:
