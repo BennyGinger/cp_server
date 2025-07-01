@@ -1,5 +1,5 @@
 [project]
-name = "cp-server"
+name = "cp_server"
 version = "0.1.0"
 description = "A FastAPI-based server for running different tasks via Celery in the background. These tasks include running Cellpose on images, removing background and simple masks tracking (iou). The server is equipped with a file watcher to automatically process new images and track subsequent masks."
 readme = "README.md"
@@ -19,15 +19,15 @@ dependencies = [
 ]
 
 [project.scripts]
-cp-server = "cp_server.fastapi_app:main"
+cp_server = "cp_server.fastapi_app:main"
 
 [project.optional-dependencies]
 celery = [
-    "cellpose>=3.1.0",
+    "cellpose<4.0",
     "numba>=0.61.0",
     "scikit-image>=0.25.2",
     "smo>=2.0.2",
-    ]
+]
 api = [
     "fastapi>=0.115.11",
     "uvicorn>=0.34.0",
@@ -44,13 +44,13 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
-    "cellpose[gui]>=3.1.0",
+    "cellpose[gui]<4.0",
     "fastapi[all]>=0.115.11",
     "pytest>=8.3.4",
     "pytest-asyncio>=0.25.3",
     "scikit-image>=0.25.2",
     "smo>=2.0.2",
-    ]
+]
 
 [tool.hatch.build.targets.sdist]
 # By default: pyproject.toml, LICENSE, README, and your package dir (cp_server) are included.

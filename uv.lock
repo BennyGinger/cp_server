@@ -248,7 +248,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "celery", specifier = ">=5.4.0" },
-    { name = "cellpose", marker = "extra == 'celery'", specifier = ">=3.1.0" },
+    { name = "cellpose", marker = "extra == 'celery'", specifier = "<4.0" },
     { name = "fastapi", marker = "extra == 'api'", specifier = ">=0.115.11" },
     { name = "numba", marker = "extra == 'celery'", specifier = ">=0.61.0" },
     { name = "numba", marker = "extra == 'celery-default'", specifier = ">=0.61.0" },
@@ -267,7 +267,7 @@ provides-extras = ["celery", "api", "celery-default"]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "cellpose", extras = ["gui"], specifier = ">=3.1.0" },
+    { name = "cellpose", extras = ["gui"], specifier = "<4.0" },
     { name = "fastapi", extras = ["all"], specifier = ">=0.115.11" },
     { name = "pytest", specifier = ">=8.3.4" },
     { name = "pytest-asyncio", specifier = ">=0.25.3" },
