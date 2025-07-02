@@ -2,6 +2,7 @@ from __future__ import annotations
 import warnings
 from typing import TYPE_CHECKING
 
+from tasks_server import get_logger
 import numpy as np
 
 if TYPE_CHECKING:
@@ -11,6 +12,8 @@ if TYPE_CHECKING:
 # Suppress FutureWarning messages from cellpose
 warnings.filterwarnings("ignore", category=FutureWarning, module="cellpose")                
 
+# Set up logging
+logger = get_logger(__name__)
 
 MOD_SETS = {"model_type": "cyto2",
                 "restore_type": "denoise_cyto2",
@@ -118,9 +121,14 @@ def _initialize_cellpose_model(do_denoise: bool, model_settings: dict[str, any])
     
     if do_denoise:
         from cellpose.denoise import CellposeDenoiseModel
-        return CellposeDenoiseModel(**model_settings)
+        model = CellposeDenoiseModel(**model_settings)
+        logger.debug(f"Cellpose is using GPU: {model.cp.gpu}")
+        return model
+    
     from cellpose.models import CellposeModel
-    return CellposeModel(**model_settings)
+    model = CellposeModel(**model_settings)
+    logger.debug(f"Cellpose is using GPU: {model.gpu}")
+    return model
 
 def _segment_image(img: np.ndarray, eval_settings: dict, model: CellposeModel | CellposeDenoiseModel)-> np.ndarray:
     """
@@ -137,12 +145,12 @@ if __name__ == "__main__":
     from tifffile import imread, imwrite
     
     # Load image
-    img_path = Path("/media/ben/Analysis/Python/Images/Image_tests/src_test/_z1_t10.tif")
+    img_path = Path(r"D:\Ben\20250620_test\A1\A1_images\A1_P1_measure_1.tif")
     img = imread(img_path)
     
     # Load settings
-    mod_sets = {"model_type": "cyto2",
-                "restore_type": "denoise_cyto2",
+    mod_sets = {"model_type": "cyto3",
+                "restore_type": "denoise_cyto3",
                 "gpu": True,}
     
     cp_sets = {"channels": None,
@@ -152,10 +160,10 @@ if __name__ == "__main__":
                "z_axis": None,
                "do_3D": False,
                "stitch_threshold": 0,}
-    
+    cel_sets = {**mod_sets, **cp_sets}
     # Run segmentation
-    masks = run_seg(mod_sets, cp_sets, img, True)
+    masks = run_seg(cel_sets, img)
     
     # Save masks
-    save_path = Path("/media/ben/Analysis/Python/Images/Image_tests/dst_test").joinpath(f"{img_path.name}_masks.tif")
-    imwrite(save_path, masks.astype("uint16"))
+    save_path = Path(r"D:\Ben\20250620_test\A1").joinpath(f"{img_path.name}_masks.tif")
+    imwrite(save_path, masks.astype("uint16"), compression="zlib")
