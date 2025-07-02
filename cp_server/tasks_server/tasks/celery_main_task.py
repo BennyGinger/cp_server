@@ -1,10 +1,9 @@
 from typing import Any
+
 from celery import chain, shared_task
 
 from cp_server.tasks_server import get_logger
-from cp_server.tasks_server.tasks.bg_sub.bg_sub_task import remove_bg
-from cp_server.tasks_server.tasks.counter.counter_task_manager import check_and_track
-from cp_server.tasks_server.tasks.segementation.seg_task import segment
+from cp_server.tasks_server.celery_app import celery_app
 
 # Setup logging
 logger = get_logger('tasks')
@@ -39,18 +38,31 @@ def process_images(img_path: str,
     logger.info(f"Received image file: {img_path}")
     
     #### Create the workflows ####
-    chain(remove_bg.s(
+    chain(
+        celery_app.signature(
+            'cp_server.tasks_server.tasks.bg_sub.remove_bg',
+            kwargs=dict(
                 img_path=img_path, 
                 sigma=sigma, 
-                size=size),
-        segment.s(
+                size=size
+            )
+        ),
+        celery_app.signature(
+            'cp_server.tasks_server.tasks.segementation.seg_task.segment',
+            kwargs=dict(
                 cellpose_settings=cellpose_settings, 
                 img_path=img_path, 
                 dst_folder=dst_folder, 
-                well_id=well_id),
-            check_and_track.s(
-                track_stitch_threshold=track_stitch_threshold),
-        ).apply_async()
+                well_id=well_id
+            )
+        ),
+        celery_app.signature(
+            'cp_server.tasks_server.tasks.counter.counter_task_manager.check_and_track',
+            kwargs=dict(
+                track_stitch_threshold=track_stitch_threshold
+            )
+        ),
+    ).apply_async()
     logger.info(f"Workflow created for {img_path}")
     return f"Image {img_path} was sent to be segmented"
 

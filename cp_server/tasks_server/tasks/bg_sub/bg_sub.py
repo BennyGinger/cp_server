@@ -1,8 +1,14 @@
+from typing import TypeVar
+
 import numpy as np
+from numpy.typing import NDArray
 from smo import SMO
 
 
-def apply_bg_sub(img: np.ndarray, sigma: float=0.0, size: int=7)-> np.ndarray:
+T = TypeVar('T', bound=np.generic)
+
+
+def apply_bg_sub(img: NDArray[T], sigma: float=0.0, size: int=7)-> NDArray[T]:
     """
     Apply background subtraction to the image
     """

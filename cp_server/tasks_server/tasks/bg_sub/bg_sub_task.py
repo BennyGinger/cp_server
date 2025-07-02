@@ -4,7 +4,7 @@ import tifffile as tiff
 
 from cp_server.tasks_server import get_logger
 from cp_server.tasks_server.tasks.bg_sub.bg_sub import apply_bg_sub
-from cp_server.tasks_server.tasks.saving.save_tasks import save_img_task
+from cp_server.tasks_server.celery_app import celery_app
 
 
 
@@ -20,7 +20,6 @@ def remove_bg(img_path: str,
     """
     # Debug log the image file and settings
     logger.debug(f"Removing background from {img_path}")
-    logger.debug(f"Decoding img inside remove_bg {img.shape=} and {img.dtype=}")
     
     # load the image
     img = tiff.imread(img_path)
@@ -30,5 +29,8 @@ def remove_bg(img_path: str,
     bg_img = apply_bg_sub(img, sigma, size)
     
     # Encode the image as a base64 string and save it in the background
-    save_img_task.delay(bg_img, img_path)
+    celery_app.send_task(
+        'cp_server.tasks_server.tasks.saving.save_img_task',
+        args=[bg_img, img_path]
+    )
     return bg_img

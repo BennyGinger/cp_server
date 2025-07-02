@@ -41,7 +41,12 @@ def _get_current_uid_gid(default_uid=1000, default_gid=1000):
         # Windows doesn’t have POSIX uids; use defaults or read from env
         return default_uid, default_gid
     else:
-        return os.getuid(), os.getgid()
+        try:
+            return os.getuid(), os.getgid() # type: ignore
+        except AttributeError:
+            # If os.getuid() or os.getgid() are not available (e.g., on some platforms)
+            # we fall back to the defaults.
+            return default_uid, default_gid
 
 def sync_dotenv() -> None:
     """
@@ -66,13 +71,13 @@ def sync_dotenv() -> None:
     root = get_root_path()
     env_path = root.joinpath(".env")
     
-    # Ensure the .env file is writable
-    if not os.access(env_path, os.W_OK):
-        raise PermissionError(f"Cannot write to {env_path!r}")
-    
     # If the .env file does not exist, create it with a template
     if not env_path.exists():
         env_path.write_text(TEMPLATE)
+    
+    # Ensure the .env file is writable
+    if not os.access(env_path.parent, os.W_OK):
+        raise PermissionError(f"Cannot write to {env_path!r}")
     
     # Compute uid/gid
     uid, gid = _get_current_uid_gid()

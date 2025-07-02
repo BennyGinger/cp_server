@@ -1,11 +1,11 @@
-from typing import Optional
+from typing import Optional, List
 
 from celery import shared_task
 
 from cp_server.tasks_server import get_logger
 from cp_server.tasks_server.utils.redis_com import redis_client
+from cp_server.tasks_server.celery_app import celery_app
 from redis import RedisError
-from cp_server.tasks_server.tasks.track.track_task import track_cells
 
 
 logger = get_logger('counter_tasks')
@@ -18,7 +18,10 @@ def mark_one_done(well_id: str) -> Optional[str]:
     remaining = redis_client.decr(f"pending_tracks:{well_id}")
     logger.info(f"Tracks remaining: {remaining}")
     if remaining == 0:
-        all_tracks_finished.delay(well_id)
+        celery_app.send_task(
+            'cp_server.tasks_server.tasks.counter.counter_task_manager.all_tracks_finished',
+            args=[well_id]
+        )
 
 @shared_task(name="cp_server.tasks_server.tasks.counter.counter_task_manager.all_tracks_finished")
 def all_tracks_finished(well_id: str) -> str:
@@ -58,8 +61,8 @@ def check_and_track(hkey: str, track_stitch_threshold: float) -> None:
             _, well_id, fov_id = hkey.split(":", 2)
 
             # 3) Grab the two mask paths
-            raw_vals = redis_client.hvals(hkey)
-            paths = [p.decode() for p in raw_vals]
+            raw_vals: List[bytes] = redis_client.hvals(hkey)  # type: ignore
+            paths = [p.decode() if isinstance(p, bytes) else str(p) for p in raw_vals]
             logger.info(f"Found 2 masks for {fov_id} in run {well_id}: {paths}")
 
             # 4) Clean up the hash so we don't double-track
@@ -67,9 +70,14 @@ def check_and_track(hkey: str, track_stitch_threshold: float) -> None:
             logger.debug(f"Deleted Redis hash {hkey}")
 
             # 5) Fire off tracking, with a safe callback
-            track_cells.apply_async(
+            celery_app.send_task(
+                'cp_server.tasks_server.tasks.track.track_task.track_cells',
                 args=[paths, track_stitch_threshold],
-                link=mark_one_done.si(well_id))
+                link=celery_app.signature(
+                    'cp_server.tasks_server.tasks.counter.counter_task_manager.mark_one_done',
+                    args=[well_id]
+                )
+            )
 
     except RedisError as e:
         # Log full stack so you know what happened

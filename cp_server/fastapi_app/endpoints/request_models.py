@@ -1,7 +1,8 @@
 from pathlib import Path
+import os
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic import BaseModel, model_validator, Field
 
 
 class BackgroundRequest(BaseModel):
@@ -16,17 +17,27 @@ class BackgroundRequest(BaseModel):
     img_path: str
     sigma: float = 0.0
     size: int = 7
-    
     @model_validator(mode="before")
     def validate_img_path(cls, values: dict[str, Any]) -> dict[str, Any]:
         """
         Validate that the file path provided in `img_path` is valid.
         """
         input_file = values.get("img_path")
-        
-        if not Path(input_file).is_file():
-            raise ValueError(f"Provided img_path is not a valid file path: {input_file}")
-        
+
+        if input_file is None:
+            raise ValueError("img_path is required")
+
+        if not isinstance(input_file, (str, bytes, os.PathLike)):
+            raise ValueError(f"Provided img_path must be a string or PathLike, got {type(input_file)}")
+
+        # Decode the input file path to a string if it is bytes or os.PathLike
+        fs_path = os.fsdecode(input_file)
+        input_path = Path(fs_path)
+        if not input_path.is_file():
+            raise ValueError(f"Provided img_path is not a valid file path: {fs_path}")
+
+        values["img_path"] = str(input_path)
+        return values
         return values
 
 class ProcessRequest(BackgroundRequest):
@@ -55,52 +66,43 @@ class ProcessRequest(BackgroundRequest):
     cellpose_settings: dict[str, Any]
     dst_folder: str
     well_id: str
-    total_fovs: int
+    total_fovs: int = Field(exclude=True)
     track_stitch_threshold: float = 0.75
-    round: int = None
-
-    model_config = ConfigDict(model_dump_exclude={"total_fovs", "round"})
+    round: int | None = Field(default=None, exclude=True)
     
     @model_validator(mode="after")
-    def set_round_from_img_path(cls, values: dict[str, Any]) -> dict[str, Any]:
+    def set_round_from_img_path(self) -> 'ProcessRequest':
         # only compute if not provided
-        if values.get("round") is None:
-            stem = Path(values["img_path"]).stem
+        if self.round is None:
+            stem = Path(self.img_path).stem
             try:
                 # filename format: <fovID>_<category>_<round>
-                values["round"] = int(stem.split("_")[-1])
+                self.round = int(stem.split("_")[-1])
             except Exception:
-                raise ValueError(f"Cannot parse round from img_path '{values['img_path']}'")
-        return values
+                raise ValueError(f"Cannot parse round from img_path '{self.img_path}'")
+        return self
     
     @model_validator(mode="after")
-    def validate_well_id(cls, values: dict[str, Any]) -> dict[str, Any]:
-        well_id = values.get("well_id")
-        
-        if not well_id:
+    def validate_well_id(self) -> 'ProcessRequest':
+        if not self.well_id:
             raise ValueError("well_id is required for processing")
         
-        return values
+        return self
     
     @model_validator(mode="after")
-    def validate_dst_folder(cls, values: dict[str, Any]) -> dict[str, Any]:
-        dst_folder = values.get("dst_folder")
-        
-        if not dst_folder:
+    def validate_dst_folder(self) -> 'ProcessRequest':
+        if not self.dst_folder:
             raise ValueError("dst_folder is required for processing")
         
-        dst_folder_path = Path(dst_folder)
+        dst_folder_path = Path(self.dst_folder)
         if not dst_folder_path.exists():
             dst_folder_path.mkdir(parents=True, exist_ok=True)
         
-        return values
+        return self
     
     @model_validator(mode="after")
-    def validate_total_fovs(cls, values: dict[str, Any]) -> dict[str, Any]:
-        total_fovs = values.get("total_fovs")
-        if values.get("round") == 2 and total_fovs is None:
+    def validate_total_fovs(self) -> 'ProcessRequest':
+        if self.round == 2 and self.total_fovs is None:
             raise ValueError("total_fovs is required for round 2 processing")
         
-        return values
-    
-    
+        return self

@@ -16,7 +16,7 @@ logger = logging.getLogger("cp_server.compose_manager")
 # 'Grab' the env vars if any, and propagate them to the .env file
 sync_dotenv()
 FASTAPI_URL = f"http://{BASE_URL}:8000"
-host_dir = os.getenv("HOST_DIR",)
+host_dir = os.getenv("HOST_DIR", ".")
 HOST_LOG_FOLDER = Path(host_dir).joinpath("logs")
 if not HOST_LOG_FOLDER.exists():
     HOST_LOG_FOLDER.mkdir(parents=True, exist_ok=True)
@@ -30,6 +30,8 @@ def _get_base_cmd() -> list[str]:
     root = get_root_path()
     compose_file = root.joinpath("docker-compose.yml")
     compose_cmd = shutil.which("docker-compose") or shutil.which("docker compose")
+    if compose_cmd is None:
+        raise RuntimeError("Neither 'docker-compose' nor 'docker compose' command found")
     return [compose_cmd, "-f", str(compose_file)]
 
 def compose_down() -> None:
@@ -58,6 +60,7 @@ def _stream_compose_logs() -> None:
         text=True,
     )
     with log_path.open("a", encoding="utf-8") as f:
+        assert proc.stdout is not None, "Failed to capture logs: stdout is None"
         for line in proc.stdout:
             # 1) Print raw, so you see Docker’s own timestamp+prefix
             print(line, end="")

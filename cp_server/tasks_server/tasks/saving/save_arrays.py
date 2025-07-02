@@ -18,17 +18,18 @@ def generate_mask_path(img_file: str, dst_folder: str) -> Path:
     Returns:
         Path: The path where the mask will be saved.
     """
-    save_dir = Path(img_file).parent.parent.joinpath(dst_folder)
+    img_path = Path(img_file)
+    save_dir = img_path.parent.parent.joinpath(dst_folder)
     save_dir.mkdir(exist_ok=True)
     
     # Extract the name of the image file and replace the marker with 'mask'
-    name = img_file.name
+    name = img_path.name
     for marker in IMG_MARKERS:
         if f"_{marker}_" in name:
             name = name.replace(marker, MASK_NAME)
             break
     else:
-        raise ValueError(f"No expected marker in {img_file.name!r}")
+        raise ValueError(f"No expected marker in {img_path.name!r}")
     return save_dir.joinpath(name)
 
 def extract_fov_id(img_file: str) -> tuple[str, str]:
@@ -40,7 +41,11 @@ def extract_fov_id(img_file: str) -> tuple[str, str]:
     Returns:
         tuple[str, str]: A tuple containing the FOV ID and timepoint extracted from the image file name.
     """
-    return Path(img_file).stem.split("_mask_")
+    img_path = Path(img_file)
+    extracted_items = img_path.stem.split("_mask_")
+    if len(extracted_items) != 2:
+        raise ValueError(f"Expected image file name format '<FOVID>_mask_[1-9].tif', got {img_path.name!r}")
+    return (extracted_items[0], extracted_items[1])
 
 def save_mask(mask: np.ndarray, mask_path: str) -> None:
     """

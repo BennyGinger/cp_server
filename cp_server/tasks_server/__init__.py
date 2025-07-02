@@ -99,7 +99,7 @@ def _configure_logging(logger: logging.Logger, *args, **kwargs) -> None:
             LOGFILE_PATH, LOG_LEVEL)
 
 # Provide a wrapper to fetch a named logger under our “tasks_server” umbrella.
-def get_logger(name: str = None) -> logging.Logger:
+def get_logger(name: str | None = None) -> logging.Logger:
     """
     Returns a logger whose name is prefixed by 'tasks_server' (or whatever SERVICE_NAME).
     If name=None, returns the 'tasks_server' logger itself.

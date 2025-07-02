@@ -1,6 +1,6 @@
 from __future__ import annotations
 import warnings
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from tasks_server import get_logger
 import numpy as np
@@ -29,7 +29,7 @@ EVAL_SETS = {"channels": None,
 
 
 # TODO: Update to cellpose 4.0
-def run_seg(cellpose_settings: dict[str, any], img: np.ndarray) -> np.ndarray:
+def run_seg(cellpose_settings: dict[str, Any], img: np.ndarray) -> np.ndarray:
     """
     Run segmentation on the image using Cellpose.
     Args:
@@ -52,7 +52,7 @@ def run_seg(cellpose_settings: dict[str, any], img: np.ndarray) -> np.ndarray:
 
 
 ##################### Helper functions #####################
-def _unpack_cellpose_settings(cellpose_settings: dict[str, any], do_denoise: bool) -> tuple[dict[str, any], dict[str, any]]:
+def _unpack_cellpose_settings(cellpose_settings: dict[str, Any], do_denoise: bool) -> tuple[dict[str, Any], dict[str, Any]]:
     """
     Unpack the Cellpose settings into model and segmentation settings.
     Args:
@@ -73,7 +73,7 @@ def _unpack_cellpose_settings(cellpose_settings: dict[str, any], do_denoise: boo
     
     return _update_model_parameters(mod_sets, do_denoise), _update_eval_settings(eval_sets, do_denoise)
 
-def _update_model_parameters(mod_set: dict[str, any], do_denoise: bool=True) -> dict[str, any]:
+def _update_model_parameters(mod_set: dict[str, Any], do_denoise: bool=True) -> dict[str, Any]:
     """
     Validate the model settings and add restore_type if needed.
     Args:
@@ -92,7 +92,7 @@ def _update_model_parameters(mod_set: dict[str, any], do_denoise: bool=True) -> 
         return mod_set
     return mod_set
     
-def _update_eval_settings(cp_set: dict[str, any], do_denoise: bool=True) -> dict[str, any]:
+def _update_eval_settings(cp_set: dict[str, Any], do_denoise: bool=True) -> dict[str, Any]:
      """
      Validate the eval settings and add channels if needed.
      Args:
@@ -114,7 +114,7 @@ def _update_eval_settings(cp_set: dict[str, any], do_denoise: bool=True) -> dict
      
      return cp_set
 
-def _initialize_cellpose_model(do_denoise: bool, model_settings: dict[str, any])-> CellposeModel | CellposeDenoiseModel:
+def _initialize_cellpose_model(do_denoise: bool, model_settings: dict[str, Any])-> CellposeModel | CellposeDenoiseModel:
     """
     Initialize the Cellpose model, with lazy import to avoid unnecessary dependencies.
     """

@@ -48,7 +48,7 @@ logging.config.dictConfig({
     },
 })
 
-def get_logger(name: str = None) -> logging.Logger:
+def get_logger(name: str | None = None) -> logging.Logger:
     """
     Get a logger with the name of the service with/without a specific name.
     If `name` is provided, it will be prefixed with the service name.

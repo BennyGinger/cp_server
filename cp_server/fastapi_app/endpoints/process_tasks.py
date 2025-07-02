@@ -45,7 +45,7 @@ def process_images_endpoint(request: Request, payload: ProcessRequest) -> dict[s
         redis_client.setnx(f"pending_tracks:{payload.well_id}", payload.total_fovs)
         redis_client.expire(f"pending_tracks:{payload.well_id}", 24 * 3600)
     
-    logger.info(f"Enqueuing {len(payload.image_paths)} images for processing (round={payload.round})")
+    logger.info(f"Sending {payload.img_path} for processing with well_id {payload.well_id}")
     
     # Process the paths
     params = payload.model_dump()
@@ -74,7 +74,7 @@ def process_bg_sub_endpoint(request: Request, payload: BackgroundRequest) -> str
     """
     celery_app: Celery = request.app.state.celery_app
     
-    logger.info(f"Enqueuing {len(payload.image_paths)} images for background subtraction")
+    logger.info(f"Sending {payload.img_path} images for background subtraction")
     
     # Process the paths
     params = payload.model_dump()
@@ -85,7 +85,7 @@ def process_bg_sub_endpoint(request: Request, payload: BackgroundRequest) -> str
     return task.id
 
 @router.get("/process/{well_id}/status")
-def get_process_status(well_id: str) -> dict[str, Any]:
+async def get_process_status(well_id: str) -> dict[str, Any]:
     """
     Check remaining tracks for a given well_id.
     Returns 404 if well_id is not found in Redis.
@@ -94,12 +94,13 @@ def get_process_status(well_id: str) -> dict[str, Any]:
     finished_key = f"finished:{well_id}"
     
     # 1) If we have a finished flag, report done
-    if redis_client.exists(finished_key):
+    if await redis_client.exists(finished_key):
         return {"well_id": well_id, "status": "finished", "remaining": 0}
     
     # 2) If we still have a pending counter, report processing
-    if redis_client.exists(pending_key):
-        rem = int(redis_client.get(pending_key))
+    if await redis_client.exists(pending_key):
+        rem_val = await redis_client.get(pending_key)
+        rem = int(rem_val) if rem_val is not None else 0
         return {"well_id": well_id, "status": "processing", "remaining": rem}
     
     # 3) Neither key exists → invalid well_id

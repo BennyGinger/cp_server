@@ -1,3 +1,4 @@
+from typing import Any
 from celery import shared_task
 import numpy as np
 
@@ -11,11 +12,11 @@ logger = get_logger(__name__)
 
 @shared_task(name="cp_server.tasks_server.tasks.segementation.seg_task.segment")
 def segment(img: np.ndarray, 
-            cellpose_settings: dict[str, any],
+            cellpose_settings: dict[str, Any],
             img_path: str, 
             dst_folder: str,
             well_id: str, 
-            ) -> None:
+            ) -> str:
     """
     Segment the image using Cellpose. Note that the image (ndarray) is encoded as a base64 string
     Args:

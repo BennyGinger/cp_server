@@ -16,3 +16,4 @@ wheels/
 # Development file trial
 play.py
 Image_tests/
+.env.tmp
