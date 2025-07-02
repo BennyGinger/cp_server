@@ -1,5 +1,5 @@
 [project]
-name = "cp_server"
+name = "cp-server"
 version = "0.1.0"
 description = "A FastAPI-based server for running different tasks via Celery in the background. These tasks include running Cellpose on images, removing background and simple masks tracking (iou). The server is equipped with a file watcher to automatically process new images and track subsequent masks."
 readme = "README.md"
@@ -11,6 +11,7 @@ authors = [
 requires-python = ">=3.12"
 dependencies = [
     "celery>=5.4.0",
+    "dotenv>=0.9.9",
     "numpy<2.0.0",
     "redis>=5.2.1",
     "requests>=2.32.4",
@@ -19,7 +20,7 @@ dependencies = [
 ]
 
 [project.scripts]
-cp_server = "cp_server.fastapi_app:main"
+cp-server = "cp_server.fastapi_app:main"
 
 [project.optional-dependencies]
 celery = [
@@ -66,34 +67,34 @@ url      = "https://download.pytorch.org/whl/cu124/"
 explicit = true
 
 
-[tool.hatch.build.targets.sdist]
+#[tool.hatch.build.targets.sdist]
 # By default: pyproject.toml, LICENSE, README, and your package dir (cp_server) are included.
 # Add anything else you need in your source archive here:
-include = [
-  "docker-compose.yml",
-  "Dockerfile_app",
-  "Dockerfile_celery",
-  "Dockerfile_celery_default",
-  # if you had any JSON or YAML configs at the repo root or in a sub-dir, list them here:
-  # "config/**/*.yml",
-  # "config/**/*.json",
-    ]
+#include = [
+#  "docker-compose.yml",
+#  "Dockerfile_app",
+#  "Dockerfile_celery",
+#  "Dockerfile_celery_default",
+#  # if you had any JSON or YAML configs at the repo root or in a sub-dir, list them here:
+#  # "config/**/*.yml",
+#  # "config/**/*.json",
+  #  ]
 
-[tool.hatch.build.targets.wheel]
+#[tool.hatch.build.targets.wheel]
 # Only ship exactly these paths into your wheel:
-only-include = [
-  "cp_server",               # your python code
-  "docker-compose.yml",
-  "Dockerfile_app",
-  "Dockerfile_celery",
-  "Dockerfile_celery_default",
-]
+#only-include = [
+#  "cp_server",               # your python code
+#  "docker-compose.yml",
+#  "Dockerfile_app",
+#  "Dockerfile_celery",
+#  "Dockerfile_celery_default",
+#]
 
 # Re-map paths so that cp_server/ becomes the top-level package and other files live
 # at the root of the wheel
-[tool.hatch.build.targets.wheel.sources]
-"cp_server"              = ""   # collapse cp_server/ → <root>/cp_server/
-"docker-compose.yml"     = ""   # place at wheel root
-"Dockerfile_app"         = ""
-"Dockerfile_celery"      = ""
-"Dockerfile_celery_default" = ""
+#[tool.hatch.build.targets.wheel.sources]
+#"cp_server"              = ""   # collapse cp_server/ → <root>/cp_server/
+#"docker-compose.yml"     = ""   # place at wheel root
+#"Dockerfile_app"         = ""
+#"Dockerfile_celery"      = ""
+#"Dockerfile_celery_default" = ""
