@@ -17,7 +17,7 @@ RUN groupadd -g $USER_GID celerygroup && \
 WORKDIR /app
 
 # Copy the project files into the container
-COPY . /app
+COPY --chown=celeryuser:celerygroup . /app
 
 # Upgrade pip and install the "uv" tool which manages the project
 RUN pip install --upgrade pip && pip install uv
@@ -33,8 +33,8 @@ ENV PATH="/app/.venv/bin:$PATH"
 RUN uv pip install -r pyproject.toml --extra celery-default
 
 # Give the celeryuser user ownership of the app and data directory
-RUN chown -R celeryuser:celerygroup /app
-RUN mkdir /data \
+RUN chown celeryuser:celerygroup /app \
+    && mkdir /data \
     && chown -R celeryuser:celerygroup /data
 
 USER celeryuser

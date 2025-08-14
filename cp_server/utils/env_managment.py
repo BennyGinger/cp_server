@@ -3,7 +3,7 @@ import os
 import sys
 from pathlib import Path
 
-from dotenv import load_dotenv
+from dotenv import load_dotenv, dotenv_values
 
 from cp_server.utils.paths import get_root_path
 
@@ -74,6 +74,10 @@ def sync_dotenv() -> None:
     # If the .env file does not exist, create it with a template
     if not env_path.exists():
         env_path.write_text(TEMPLATE)
+    else:
+        # Load existing .env into the environment (without overriding real env)
+        # so os.getenv can see values from the file when not set in the OS.
+        load_dotenv(env_path, override=False)
     
     # Ensure the .env file is writable
     if not os.access(env_path.parent, os.W_OK):
@@ -82,36 +86,52 @@ def sync_dotenv() -> None:
     # Compute uid/gid
     uid, gid = _get_current_uid_gid()
 
-    # Load existing .env (if any)
-    lines = {}
-    for line in env_path.read_text().splitlines():
-        if not line.strip() or line.startswith("#"): 
-            continue
-        key, _, val = line.partition("=")
-        lines[key] = val
+    # Load existing .env key-values using dotenv parser (handles quotes, etc.)
+    lines: dict[str, str] = {}
+    try:
+        lines = {k: str(v) for k, v in dotenv_values(env_path).items()}  # type: ignore[arg-type]
+    except Exception:
+        # Fallback to naive parsing if dotenv fails for any reason
+        for line in env_path.read_text(encoding="utf-8").splitlines():
+            if not line.strip() or line.lstrip().startswith("#"):
+                continue
+            key, _, val = line.partition("=")
+            lines[key.strip()] = val.strip()
 
     # Override your USER_UID / USER_GID
     lines["USER_UID"] = str(uid)
     lines["USER_GID"] = str(gid)
     
-    # Override the LOGS setups
-    lines["LOGFILE_NAME"] = LOGFILE_NAME
-    lines["LOG_LEVEL"] = LOG_LEVEL
+    # Merge LOG/URL settings: prefer OS env, then existing .env, then defaults
+    logfile_name = os.getenv("LOGFILE_NAME") or lines.get("LOGFILE_NAME") or LOGFILE_NAME
+    log_level = (os.getenv("LOG_LEVEL") or lines.get("LOG_LEVEL") or LOG_LEVEL).upper()
+    base_url = os.getenv("BASE_URL") or lines.get("BASE_URL") or BASE_URL
+    lines["LOGFILE_NAME"] = logfile_name
+    lines["LOG_LEVEL"] = log_level
+    lines["BASE_URL"] = base_url
     
-    # Override the BASE_URL
-    lines["BASE_URL"] = BASE_URL
-    
-    # Add the HOST_DIR: ⚠️ MUST BE PROVIDED BY THE USER ⚠️ 
-    host_dir = os.getenv("HOST_DIR", None)
-    if host_dir is None:
-        raise ValueError("HOST_DIR environment variable must be set to the directory you want to mount in the Docker containers.")
+    # Add the HOST_DIR: prefer OS env, then from existing .env
+    host_dir = os.getenv("HOST_DIR") or lines.get("HOST_DIR")
+    if not host_dir:
+        raise ValueError("HOST_DIR must be set (in the environment or .env) to the directory you want to mount in the Docker containers.")
     lines["HOST_DIR"] = host_dir
     
-    # Write back
+    # Write back (atomically). On Windows, .replace() overwrites the target.
     tmp_path = env_path.with_suffix(".tmp")
     content = "\n".join(f"{k}={v}" for k, v in lines.items()) + "\n"
+    try:
+        tmp_path.unlink(missing_ok=True)
+    except Exception:
+        pass
     tmp_path.write_text(content, encoding="utf-8")
-    tmp_path.rename(env_path)  # atomic rename
+    try:
+        tmp_path.replace(env_path)
+    except OSError:
+        try:
+            env_path.unlink(missing_ok=True)
+        except Exception:
+            pass
+        tmp_path.rename(env_path)
     
     # Load the updated .env file into the environment
     load_dotenv(env_path, override=True)

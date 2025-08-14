@@ -17,7 +17,7 @@ RUN groupadd -g $USER_GID fastapigroup \
 WORKDIR /app
 
 # Copy the project files into the container
-COPY . /app
+COPY --chown=fastapiuser:fastapigroup . /app
 
 # Upgrade pip and install the "uv" tool which manages the project
 RUN pip install --upgrade pip \
@@ -33,9 +33,9 @@ ENV PATH="/app/.venv/bin:$PATH"
 # Install only the "api" extra dependencies defined in your pyproject file
 RUN uv pip install -r pyproject.toml --extra api
 
-# Set the folder structure and permissions
-RUN chown -R fastapiuser:fastapigroup /app
-RUN mkdir /data \
+# Set the folder structure and permissions - ensure /app directory itself is owned by fastapiuser
+RUN chown fastapiuser:fastapigroup /app \
+    && mkdir /data \
     && chown -R fastapiuser:fastapigroup /data
 
 # Set the user to run the application

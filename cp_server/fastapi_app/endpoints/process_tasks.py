@@ -85,7 +85,7 @@ def process_bg_sub_endpoint(request: Request, payload: BackgroundRequest) -> str
     return task.id
 
 @router.get("/process/{well_id}/status")
-async def get_process_status(well_id: str) -> dict[str, Any]:
+def get_process_status(well_id: str) -> dict[str, Any]:
     """
     Check remaining tracks for a given well_id.
     Returns 404 if well_id is not found in Redis.
@@ -94,12 +94,12 @@ async def get_process_status(well_id: str) -> dict[str, Any]:
     finished_key = f"finished:{well_id}"
     
     # 1) If we have a finished flag, report done
-    if await redis_client.exists(finished_key):
+    if redis_client.exists(finished_key):
         return {"well_id": well_id, "status": "finished", "remaining": 0}
     
     # 2) If we still have a pending counter, report processing
-    if await redis_client.exists(pending_key):
-        rem_val = await redis_client.get(pending_key)
+    if redis_client.exists(pending_key):
+        rem_val = redis_client.get(pending_key)
         rem = int(rem_val) if rem_val is not None else 0
         return {"well_id": well_id, "status": "processing", "remaining": rem}
     

@@ -1,6 +1,7 @@
 import logging
 import os
 from pathlib import Path
+import re
 import subprocess
 import shutil
 import threading
@@ -29,10 +30,16 @@ def _get_base_cmd() -> list[str]:
     """
     root = get_root_path()
     compose_file = root.joinpath("docker-compose.yml")
-    compose_cmd = shutil.which("docker-compose") or shutil.which("docker compose")
-    if compose_cmd is None:
-        raise RuntimeError("Neither 'docker-compose' nor 'docker compose' command found")
-    return [compose_cmd, "-f", str(compose_file)]
+    # Try docker-compose v1 first
+    v1 = shutil.which("docker-compose")
+    if v1:
+        return [v1, "-f", str(compose_file)]
+    # Fall back to docker compose v2
+    docker = shutil.which("docker")
+    if docker:
+        return [docker, "compose", "-f", str(compose_file)]
+    # Raise an error if neither command is found
+    raise RuntimeError("Neither 'docker-compose' nor 'docker' (with compose) found in PATH")
 
 def compose_down() -> None:
     """
@@ -59,14 +66,30 @@ def _stream_compose_logs() -> None:
         stderr=subprocess.STDOUT,
         text=True,
     )
+    
+    # Pattern to match progress bar lines (percentage, bar, size info)
+    progress_pattern = re.compile(r'^\s*\d+%\|.*?\|\s*[\d.]+[kMG]?/?[\d.]+[kMG]?\s*\[.*?\]')
+    last_progress_line = None
+    
     with log_path.open("a", encoding="utf-8") as f:
         assert proc.stdout is not None, "Failed to capture logs: stdout is None"
         for line in proc.stdout:
-            # 1) Print raw, so you see Docker’s own timestamp+prefix
-            print(line, end="")
-            # 2) Mirror the exact same line into your logfile
-            f.write(line)
-            f.flush() # Ensure the file is flushed after each line, meaning it is written immediately
+            # Check if this is a progress bar line
+            if progress_pattern.search(line.strip()):
+                # Only print/log if it's different from the last progress line
+                # or if it's a completion (100%)
+                if (last_progress_line != line.strip() and 
+                    (line.strip() != last_progress_line or "100%" in line)):
+                    print(line, end="")
+                    f.write(line)
+                    f.flush()
+                    last_progress_line = line.strip()
+            else:
+                # Non-progress line: always print and log
+                print(line, end="")
+                f.write(line)
+                f.flush()
+                last_progress_line = None  # Reset progress tracking
     proc.wait()
 
 def _wait_for_services(timeout: int = 120, interval: int = 1) -> None:
@@ -76,23 +99,37 @@ def _wait_for_services(timeout: int = 120, interval: int = 1) -> None:
         "/health",
         "/health/celery",
     ]
+    
+    # Give services time to start up before first health check
+    initial_delay = 5.0  # seconds
+    logger.info(f"Waiting {initial_delay}s for services to start up before health checks...")
+    time.sleep(initial_delay)
+    
     start = time.time()
     while time.time() - start < timeout:
         all_ok = True
+        failed_endpoints = []
         for url in endpoints:
             try:
                 r = requests.get(f"{FASTAPI_URL}{url}", timeout=1)
                 if r.status_code != 200:
+                    failed_endpoints.append(f"{url} (status: {r.status_code})")
                     all_ok = False
-                    break
-            except requests.RequestException:
+            except requests.RequestException as e:
+                failed_endpoints.append(f"{url} (error: {e})")
                 all_ok = False
-                break
+        
         if all_ok:
             logger.info("All services healthy.")
             return
+        
+        # Log which endpoints are failing every 10 seconds
+        elapsed = time.time() - start
+        if int(elapsed) % 10 == 0:
+            logger.info(f"Waiting for services... Failed: {', '.join(failed_endpoints)}")
+        
         time.sleep(interval)
-    raise RuntimeError(f"Services are not healthy after {timeout}s")
+    raise RuntimeError(f"Services are not healthy after {timeout}s. Failed endpoints: {', '.join(failed_endpoints)}")
 
 def compose_up(stream_log: bool) -> None:
     """
@@ -112,7 +149,6 @@ def compose_up(stream_log: bool) -> None:
         logger.error("Compose up failed (exit code %s)", e.returncode)
         raise
     
-    logger.info("Waiting for service health…")
     _wait_for_services()
     
     if stream_log:

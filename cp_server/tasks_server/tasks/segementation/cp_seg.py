@@ -2,7 +2,7 @@ from __future__ import annotations
 import warnings
 from typing import TYPE_CHECKING, Any
 
-from tasks_server import get_logger
+from cp_server.tasks_server import get_logger
 import numpy as np
 
 if TYPE_CHECKING:

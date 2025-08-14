@@ -75,6 +75,7 @@ services:
     volumes:
       - "${HOST_DIR}:/data"
       - ./cp_server:/app/cp_server
+      - cellpose_models:/home/celeryuser/.cellpose
     environment:
       CELERY_BROKER_URL: "${CELERY_BROKER_URL}"
       CELERY_BACKEND_URL: "${CELERY_BACKEND_URL}"
@@ -95,3 +96,6 @@ services:
             - driver: "nvidia"
               count: all
               capabilities: ["gpu"]
+
+volumes:
+  cellpose_models:

@@ -14,13 +14,15 @@ def generate_mask_path(img_file: str, dst_folder: str) -> Path:
     The assumption is that the coming file name is in the format '<FOVID>_refseg_[1-9].tif', so the mask will be saved as '<FOVID>_mask_[1-9].tif'.
     Args:
         img_file (str): The path to the image file.
-        dst_folder (str): The destination folder where the mask will be saved.
+        dst_folder (str): The destination folder where the mask will be saved (container path).
     Returns:
         Path: The path where the mask will be saved.
     """
     img_path = Path(img_file)
-    save_dir = img_path.parent.parent.joinpath(dst_folder)
-    save_dir.mkdir(exist_ok=True)
+    
+    # dst_folder is now a container path like "/data/A1_well/A1_masks"
+    save_dir = Path(dst_folder)
+    save_dir.mkdir(parents=True, exist_ok=True)
     
     # Extract the name of the image file and replace the marker with 'mask'
     name = img_path.name
@@ -34,18 +36,31 @@ def generate_mask_path(img_file: str, dst_folder: str) -> Path:
 
 def extract_fov_id(img_file: str) -> tuple[str, str]:
     """
-    Extract the field of view (FOV) ID from the image file name.
-    The assumption is that the coming file name is in the format '<FOVID>_mask_[1-9].tif', so the FOV ID and timepoint will be extracted.
+    Extract the field of view (FOV) ID and timepoint from the image file name.
+    The function can handle both mask files ('FOVID_mask_[1-9].tif') and input image files ('FOVID_refseg_[1-9].tif' or 'FOVID_measure_[1-9].tif').
     Args:
         img_file (str): The path to the image file.
     Returns:
         tuple[str, str]: A tuple containing the FOV ID and timepoint extracted from the image file name.
     """
     img_path = Path(img_file)
-    extracted_items = img_path.stem.split("_mask_")
-    if len(extracted_items) != 2:
-        raise ValueError(f"Expected image file name format '<FOVID>_mask_[1-9].tif', got {img_path.name!r}")
-    return (extracted_items[0], extracted_items[1])
+    
+    # Try to extract from mask format first
+    if "_mask_" in img_path.stem:
+        extracted_items = img_path.stem.split("_mask_")
+        if len(extracted_items) == 2:
+            return (extracted_items[0], extracted_items[1])
+    
+    # Try to extract from image format (refseg, measure, etc.)
+    # Look for pattern: FOVID_<type>_<timepoint>
+    parts = img_path.stem.split("_")
+    if len(parts) >= 3:
+        # Last part should be timepoint, second-to-last should be type (refseg, measure, etc.)
+        fov_id = "_".join(parts[:-2])  # Everything except last 2 parts
+        timepoint = parts[-1]  # Last part
+        return (fov_id, timepoint)
+    
+    raise ValueError(f"Could not extract FOV ID and timepoint from {img_path.name!r}")
 
 def save_mask(mask: np.ndarray, mask_path: str) -> None:
     """
