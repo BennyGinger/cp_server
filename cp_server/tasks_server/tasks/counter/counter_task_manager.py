@@ -11,10 +11,14 @@ from redis import RedisError
 logger = get_logger('counter_tasks')
 
 @shared_task(name="cp_server.tasks_server.tasks.counter.counter_task_manager.mark_one_done")
-def mark_one_done(well_id: str) -> Optional[str]:
+def mark_one_done(track_result, well_id: str) -> Optional[str]:
     """
     Celery callback: decrement the pending counter; if zero, fire final task.
+    The track_result parameter receives the return value from the track_cells task.
     """
+    # Log the track result (optional, can be removed if not needed)
+    logger.debug(f"Track task completed with result: {track_result}")
+    
     remaining = redis_client.decr(f"pending_tracks:{well_id}")
     logger.info(f"Tracks remaining: {remaining}")
     if remaining == 0:
@@ -71,7 +75,7 @@ def check_and_track(hkey: str, track_stitch_threshold: float) -> None:
 
             # 5) Fire off tracking, with a safe callback
             celery_app.send_task(
-                'cp_server.tasks_server.tasks.track.track_task.track_cells',
+                'cp_server.tasks_server.tasks.track.track_cells',
                 args=[paths, track_stitch_threshold],
                 link=celery_app.signature(
                     'cp_server.tasks_server.tasks.counter.counter_task_manager.mark_one_done',
