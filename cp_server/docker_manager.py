@@ -102,7 +102,7 @@ def _wait_for_services(timeout: int = 120, interval: int = 1) -> None:
     
     # Give services time to start up before first health check
     initial_delay = 5.0  # seconds
-    logger.info(f"Waiting {initial_delay}s for services to start up before health checks...")
+    logger.info(f"Waiting for services to start up before health checks...")
     time.sleep(initial_delay)
     
     start = time.time()
@@ -126,7 +126,7 @@ def _wait_for_services(timeout: int = 120, interval: int = 1) -> None:
         # Log which endpoints are failing every 10 seconds
         elapsed = time.time() - start
         if int(elapsed) % 10 == 0:
-            logger.info(f"Waiting for services... Failed: {', '.join(failed_endpoints)}")
+            logger.info(f"All Services still not healthy: {', '.join(failed_endpoints)}")
         
         time.sleep(interval)
     raise RuntimeError(f"Services are not healthy after {timeout}s. Failed endpoints: {', '.join(failed_endpoints)}")

@@ -43,7 +43,11 @@ def create_celery_app(include_tasks: bool = False) -> Celery:
     celery_app.conf.update(
         task_serializer='custom_ndarray',
         result_serializer='custom_ndarray',
-        accept_content=['application/x-custom-ndarray'],)
+        accept_content=['application/x-custom-ndarray'],
+        # Reduce verbosity of task completion logging
+        worker_log_format='[%(asctime)s: %(levelname)s/%(processName)s] %(message)s',
+        worker_task_log_format='[%(asctime)s: %(levelname)s/%(processName)s][%(task_name)s(%(task_id)s)] %(message)s',
+    )
     
     # Only load tasks if we're running as a worker
     if include_tasks:
@@ -60,4 +64,10 @@ def create_celery_app(include_tasks: bool = False) -> Celery:
     return celery_app
 
 celery_app = create_celery_app(include_tasks=True)
+
+# Configure logging to reduce verbosity of task completion messages
+import logging
+trace_logger = logging.getLogger('celery.app.trace')
+trace_logger.setLevel(logging.DEBUG)  # This will show task completion logs only in DEBUG mode
+
 logger.info("Celery app initialized successfully.")
