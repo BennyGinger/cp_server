@@ -1,108 +1,127 @@
-from cellpose.models import CellposeModel
-from cellpose.denoise import CellposeDenoiseModel
 import numpy as np
 import pytest
+from unittest.mock import Mock, patch
 
-from cp_server.tasks_server.tasks.segementation.cp_seg import _initialize_cellpose_model, unpack_settings, _segment_image
+from cp_server.tasks_server.tasks.segementation.cp_seg import run_seg
 
 
 @pytest.fixture
-def settings():
+def sample_image():
+    """Create a sample 2D image for testing."""
+    return np.random.randint(0, 255, (100, 100), dtype=np.uint8)
+
+
+@pytest.fixture
+def cellpose_settings():
+    """Sample cellpose settings for testing."""
     return {
-        "model": {
-            "model_type": "cyto2",
-            "restore_type": "denoise_cyto2",
-            "gpu": True,},
-        
-        "segmentation": {
-            "channels": None,
-            "diameter": 60,
-            "flow_threshold": 0.4,
-            "cellprob_threshold": 0.0,
-            "z_axis": 0,
-            "do_3D": False,
-            "stitch_threshold": 0.75,}}
+        "model_type": "cyto2",
+        "gpu": False,  # Use CPU for tests
+        "diameter": 30,
+        "flow_threshold": 0.4,
+        "cellprob_threshold": 0.0,
+        "do_denoise": False,  # Disable denoising for faster tests
+    }
 
-########### Test unpack_settings ############
-@pytest.mark.parametrize("do_denoise", [True, False])
-def test_unpack_settings(settings, do_denoise):
-    
-    model_settings, cp_settings = unpack_settings(settings, do_denoise)
-    
-    assert model_settings == settings["model"]
-    match do_denoise:
-        case True:
-            assert cp_settings["channels"] == [0, 0]
-            assert "restore_type" in model_settings
-        case False:
-            assert cp_settings["channels"] is None
-            assert "restore_type" not in model_settings
-    assert cp_settings == settings["segmentation"]
 
-def test_unpack_settings_with_missing_channels(settings):
+@patch('cp_server.tasks_server.tasks.segementation.cp_seg.setup_cellpose')
+@patch('cp_server.tasks_server.tasks.segementation.cp_seg.run_cellpose')
+def test_run_seg_returns_masks(mock_run_cellpose, mock_setup_cellpose, sample_image, cellpose_settings):
+    """Test that run_seg returns single mask for single image input."""
     
-    settings["segmentation"].pop("channels")
+    # Setup mocks
+    mock_configured_settings = {'model': Mock(), 'eval_params': {}}
+    mock_setup_cellpose.return_value = mock_configured_settings
     
-    model_settings, cp_settings = unpack_settings(settings, do_denoise=True)
+    # Mock masks, flows, styles return from run_cellpose (single image)
+    mock_masks = np.ones((100, 100), dtype=np.uint16)
+    mock_flows = [np.zeros((100, 100)), np.zeros((100, 100)), np.zeros((100, 100))]
+    mock_styles = np.array([1.0, 2.0])
+    mock_run_cellpose.return_value = (mock_masks, mock_flows, mock_styles)
     
-    assert model_settings == settings["model"]
-    assert cp_settings["channels"] == [0, 0]
-    assert cp_settings == settings["segmentation"]
+    # Call run_seg with single image
+    result = run_seg(cellpose_settings, sample_image)
+    
+    # Verify setup_cellpose was called with correct parameters
+    mock_setup_cellpose.assert_called_once_with(
+        cellpose_settings=cellpose_settings,
+        threading=False,
+        use_nuclear_channel=False,
+        do_denoise=False
+    )
+    
+    # Verify run_cellpose was called with correct parameters
+    mock_run_cellpose.assert_called_once_with(sample_image, mock_configured_settings)
+    
+    # Verify we get back the single mask (not a list)
+    assert isinstance(result, np.ndarray)
+    assert not isinstance(result, list)
+    assert np.array_equal(result, mock_masks)
 
-@pytest.mark.parametrize("model", ["cyto2", "cyto3", "nuclei"])
-def test_unpack_settings_with_no_restore_model(settings, model):
-    
-    settings["model"]['model_type'] = model
-    settings["model"].pop("restore_type")
-    
-    model_settings, _ = unpack_settings(settings, do_denoise=True)
-    
-    assert "restore_type" in model_settings
-    if "cyto" in model:
-        assert model_settings['model_type'] in model_settings['restore_type']
-    else:
-        assert "cyto2" in model_settings['restore_type']
-    
 
-########### Test initialize_cellpose_model ############
-@pytest.mark.parametrize("do_denoise", [True, False])
-def test_initialize_cellpose_model_with_denoise(settings, do_denoise):
+@patch('cp_server.tasks_server.tasks.segementation.cp_seg.setup_cellpose')
+@patch('cp_server.tasks_server.tasks.segementation.cp_seg.run_cellpose')
+def test_run_seg_handles_list_of_masks(mock_run_cellpose, mock_setup_cellpose, sample_image, cellpose_settings):
+    """Test that run_seg preserves list input/output relationship."""
     
-    model_settings = unpack_settings(settings, do_denoise)[0]
+    # Setup mocks
+    mock_configured_settings = {'model': Mock(), 'eval_params': {}}
+    mock_setup_cellpose.return_value = mock_configured_settings
     
-    model = _initialize_cellpose_model(do_denoise, model_settings)
+    # Create a list of images as input
+    image_list = [sample_image, sample_image]
     
-    match do_denoise:
-        case True:
-            assert isinstance(model, CellposeDenoiseModel)
-            assert model.cp.gpu
-        case False:
-            assert isinstance(model, CellposeModel)
-            assert model.gpu
+    # Mock return where masks is a list (matching input)
+    mock_masks_list = [np.ones((100, 100), dtype=np.uint16), np.ones((100, 100), dtype=np.uint16)]
+    mock_flows = [np.zeros((100, 100)), np.zeros((100, 100))]
+    mock_styles = [np.array([1.0, 2.0]), np.array([1.0, 2.0])]
+    mock_run_cellpose.return_value = (mock_masks_list, mock_flows, mock_styles)
+    
+    # Call run_seg with list input
+    result = run_seg(cellpose_settings, image_list)
+    
+    # Should return the list of masks as-is (preserving input/output relationship)
+    assert isinstance(result, list)
+    assert len(result) == 2
+    assert np.array_equal(result[0], mock_masks_list[0])
+    assert np.array_equal(result[1], mock_masks_list[1])
 
-########### Test segment_image ############
-@pytest.mark.parametrize("do_denoise", [True, False])
-def test_segment_2Dimage(img, settings, do_denoise):
-    
-    model_settings, cp_settings = unpack_settings(settings, do_denoise)
-    cp_settings['z_axis'] = None
-    cp_settings['stitch_threshold'] = 0
-    
-    model = _initialize_cellpose_model(do_denoise, model_settings)
-    
-    masks = _segment_image(img, cp_settings, model)
-    
-    assert masks.shape == img.shape
 
-@pytest.mark.parametrize("threeD_settings", [{"do_3D": False, "stitch_threshold": 0.75}, {"do_3D": True, "stitch_threshold": 0.0}])
-def test_segment_3Dimage(img_zstack, settings, threeD_settings):
-    do_denoise = True
+def test_run_seg_do_denoise_default(sample_image):
+    """Test that do_denoise defaults to True for backward compatibility."""
+    cellpose_settings = {"model_type": "cyto2", "gpu": False}
     
-    model_settings, cp_settings = unpack_settings(settings, do_denoise=do_denoise)
-    cp_settings.update(threeD_settings)
+    with patch('cp_server.tasks_server.tasks.segementation.cp_seg.setup_cellpose') as mock_setup:
+        with patch('cp_server.tasks_server.tasks.segementation.cp_seg.run_cellpose') as mock_run:
+            mock_setup.return_value = {'model': Mock(), 'eval_params': {}}
+            mock_run.return_value = (np.ones((100, 100)), [], [])
+            
+            run_seg(cellpose_settings, sample_image)
+            
+            # Check that do_denoise=True was passed to setup_cellpose
+            mock_setup.assert_called_once_with(
+                cellpose_settings=cellpose_settings,
+                threading=False,
+                use_nuclear_channel=False,
+                do_denoise=True  # Default value
+            )
+
+
+def test_run_seg_explicit_do_denoise(sample_image):
+    """Test that explicit do_denoise setting is respected."""
+    cellpose_settings = {"model_type": "cyto2", "gpu": False, "do_denoise": False}
     
-    model = _initialize_cellpose_model(do_denoise=do_denoise, model_settings=model_settings)
-    
-    masks = _segment_image(img_zstack, cp_settings, model)
-    
-    assert masks.shape == img_zstack.shape
+    with patch('cp_server.tasks_server.tasks.segementation.cp_seg.setup_cellpose') as mock_setup:
+        with patch('cp_server.tasks_server.tasks.segementation.cp_seg.run_cellpose') as mock_run:
+            mock_setup.return_value = {'model': Mock(), 'eval_params': {}}
+            mock_run.return_value = (np.ones((100, 100)), [], [])
+            
+            run_seg(cellpose_settings, sample_image)
+            
+            # Check that do_denoise=False was passed to setup_cellpose
+            mock_setup.assert_called_once_with(
+                cellpose_settings=cellpose_settings,
+                threading=False,
+                use_nuclear_channel=False,
+                do_denoise=False  # Explicit value
+            )

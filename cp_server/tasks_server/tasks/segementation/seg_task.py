@@ -32,6 +32,8 @@ def segment(img: np.ndarray,
     
     # Run the segmentation
     mask = run_seg(cellpose_settings, img)
+    # Since we pass a single array, we expect a single array back
+    assert not isinstance(mask, list), f"Expected single mask but got list of {len(mask)} masks"
     logger.debug(f"Created cp masks of {mask.shape=}")
     
     # Encode the mask and save it in the background

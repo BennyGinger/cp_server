@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, cast
 from fastapi import APIRouter, Request, HTTPException
 from celery import Celery
 
@@ -85,7 +85,7 @@ def process_bg_sub_endpoint(request: Request, payload: BackgroundRequest) -> str
     return task.id
 
 @router.get("/process/{well_id}/status")
-def get_process_status(well_id: str) -> dict[str, Any]:
+async def get_process_status(well_id: str) -> dict[str, Any]:
     """
     Check remaining tracks for a given well_id.
     Returns 404 if well_id is not found in Redis.
@@ -100,7 +100,13 @@ def get_process_status(well_id: str) -> dict[str, Any]:
     # 2) If we still have a pending counter, report processing
     if redis_client.exists(pending_key):
         rem_val = redis_client.get(pending_key)
-        rem = int(rem_val) if rem_val is not None else 0
+        if rem_val is None:
+            rem = 0
+        else:
+            # Cast to bytes|str to help with type checking
+            rem_val = cast(bytes | str, rem_val)
+            decoded_val = rem_val.decode('utf-8') if isinstance(rem_val, bytes) else rem_val
+            rem = int(decoded_val)
         return {"well_id": well_id, "status": "processing", "remaining": rem}
     
     # 3) Neither key exists → invalid well_id
