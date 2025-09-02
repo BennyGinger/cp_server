@@ -8,7 +8,7 @@ from dotenv import load_dotenv, dotenv_values
 from cp_server.utils.paths import get_root_path
 
 
-LOGFILE_NAME = os.getenv("LOGFILE_NAME", "combined_server.log")
+LOGFILE_NAME = os.getenv("LOGFILE_NAME", "task_servers.log")
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
 BASE_URL = os.getenv("BASE_URL", "localhost")
 
@@ -32,7 +32,7 @@ USER_GID=1000
 #----------- LOGGING CONFIGURATION -----------
 # Control logging verbosity: DEBUG, INFO, WARNING, ERROR, CRITICAL
 LOG_LEVEL=INFO
-LOGFILE_NAME=combined_server.log
+LOGFILE_NAME=task_servers.log
 """
 
 

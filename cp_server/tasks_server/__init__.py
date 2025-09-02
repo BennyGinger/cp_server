@@ -16,7 +16,7 @@ SERVICE_NAME = os.getenv("SERVICE_NAME", "tasks_server")
 def _configure_logging(logger: logging.Logger, *args, **kwargs) -> None:
     if RUN_CELERY_LOGGING:
         LOG_LEVEL    = os.getenv("LOG_LEVEL", "INFO").upper()
-        LOGFILE_NAME = os.getenv("LOGFILE_NAME", "combined_server.log")
+        LOGFILE_NAME = os.getenv("LOGFILE_NAME", "task_servers.log")
         # Inside the container, as /data/logs
         log_folder = Path("/data/logs")
         if not log_folder.exists():
@@ -35,13 +35,8 @@ def _configure_logging(logger: logging.Logger, *args, **kwargs) -> None:
                 },
             },
 
-            # Only configure handlers that affect "celery" and its children. We do NOT reconfigure the root logger here.
+            # Only configure handlers that affect Celery and related libs. We do NOT reconfigure the root logger here.
             "handlers": {
-                "console": {
-                    "class": "logging.StreamHandler",
-                    "formatter": "default",
-                    "level": LOG_LEVEL,
-                },
                 "file": {
                     "class": "logging.FileHandler",
                     "formatter": "default",
@@ -54,37 +49,43 @@ def _configure_logging(logger: logging.Logger, *args, **kwargs) -> None:
             "loggers": {
                 # Celery’s own logger hierarchy:
                 "celery": {
-                    "handlers": ["console", "file"],
+                    "handlers": ["file"],
                     "level": LOG_LEVEL,
                     "propagate": False,
                 },
                 # Include this if you want task‐trace logs too:
                 "celery.app.trace": {
-                    "handlers": ["console", "file"],
+                    "handlers": ["file"],
                     "level": LOG_LEVEL,
+                    "propagate": False,
+                },
+                # Kombu / amqp noise control
+                "kombu": {
+                    "handlers": ["file"],
+                    "level": "WARNING",
                     "propagate": False,
                 },
                 
                 # Quiet down MODULES to INFO (or WARNING) instead of DEBUG
                 "celery.bootsteps": {
-                    "handlers": ["console", "file"],
+                    "handlers": ["file"],
                     "level": "INFO",
                     "propagate": False,
                 },
                 
                 "celery.worker.consumer": {
-                    "handlers": ["console", "file"],
+                    "handlers": ["file"],
                     "level": "WARNING",
                     "propagate": False,
                 },
                 "celery.concurrency": {
-                    "handlers": ["console", "file"],
+                    "handlers": ["file"],
                     "level": "INFO",
                     "propagate": False,
                 },
                 
                 "mmpycorex.launcher": {
-                    "handlers": ["console", "file"],
+                    "handlers": ["file"],
                     "level": "WARNING",
                     "propagate": False,
                 },
@@ -95,7 +96,7 @@ def _configure_logging(logger: logging.Logger, *args, **kwargs) -> None:
         # Optional: a quick sanity‐check message
         _celery_logger = logging.getLogger(f"{SERVICE_NAME}.logging")
         _celery_logger.info(
-            "Celery logging configured (console + %s) at level %s",
+            "Celery logging configured (file only → %s) at level %s",
             LOGFILE_PATH, LOG_LEVEL)
 
 # Provide a wrapper to fetch a named logger under our “tasks_server” umbrella.

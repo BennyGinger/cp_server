@@ -5,7 +5,7 @@ import logging.config
 
 # Read level and filename from environment (populated via your docker-compose/.env)
 LOG_LEVEL     = os.getenv("LOG_LEVEL", "INFO").upper()
-LOGFILE_NAME  = os.getenv("LOGFILE_NAME", "combined_server.log")
+LOGFILE_NAME  = os.getenv("LOGFILE_NAME", "task_servers.log")
 SERVICE_NAME  = os.getenv("SERVICE_NAME", "fastapi_app")
 
 # Inside the container, as /data/logs
@@ -14,7 +14,7 @@ if not log_folder.exists():
     log_folder.mkdir(parents=True, exist_ok=True)
 LOGFILE_PATH  = log_folder.joinpath(LOGFILE_NAME)
 
-# 1) Build a dictConfig that attaches both console and file handlers
+# 1) Build a dictConfig that attaches only a file handler (no console)
 logging.config.dictConfig({
     "version": 1,
     "disable_existing_loggers": False,
@@ -26,13 +26,7 @@ logging.config.dictConfig({
         },
     },
     "handlers": {
-        # → send everything to stdout/stderr so Docker captures it
-        "console": {
-            "class": "logging.StreamHandler",
-            "formatter": "default",
-            "level": LOG_LEVEL,
-        },
-        # → also append to /logs/<combined_server.log> inside container (→ host’s ./logs/)
+        # → append to /data/logs/<task_servers.log> inside container (→ host’s ./logs/)
         "file": {
             "class": "logging.FileHandler",
             "formatter": "default",
@@ -43,8 +37,32 @@ logging.config.dictConfig({
     },
     # 2) Apply to the root logger
     "root": {
-        "handlers": ["console", "file"],
+        "handlers": ["file"],
         "level": LOG_LEVEL,
+    },
+    # 3) Silence uvicorn's default console handlers and route to file only
+    "loggers": {
+        "uvicorn": {
+            "handlers": ["file"],
+            "level": LOG_LEVEL,
+            "propagate": False,
+        },
+        "uvicorn.error": {
+            "handlers": ["file"],
+            "level": LOG_LEVEL,
+            "propagate": False,
+        },
+        "uvicorn.access": {
+            "handlers": ["file"],
+            "level": LOG_LEVEL,
+            "propagate": False,
+        },
+        # Optional: FastAPI logger namespace as well
+        "fastapi": {
+            "handlers": ["file"],
+            "level": LOG_LEVEL,
+            "propagate": False,
+        },
     },
 })
 
@@ -68,7 +86,6 @@ def get_logger(name: str | None = None) -> logging.Logger:
     base = SERVICE_NAME
     return logging.getLogger(f"{base}.{name}") if name else logging.getLogger(base)
 
-# At this point, any logger.getLogger(...) under fastapi_app (or even outside it) 
-# inherits these two handlers. If you want a quick confirmation, you can log:
+# At this point, uvicorn/fastapi logs go only to the file (no console in container)
 logger = get_logger('logger')
-logger.info("FastAPI package logging set up (console ↔ %s)", LOGFILE_PATH)
+logger.info("FastAPI logging set up (file only → %s)", LOGFILE_PATH)

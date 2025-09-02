@@ -80,13 +80,13 @@ def _stream_compose_logs() -> None:
                 # or if it's a completion (100%)
                 if (last_progress_line != line.strip() and 
                     (line.strip() != last_progress_line or "100%" in line)):
+                    # Keep progress feedback visible locally
                     print(line, end="")
                     f.write(line)
                     f.flush()
                     last_progress_line = line.strip()
             else:
-                # Non-progress line: always print and log
-                print(line, end="")
+                # Non-progress lines from remote services: write to file only
                 f.write(line)
                 f.flush()
                 last_progress_line = None  # Reset progress tracking
