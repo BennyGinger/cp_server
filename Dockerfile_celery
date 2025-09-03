@@ -15,7 +15,8 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       software-properties-common \
       ca-certificates \
-      gnupg && \
+    gnupg \
+    git && \
     rm -rf /var/lib/apt/lists/*
 
 # 2) Add the Deadsnakes PPA’s GPG key & repository

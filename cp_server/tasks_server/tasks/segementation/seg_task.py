@@ -4,7 +4,6 @@ import numpy as np
 
 from cp_server.tasks_server import get_logger
 from cp_server.tasks_server.tasks.saving.save_arrays import generate_mask_path, save_mask, extract_fov_id
-from cp_server.tasks_server.tasks.segementation.cp_seg import run_seg
 from cp_server.tasks_server.utils.redis_com import redis_client
 
 
@@ -30,7 +29,12 @@ def segment(img: np.ndarray,
     logger.info(f"Initializing segmentation for {img_path} with settings: {cellpose_settings}")
     logger.debug(f"Decoding img inside segment {img.shape=} and {img.dtype=}")
     
-    # Run the segmentation
+    # Run the segmentation (lazy import to avoid importing cellpose on workers that don't have it)
+    try:
+        from cp_server.tasks_server.tasks.segementation.cp_seg import run_seg
+    except Exception as e:
+        logger.error("Failed to import run_seg (cellpose backend). Ensure this task runs on the GPU worker with cellpose-kit installed.")
+        raise
     mask = run_seg(cellpose_settings, img)
     # Since we pass a single array, we expect a single array back
     assert not isinstance(mask, list), f"Expected single mask but got list of {len(mask)} masks"
