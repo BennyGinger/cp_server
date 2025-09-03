@@ -1,6 +1,6 @@
 [project]
 name = "cp-server"
-version = "0.2.0"
+version = "0.2.1"
 description = "A FastAPI-based server for running different tasks via Celery in the background. These tasks include running Cellpose on images, removing background and simple masks tracking (iou). The server is equipped with a file watcher to automatically process new images and track subsequent masks."
 readme = "README.md"
 authors = [
@@ -24,7 +24,7 @@ cp-server = "cp_server.fastapi_app:main"
 
 [project.optional-dependencies]
 celery = [
-    "cellpose<4.0",
+    "cellpose>4.0",
     "cellpose-kit>=0.1.0",
     "numba>=0.61.0",
     "scikit-image>=0.25.2",
@@ -48,8 +48,8 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
+    "cellpose>4.0",
     "cellpose-kit>=0.1.0",
-    "cellpose[gui]<4.0",
     "fastapi[all]>=0.115.11",
     "pytest>=8.3.4",
     "pytest-asyncio>=0.25.3",
@@ -62,7 +62,9 @@ dev = [
 [tool.uv.sources]
 torch       = [{ index = "pytorch-cu121" }]
 torchvision = [{ index = "pytorch-cu121" }]
-cellpose-kit = {path = "../Cellpose-kit/"}
+# Install cellpose-kit from GitHub in Docker builds (no local path available)
+# Use default branch to avoid resolving a non-existent tag named "main"
+cellpose-kit = { git = "https://github.com/BennyGinger/Cellpose-kit.git" }
 
 [[tool.uv.index]]
 name     = "pytorch-cu121"

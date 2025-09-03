@@ -65,6 +65,8 @@ def _stream_compose_logs() -> None:
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,
+        encoding="utf-8",
+        errors="replace",
     )
     
     # Pattern to match progress bar lines (percentage, bar, size info)
