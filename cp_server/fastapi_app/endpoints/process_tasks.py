@@ -1,8 +1,10 @@
 from typing import Any, cast
+from pathlib import Path
+
 from fastapi import APIRouter, Request, HTTPException
 from celery import Celery
 
-from cp_server.fastapi_app.endpoints.request_models import ProcessRequest, BackgroundRequest
+from cp_server.fastapi_app.endpoints.request_models import ProcessRequest, BackgroundRequest, RegisterMaskRequest
 from cp_server.fastapi_app import get_logger
 from cp_server.fastapi_app.endpoints import redis_client
 
@@ -112,3 +114,62 @@ async def get_process_status(well_id: str) -> dict[str, Any]:
     # 3) Neither key exists → invalid well_id
     raise HTTPException(status_code=404,
                         detail=f"well_id '{well_id}' not found")
+
+@router.post("/register_mask")
+def register_mask_endpoint(request: Request, payload: RegisterMaskRequest) -> str | None:
+    """
+    Register a single mask and trigger tracking if it's an R2 mask.
+    
+    :param request: The FastAPI request object.
+    :param payload: RegisterMaskRequest containing well_id, mask_path, total_fovs, and track_stitch_threshold
+    
+    :return: Task ID if tracking was triggered, None otherwise.
+    """
+    celery_app: Celery = request.app.state.celery_app
+    
+    # Register the mask
+    fov_id, time_id, hkey = _register_single_mask(payload.well_id, payload.mask_path)
+    
+    # If it's an R2 mask ('2'), trigger tracking
+    if time_id == '2':
+        # Initialize the pending tracks counter if not already set
+        redis_client.setnx(f"pending_tracks:{payload.well_id}", payload.total_fovs)
+        redis_client.expire(f"pending_tracks:{payload.well_id}", 24 * 3600)
+        
+        # trigger tracking
+        task = celery_app.send_task(
+            'cp_server.tasks_server.tasks.counter.counter_task_manager.check_and_track',
+            kwargs={
+                'hkey': hkey,
+                'track_stitch_threshold': payload.track_stitch_threshold})
+        
+        logger.debug(f"Registered R2 mask and triggered tracking task {task.id} for {fov_id}")
+        return task.id
+    else:
+        logger.debug(f"Registered R1 mask for {fov_id}, no tracking triggered")
+        return None
+    
+def _register_single_mask(well_id: str, mask_path: str) -> tuple[str, str, str]:
+    """
+    Helper function to register a single mask and extract FOV info.
+    
+    Args:
+        well_id (str): The well ID
+        mask_path (str): Path to the mask file
+        
+    Returns:
+        tuple[str, str, str]: (fov_id, time_id, hkey)
+    """
+    path_obj = Path(mask_path)
+    stem_parts = path_obj.stem.split('_')
+    
+    # For pattern <fov_id>_<category>_<time_id>, extract correctly
+    fov_id = '_'.join(stem_parts[:-2])  # Everything except last 2 parts (category and time_id)
+    time_id = stem_parts[-1]  # Last part is time_id
+    
+    hkey = f"masks:{well_id}:{fov_id}"
+    redis_client.hset(hkey, time_id, mask_path)
+    
+    logger.debug(f"Registered R{time_id} mask for {fov_id}: {mask_path}")
+    return fov_id, time_id, hkey
+

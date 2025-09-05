@@ -1,6 +1,7 @@
 from celery import shared_task
 import numpy as np
 import tifffile as tiff
+from pathlib import Path
 
 from cp_server.tasks_server import get_logger
 from cp_server.tasks_server.tasks.saving.save_arrays import save_mask
@@ -19,7 +20,7 @@ def track_cells(mask_paths: list[str],
     """
     
     # Log
-    logger.info(f"Tracking cells in {len(mask_paths)} images with track_stitch_threshold {track_stitch_threshold}")
+    logger.debug(f"Tracking cells in {len(mask_paths)} images with track_stitch_threshold {track_stitch_threshold}")
     
     # Load the stack of masks
     masks = [tiff.imread(path) for path in mask_paths]
@@ -30,6 +31,14 @@ def track_cells(mask_paths: list[str],
     stitched_masks = track_masks(masks, track_stitch_threshold)
     logger.debug(f"Stitched masks of shape {stitched_masks.shape=}")
     
-    # Overwrite the original masks with the stitched ones
-    for mask, path in zip(stitched_masks, mask_paths):
-        save_mask(mask, path)
+    # Overwrite the original masks with the stitched ones and log each tracked file
+    if mask_paths:
+        log_dir = Path(mask_paths[0]).parent
+        log_file = log_dir / "tracked_files.txt"
+        
+        with open(log_file, "a") as f:
+            for mask, path in zip(stitched_masks, mask_paths):
+                save_mask(mask, path)
+                f.write(f"{path}\n")
+        
+        logger.debug(f"Logged {len(mask_paths)} tracked files to {log_file}")

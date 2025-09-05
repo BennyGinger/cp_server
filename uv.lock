@@ -206,7 +206,7 @@ wheels = [
 
 [[package]]
 name = "cp-server"
-version = "0.2.1"
+version = "0.3.0"
 source = { editable = "." }
 dependencies = [
     { name = "celery" },

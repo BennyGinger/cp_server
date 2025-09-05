@@ -1,8 +1,33 @@
 from pathlib import Path
 import os
+import re
 from typing import Any
 
 from pydantic import BaseModel, model_validator, Field
+
+
+# Filename pattern constants
+FILENAME_PATTERN = r'^.+_.+_[12]$'
+EXPECTED_FORMAT = "<fov_id>_<category>_<round/time_id>.tif where round/time_id is '1' or '2'"
+
+
+def _validate_filename_pattern(filepath: str, pattern: str, expected_format: str) -> None:
+    """
+    Helper function to validate filename patterns.
+    
+    Args:
+        filepath (str): The full file path
+        pattern (str): The regex pattern to match
+        expected_format (str): Human-readable description of expected format
+        
+    Raises:
+        ValueError: If the filename doesn't match the pattern
+    """
+    path_obj = Path(filepath)
+    filename = path_obj.stem
+    
+    if not re.match(pattern, filename):
+        raise ValueError(f"Invalid filename format: {filepath}. Expected format: {expected_format}")
 
 
 class BackgroundRequest(BaseModel):
@@ -38,7 +63,15 @@ class BackgroundRequest(BaseModel):
 
         values["img_path"] = str(input_path)
         return values
-        return values
+    
+    @model_validator(mode="after")
+    def validate_img_filename(self) -> 'BackgroundRequest':
+        """
+        Validate that the image filename follows the expected naming convention.
+        Expected format: <fov_id>_<category>_<round>.<ext>
+        """
+        _validate_filename_pattern(self.img_path, FILENAME_PATTERN, EXPECTED_FORMAT)
+        return self
 
 class ProcessRequest(BackgroundRequest):
     """
@@ -106,3 +139,60 @@ class ProcessRequest(BackgroundRequest):
             raise ValueError("total_fovs is required for round 2 processing")
         
         return self
+
+class RegisterMaskRequest(BaseModel):
+    """
+    A Pydantic model for registering a single mask.
+    
+    Attributes:
+        well_id (str): Unique identifier for the processing well.
+        mask_path (str): Path to the mask file. File name should end with '_1.tif' or '_2.tif'.
+        total_fovs (int): Total number of fields of view. It will not be included in the model dump.
+        track_stitch_threshold (float, optional): Threshold for stitching masks during tracking. Default to 0.75.
+    """
+    well_id: str
+    mask_path: str
+    total_fovs: int = Field(exclude=True)
+    track_stitch_threshold: float = 0.75
+    
+    @model_validator(mode="before")
+    def validate_mask_path(cls, values: dict[str, Any]) -> dict[str, Any]:
+        """
+        Validate that the mask path provided is valid.
+        """
+        mask_file = values.get("mask_path")
+
+        if mask_file is None:
+            raise ValueError("mask_path is required")
+
+        if not isinstance(mask_file, (str, bytes, os.PathLike)):
+            raise ValueError(f"Provided mask_path must be a string or PathLike, got {type(mask_file)}")
+
+        # Decode the mask file path to a string if it is bytes or os.PathLike
+        fs_path = os.fsdecode(mask_file)
+        mask_path_obj = Path(fs_path)
+        if not mask_path_obj.is_file():
+            raise ValueError(f"Provided mask_path is not a valid file path: {fs_path}")
+
+        values["mask_path"] = str(mask_path_obj)
+        return values
+    
+    @model_validator(mode="after")
+    def validate_mask_filename(self) -> 'RegisterMaskRequest':
+        """
+        Validate that the mask filename follows the expected naming convention.
+        Expected format: <fov_id>_<category>_<time_id>.tif
+        """
+        _validate_filename_pattern(self.mask_path, FILENAME_PATTERN, EXPECTED_FORMAT)
+        return self
+
+class InitializePendingCounterRequest(BaseModel):
+    """
+    A Pydantic model for initializing pending counter.
+    
+    Attributes:
+        well_id (str): Unique identifier for the processing well.
+        total_fovs (int): Total number of FOVs that will have tracking triggered.
+    """
+    well_id: str
+    total_fovs: int

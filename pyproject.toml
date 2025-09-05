@@ -1,6 +1,6 @@
 [project]
 name = "cp-server"
-version = "0.2.1"
+version = "0.3.0"
 description = "A FastAPI-based server for running different tasks via Celery in the background. These tasks include running Cellpose on images, removing background and simple masks tracking (iou). The server is equipped with a file watcher to automatically process new images and track subsequent masks."
 readme = "README.md"
 authors = [

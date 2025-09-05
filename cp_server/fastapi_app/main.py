@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from cp_server.fastapi_app import get_logger
 from cp_server.fastapi_app.endpoints.health import router as app_utils_router
 from cp_server.fastapi_app.endpoints.maintenance import router as maintenance_router
-from cp_server.fastapi_app.endpoints.process_tasks import router as segment_task
+from cp_server.fastapi_app.endpoints.process_tasks import router as process_router
 
 
 # Setup logging
@@ -17,7 +17,7 @@ app = FastAPI()
 # Include the routers
 app.include_router(app_utils_router)
 app.include_router(maintenance_router)
-app.include_router(segment_task)
+app.include_router(process_router)
 
 # Initiate a minimal celery app, to send tasks to the celery worker
 logger.info("Creating a minimal Celery app to send tasks to the worker...")
