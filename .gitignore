@@ -11,7 +11,9 @@ wheels/
 .vscode
 .ruff_cache
 .pytest_cache
+.env
 
 # Development file trial
 play.py
 Image_tests/
+.env.tmp

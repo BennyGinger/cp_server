@@ -1,28 +1,32 @@
 from fastapi import FastAPI
 
+from cp_server.fastapi_app import get_logger
 from cp_server.fastapi_app.endpoints.health import router as app_utils_router
-from cp_server.fastapi_app.endpoints.file_watcher import router as file_watcher
-from cp_server.fastapi_app.endpoints.segment import router as segment_task
-from cp_server.fastapi_app.watcher.watcher_manager import FileWatcherManager
-from cp_server.tasks_server.celery_app import create_celery_app
-from cp_server.fastapi_app import logger
+from cp_server.fastapi_app.endpoints.maintenance import router as maintenance_router
+from cp_server.fastapi_app.endpoints.process_tasks import router as process_router
 
 
-app = FastAPI()
-
-# Set the logger
+# Setup logging
+logger = get_logger("startup")
 logger.info("-----------------------------------------------")
-logger.info("Starting the Cellpose server...")
+logger.info("Initializing the Cellpose server...")
 
-# Initiate the file watcher manager and celery app
-logger.info("Initiating the file watcher manager...")
-min_celery_app = create_celery_app()
-app.state.watcher_manager = FileWatcherManager(min_celery_app)
+# Create the FastAPI app
+app = FastAPI()
 
 # Include the routers
 app.include_router(app_utils_router)
-app.include_router(file_watcher)
-app.include_router(segment_task)
+app.include_router(maintenance_router)
+app.include_router(process_router)
 
+# Initiate a minimal celery app, to send tasks to the celery worker
+logger.info("Creating a minimal Celery app to send tasks to the worker...")
+logger.debug("just to test log levels")
+# Lazy import to trigger the creation of the Celery app after the fastapi app is created
+from cp_server.tasks_server.celery_app import create_celery_app
+min_celery_app = create_celery_app()
+app.state.celery_app = min_celery_app
+
+logger.info("Cellpose server up and running!")
 
 

@@ -1,12 +1,16 @@
-version: '3.9'
-
 services:
+  #######################################
+  ############## Redis ##################
+  #######################################
   redis:
-    image: redis:latest
+    image: redis:latest  # TODO: Use a specific version
     ports:
       - "6380:6379"
     restart: on-failure
 
+  ######################################
+  ############# FastAPI ################
+  ######################################
   fastapi:
     build:
       context: .
@@ -14,36 +18,53 @@ services:
       args:
         USER_UID: "${USER_UID:-1000}"
         USER_GID: "${USER_GID:-1000}"
-    ports:
-      - "8000:8000"
     volumes:
-      - /home/eblab/data_dir:/data
-      # - ./:/app
+      - "${HOST_DIR}:/data"
+      - ./cp_server:/app/cp_server 
     environment:
-      # Environment variable used by your app to know where the Celery broker is.
-      CELERY_BROKER_URL: "redis://redis:6379/0"
-      CELERY_BACKEND_URL: "redis://redis:6379/1"
+      CELERY_BROKER_URL: "${CELERY_BROKER_URL}"
+      CELERY_BACKEND_URL: "${CELERY_BACKEND_URL}"
+      REDIS_HOST: "${REDIS_HOST:-redis}"
+      REDIS_PORT: "${REDIS_PORT:-6379}"
+      REDIS_DB: "${REDIS_DB:-2}"
+      LOG_LEVEL: "${LOG_LEVEL:-INFO}"
+      LOGFILE_NAME: "${LOGFILE_NAME:-task_servers.log}"
+      SERVICE_NAME: fastapi
+      RUNNING_AS_CELERY: "false"
     depends_on:
       - redis
     restart: on-failure
+    ports:
+      - "8000:8000"
+
+  #######################################
+  ########### Celery Workers ############
+  #######################################
 
   celery-default:
     build:
       context: .
-      dockerfile: Dockerfile_celery
+      dockerfile: Dockerfile_celery_default
       args:
         USER_UID: "${USER_UID:-1000}"
         USER_GID: "${USER_GID:-1000}"
     volumes:
-      - /home/eblab/data_dir:/data
+      - "${HOST_DIR}:/data"
+      - ./cp_server:/app/cp_server 
     environment:
-      CELERY_BROKER_URL: "redis://redis:6379/0"
-      CELERY_BACKEND_URL: "redis://redis:6379/1"
-    command: celery -A cp_server.tasks_server.celery_app:celery_app worker -Q celery --loglevel=info
+      CELERY_BROKER_URL: "${CELERY_BROKER_URL}"
+      CELERY_BACKEND_URL: "${CELERY_BACKEND_URL}"
+      REDIS_HOST: "${REDIS_HOST:-redis}"
+      REDIS_PORT: "${REDIS_PORT:-6379}"
+      REDIS_DB: "${REDIS_DB:-2}"
+      LOG_LEVEL: "${LOG_LEVEL:-INFO}"
+      LOGFILE_NAME: "${LOGFILE_NAME:-task_servers.log}"
+      SERVICE_NAME: celery
+      RUNNING_AS_CELERY: "true"
     depends_on:
       - redis
     restart: on-failure
-  
+
   celery-gpu:
     build:
       context: .
@@ -52,11 +73,22 @@ services:
         USER_UID: "${USER_UID:-1000}"
         USER_GID: "${USER_GID:-1000}"
     volumes:
-      - /home/eblab/data_dir:/data
+      - "${HOST_DIR}:/data"
+      - ./cp_server:/app/cp_server
+      - cellpose_models:/home/celeryuser/.cellpose
     environment:
-      CELERY_BROKER_URL: "redis://redis:6379/0"
-      CELERY_BACKEND_URL: "redis://redis:6379/1"
-    command: celery -A cp_server.tasks_server.celery_app:celery_app worker -Q gpu_tasks --concurrency=10 --loglevel=info
+      CELERY_BROKER_URL: "${CELERY_BROKER_URL}"
+      CELERY_BACKEND_URL: "${CELERY_BACKEND_URL}"
+      REDIS_HOST: "${REDIS_HOST:-redis}"
+      REDIS_PORT: "${REDIS_PORT:-6379}"
+      REDIS_DB: "${REDIS_DB:-2}"
+      LOG_LEVEL: "${LOG_LEVEL:-INFO}"
+      LOGFILE_NAME: "${LOGFILE_NAME:-task_servers.log}"
+      SERVICE_NAME: celery
+      RUNNING_AS_CELERY: "true"
+    depends_on:
+      - redis
+    restart: on-failure
     deploy:
       resources:
         reservations:
@@ -64,8 +96,6 @@ services:
             - driver: "nvidia"
               count: all
               capabilities: ["gpu"]
-    depends_on:
-      - redis
-    restart: on-failure
-  
-  
+
+volumes:
+  cellpose_models:
