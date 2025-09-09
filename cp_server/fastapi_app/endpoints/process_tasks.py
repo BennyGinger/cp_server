@@ -116,38 +116,71 @@ async def get_process_status(well_id: str) -> dict[str, Any]:
                         detail=f"well_id '{well_id}' not found")
 
 @router.post("/register_mask")
-def register_mask_endpoint(request: Request, payload: RegisterMaskRequest) -> str | None:
+def register_mask_endpoint(request: Request, payload: RegisterMaskRequest) -> list[str]:
     """
-    Register a single mask and trigger tracking if it's an R2 mask.
+    Register multiple masks in batch and trigger tracking for R2 masks.
     
     :param request: The FastAPI request object.
-    :param payload: RegisterMaskRequest containing well_id, mask_path, total_fovs, and track_stitch_threshold
-    
-    :return: Task ID if tracking was triggered, None otherwise.
+    :param payload: RegisterMaskRequest containing well_id, mask_paths (list), total_fovs, and track_stitch_threshold
+
+    :return: List of tracking task IDs.
     """
     celery_app: Celery = request.app.state.celery_app
     
-    # Register the mask
-    fov_id, time_id, hkey = _register_single_mask(payload.well_id, payload.mask_path)
+    tracking_task_ids = []
     
-    # If it's an R2 mask ('2'), trigger tracking
-    if time_id == '2':
-        # Initialize the pending tracks counter if not already set
+    logger.info(f"Processing batch registration of {len(payload.mask_paths)} masks for well {payload.well_id}")
+    
+    # Early return for empty list
+    if not payload.mask_paths:
+        redis_client.set(f"finished:{payload.well_id}", "1")
+        redis_client.expire(f"finished:{payload.well_id}", 24 * 3600)
+        return []
+    
+    # Check if there are any R2 masks to process
+    r2_masks = [path for path in payload.mask_paths if Path(path).stem.split('_')[-1] == '2']
+    has_r2_masks = len(r2_masks) > 0
+    
+    # Only initialize pending_tracks if we have R2 masks to track
+    if has_r2_masks:
+        # Clear any existing finished flag (in case R1 was registered first)
+        redis_client.delete(f"finished:{payload.well_id}")
+        # Set counter to total FOVs - this accounts for both registered R2 masks AND future R2 masks from imaging
         redis_client.setnx(f"pending_tracks:{payload.well_id}", payload.total_fovs)
         redis_client.expire(f"pending_tracks:{payload.well_id}", 24 * 3600)
-        
-        # trigger tracking
-        task = celery_app.send_task(
-            'cp_server.tasks_server.tasks.counter.counter_task_manager.check_and_track',
-            kwargs={
-                'hkey': hkey,
-                'track_stitch_threshold': payload.track_stitch_threshold})
-        
-        logger.debug(f"Registered R2 mask and triggered tracking task {task.id} for {fov_id}")
-        return task.id
-    else:
-        logger.debug(f"Registered R1 mask for {fov_id}, no tracking triggered")
-        return None
+    
+    # Process all masks, but sort to ensure R1 masks are registered before R2 masks
+    sorted_masks = sorted(payload.mask_paths, key=lambda path: Path(path).stem.split('_')[-1])
+    
+    for mask_path in sorted_masks:
+        try:
+            fov_id, time_id, hkey = _register_single_mask(payload.well_id, mask_path)
+            
+            # Only trigger tracking for R2 masks
+            if time_id == '2':
+                # Trigger tracking for R2 mask
+                task = celery_app.send_task(
+                    'cp_server.tasks_server.tasks.counter.counter_task_manager.check_and_track',
+                    kwargs={
+                        'hkey': hkey,
+                        'track_stitch_threshold': payload.track_stitch_threshold
+                    }
+                )
+                tracking_task_ids.append(task.id)
+                logger.debug(f"Triggered tracking task {task.id} for {fov_id} (well {payload.well_id})")
+
+        except Exception as e:
+            logger.error(f"Failed to register mask {mask_path}: {e}")
+            # Continue with other masks rather than failing entire batch
+    
+    # If no R2 masks were processed, mark as finished immediately  
+    if not has_r2_masks:
+        redis_client.set(f"finished:{payload.well_id}", "1")
+        redis_client.expire(f"finished:{payload.well_id}", 24 * 3600)
+    
+    logger.info(f"Batch registration completed: {len(payload.mask_paths)} masks processed, {len(tracking_task_ids)} tracking tasks")
+    
+    return tracking_task_ids
     
 def _register_single_mask(well_id: str, mask_path: str) -> tuple[str, str, str]:
     """

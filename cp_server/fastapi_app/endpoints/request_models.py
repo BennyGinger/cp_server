@@ -142,48 +142,59 @@ class ProcessRequest(BackgroundRequest):
 
 class RegisterMaskRequest(BaseModel):
     """
-    A Pydantic model for registering a single mask.
+    A Pydantic model for registering multiple masks in batch.
     
     Attributes:
         well_id (str): Unique identifier for the processing well.
-        mask_path (str): Path to the mask file. File name should end with '_1.tif' or '_2.tif'.
+        mask_paths (list[str]): List of paths to mask files. File names should end with '_1.tif' or '_2.tif'.
         total_fovs (int): Total number of fields of view. It will not be included in the model dump.
         track_stitch_threshold (float, optional): Threshold for stitching masks during tracking. Default to 0.75.
     """
     well_id: str
-    mask_path: str
+    mask_paths: list[str]
     total_fovs: int = Field(exclude=True)
     track_stitch_threshold: float = 0.75
     
     @model_validator(mode="before")
-    def validate_mask_path(cls, values: dict[str, Any]) -> dict[str, Any]:
+    def validate_mask_paths(cls, values: dict[str, Any]) -> dict[str, Any]:
         """
-        Validate that the mask path provided is valid.
+        Validate that the mask paths provided are valid.
         """
-        mask_file = values.get("mask_path")
+        mask_files = values.get("mask_paths")
 
-        if mask_file is None:
-            raise ValueError("mask_path is required")
+        if mask_files is None:
+            raise ValueError("mask_paths is required")
 
-        if not isinstance(mask_file, (str, bytes, os.PathLike)):
-            raise ValueError(f"Provided mask_path must be a string or PathLike, got {type(mask_file)}")
+        if not isinstance(mask_files, list):
+            raise ValueError(f"mask_paths must be a list, got {type(mask_files)}")
+        
+        if not mask_files:
+            raise ValueError("mask_paths cannot be empty")
 
-        # Decode the mask file path to a string if it is bytes or os.PathLike
-        fs_path = os.fsdecode(mask_file)
-        mask_path_obj = Path(fs_path)
-        if not mask_path_obj.is_file():
-            raise ValueError(f"Provided mask_path is not a valid file path: {fs_path}")
+        if not all(isinstance(f, (str, bytes, os.PathLike)) for f in mask_files):
+            raise ValueError("All mask paths must be strings or PathLike objects")
 
-        values["mask_path"] = str(mask_path_obj)
+        # Validate each file path
+        validated_paths = []
+        for mask_file in mask_files:
+            # Decode the mask file path to a string if it is bytes or os.PathLike
+            fs_path = os.fsdecode(mask_file)
+            mask_path_obj = Path(fs_path)
+            if not mask_path_obj.is_file():
+                raise ValueError(f"Provided mask_path is not a valid file path: {fs_path}")
+            validated_paths.append(str(mask_path_obj))
+
+        values["mask_paths"] = validated_paths
         return values
     
     @model_validator(mode="after")
-    def validate_mask_filename(self) -> 'RegisterMaskRequest':
+    def validate_mask_filenames(self) -> 'RegisterMaskRequest':
         """
-        Validate that the mask filename follows the expected naming convention.
+        Validate that all mask filenames follow the expected naming convention.
         Expected format: <fov_id>_<category>_<time_id>.tif
         """
-        _validate_filename_pattern(self.mask_path, FILENAME_PATTERN, EXPECTED_FORMAT)
+        for mask_path in self.mask_paths:
+            _validate_filename_pattern(mask_path, FILENAME_PATTERN, EXPECTED_FORMAT)
         return self
 
 class InitializePendingCounterRequest(BaseModel):
