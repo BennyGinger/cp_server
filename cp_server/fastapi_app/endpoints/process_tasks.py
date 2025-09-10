@@ -133,8 +133,6 @@ def register_mask_endpoint(request: Request, payload: RegisterMaskRequest) -> li
     
     # Early return for empty list
     if not payload.mask_paths:
-        redis_client.set(f"finished:{payload.well_id}", "1")
-        redis_client.expire(f"finished:{payload.well_id}", 24 * 3600)
         return []
     
     # Check if there are any R2 masks to process
@@ -173,10 +171,8 @@ def register_mask_endpoint(request: Request, payload: RegisterMaskRequest) -> li
             logger.error(f"Failed to register mask {mask_path}: {e}")
             # Continue with other masks rather than failing entire batch
     
-    # If no R2 masks were processed, mark as finished immediately  
-    if not has_r2_masks:
-        redis_client.set(f"finished:{payload.well_id}", "1")
-        redis_client.expire(f"finished:{payload.well_id}", 24 * 3600)
+    # If no R2 masks were processed, do not mark as finished here.
+    # Completion should be set by the tracking workflow once all pending tasks are done.
     
     logger.info(f"Batch registration completed: {len(payload.mask_paths)} masks processed, {len(tracking_task_ids)} tracking tasks")
     
