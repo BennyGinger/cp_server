@@ -3,10 +3,15 @@ services:
   ############## Redis ##################
   #######################################
   redis:
-    image: redis:latest  # TODO: Use a specific version
+    image: redis:7.2-alpine
     ports:
       - "6380:6379"
-    restart: on-failure
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 30
 
   ######################################
   ############# FastAPI ################
@@ -33,7 +38,12 @@ services:
       RUNNING_AS_CELERY: "false"
     depends_on:
       - redis
-    restart: on-failure
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 30
     ports:
       - "8000:8000"
 
@@ -63,7 +73,7 @@ services:
       RUNNING_AS_CELERY: "true"
     depends_on:
       - redis
-    restart: on-failure
+    restart: unless-stopped
 
   celery-gpu:
     build:
@@ -88,7 +98,7 @@ services:
       RUNNING_AS_CELERY: "true"
     depends_on:
       - redis
-    restart: on-failure
+    restart: unless-stopped
     deploy:
       resources:
         reservations:

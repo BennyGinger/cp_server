@@ -39,5 +39,5 @@ RUN chown celeryuser:celerygroup /app \
 
 USER celeryuser
 
-# Start the celery default worker
-CMD ["watchmedo", "auto-restart", "--directory=/app/cp_server", "--pattern=*.py", "--recursive", "--", "celery", "-A", "cp_server.tasks_server.celery_app:celery_app", "worker", "-Q", "celery", "--loglevel=info"]
+# Start the celery default worker (no autoreload watcher)
+CMD ["celery", "-A", "cp_server.tasks_server.celery_app:celery_app", "worker", "-Q", "celery", "--concurrency=2", "--prefetch-multiplier=1", "--max-tasks-per-child=50", "--without-gossip", "--without-mingle", "--heartbeat-interval=30", "--loglevel=info"]
