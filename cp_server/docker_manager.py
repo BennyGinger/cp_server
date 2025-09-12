@@ -191,10 +191,22 @@ class ComposeManager:
         """
         compose_up(self.stream_log)
 
-    def __exit__(self, exc_type, exc_value, traceback) -> None:
+    def __exit__(self, exc_type, exc_value, traceback) -> bool:
         """
         Exit the runtime context related to this object.
         This method is called when exiting the context manager.
         It tears down the Docker Compose environment.
+        If an exception occurred, log it before tearing down.
+        
+        Returns:
+            bool: False to propagate any exception that occurred
         """
+        if exc_type is not None:
+            # Exception occurred - log it before tearing down
+            logger.error(f"Pipeline failed with exception: {exc_type.__name__}: {exc_value}")
+            logger.error(f"Exception traceback will be shown after Docker cleanup")
+        
         compose_down()
+        
+        # Don't suppress the exception - let it propagate
+        return False

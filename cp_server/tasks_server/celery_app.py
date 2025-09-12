@@ -2,6 +2,7 @@ import os
 
 from kombu.serialization import register
 from celery import Celery
+from celery.signals import worker_ready
 
 from cp_server.tasks_server import get_logger
 from cp_server.tasks_server.utils.serialization_utils import custom_encoder, custom_decoder
@@ -64,6 +65,51 @@ def create_celery_app(include_tasks: bool = False) -> Celery:
     return celery_app
 
 celery_app = create_celery_app(include_tasks=True)
+
+@worker_ready.connect
+def preload_models(sender, **kwargs):
+    """Preload commonly used models when worker starts using cellpose-kit"""
+    # Only preload on GPU workers (they have cellpose)
+    worker_name = getattr(sender, 'hostname', '')
+    if 'gpu' not in worker_name.lower():
+        logger.info("Skipping model preload on non-GPU worker")
+        return
+        
+    logger.info("Preloading Cellpose models with cellpose-kit...")
+    
+    try:
+        from cp_server.tasks_server.tasks.segementation.model_manager import model_manager
+        
+        # Preload common model configurations
+        common_configs = [
+            {
+                'pretrained_model': 'cyto3', 
+                'gpu': True, 
+                'diameter': 30,
+                'do_denoise': True,
+                'use_nuclear_channel': False
+            },
+            {
+                'pretrained_model': 'cpsam', 
+                'gpu': True, 
+                'diameter': 40,
+                'do_denoise': True,
+                'use_nuclear_channel': False
+            },
+        ]
+        
+        for config in common_configs:
+            try:
+                model_manager.get_configured_settings(config)
+                logger.info(f"Preloaded cellpose-kit model: {config}")
+            except Exception as e:
+                logger.warning(f"Failed to preload cellpose-kit model {config}: {e}")
+        
+        logger.info("Cellpose-kit model preloading complete")
+    except ImportError:
+        logger.info("Cellpose-kit not available on this worker - skipping model preload")
+    except Exception as e:
+        logger.warning(f"Cellpose-kit model preloading failed: {e}")
 
 # Configure logging to reduce verbosity of task completion messages
 import logging

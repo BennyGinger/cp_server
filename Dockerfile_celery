@@ -60,5 +60,4 @@ RUN chown celeryuser:celerygroup /app \
 
 USER celeryuser
 
-# Start the celery GPU worker (no autoreload watcher in production); tune for stability and lower memory pressure
-CMD ["celery", "-A", "cp_server.tasks_server.celery_app:celery_app", "worker", "-Q", "gpu_tasks", "--concurrency=2", "--prefetch-multiplier=1", "--max-tasks-per-child=10", "--without-gossip", "--without-mingle", "--heartbeat-interval=30", "--loglevel=info"]
+# CMD will be specified in docker-compose.yml for centralized management

@@ -5,6 +5,7 @@ import numpy as np
 from cp_server.tasks_server import get_logger
 from cp_server.tasks_server.tasks.saving.save_arrays import generate_mask_path, save_mask, extract_fov_id
 from cp_server.tasks_server.utils.redis_com import redis_client
+from cp_server.tasks_server.tasks.segementation.model_manager import model_manager
 
 
 logger = get_logger(__name__)
@@ -17,7 +18,7 @@ def segment(img: np.ndarray,
             well_id: str, 
             ) -> str:
     """
-    Segment the image using Cellpose. Note that the image (ndarray) is encoded as a base64 string
+    Segment the image using Cellpose with persistent model loading via cellpose-kit.
     Args:
         img (np.ndarray): The image to be segmented.
         cellpose_settings (dict): Settings for the Cellpose model and segmentation.
@@ -29,13 +30,16 @@ def segment(img: np.ndarray,
     logger.info(f"Initializing segmentation for {img_path} with settings: {cellpose_settings}")
     logger.debug(f"Decoding img inside segment {img.shape=} and {img.dtype=}")
     
-    # Run the segmentation (lazy import to avoid importing cellpose on workers that don't have it)
+    # Get cached configured settings from cellpose-kit
+    configured_settings = model_manager.get_configured_settings(cellpose_settings)
+    
+    # Run segmentation with cellpose-kit
     try:
-        from cp_server.tasks_server.tasks.segementation.cp_seg import run_seg
+        mask = _run_segmentation_with_cellpose_kit(configured_settings, img)
     except Exception as e:
-        logger.error("Failed to import run_seg (cellpose backend). Ensure this task runs on the GPU worker with cellpose-kit installed.")
+        logger.error(f"Segmentation failed for {img_path}: {e}")
         raise
-    mask = run_seg(cellpose_settings, img)
+    
     # Since we pass a single array, we expect a single array back
     assert not isinstance(mask, list), f"Expected single mask but got list of {len(mask)} masks"
     logger.debug(f"Created cp masks of {mask.shape=}")
@@ -54,3 +58,16 @@ def segment(img: np.ndarray,
     redis_client.hset(hkey, time_id, str(mask_path))
     logger.info(f"Stored mask for {fov_id} time {time_id}")
     return hkey
+
+
+def _run_segmentation_with_cellpose_kit(configured_settings: Any, img: np.ndarray) -> np.ndarray:
+    """Run segmentation using cellpose-kit with pre-configured settings"""
+    try:
+        from cellpose_kit.api import run_cellpose
+        
+        # Run segmentation - cellpose-kit handles threading, model management, etc.
+        masks, flows, styles = run_cellpose(img, configured_settings)
+        return masks
+    except Exception as e:
+        logger.error(f"Cellpose-kit evaluation failed: {e}")
+        raise

@@ -25,7 +25,9 @@ services:
         USER_GID: "${USER_GID:-1000}"
     volumes:
       - "${HOST_DIR}:/data"
-      - ./cp_server:/app/cp_server 
+      - ./cp_server:/app/cp_server
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     environment:
       CELERY_BROKER_URL: "${CELERY_BROKER_URL}"
       CELERY_BACKEND_URL: "${CELERY_BACKEND_URL}"
@@ -36,6 +38,7 @@ services:
       LOGFILE_NAME: "${LOGFILE_NAME:-task_servers.log}"
       SERVICE_NAME: fastapi
       RUNNING_AS_CELERY: "false"
+      TZ: "${TZ:-Europe/London}"
     depends_on:
       - redis
     restart: unless-stopped
@@ -46,6 +49,7 @@ services:
       retries: 30
     ports:
       - "8000:8000"
+    command: ["uvicorn", "cp_server.fastapi_app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 
   #######################################
   ########### Celery Workers ############
@@ -60,7 +64,9 @@ services:
         USER_GID: "${USER_GID:-1000}"
     volumes:
       - "${HOST_DIR}:/data"
-      - ./cp_server:/app/cp_server 
+      - ./cp_server:/app/cp_server
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     environment:
       CELERY_BROKER_URL: "${CELERY_BROKER_URL}"
       CELERY_BACKEND_URL: "${CELERY_BACKEND_URL}"
@@ -71,9 +77,20 @@ services:
       LOGFILE_NAME: "${LOGFILE_NAME:-task_servers.log}"
       SERVICE_NAME: celery
       RUNNING_AS_CELERY: "true"
+      TZ: "${TZ:-Europe/Berlin}"
     depends_on:
       - redis
     restart: unless-stopped
+    command: >
+      celery -A cp_server.tasks_server.celery_app:celery_app worker 
+      -Q celery 
+      --concurrency=6 
+      --prefetch-multiplier=2 
+      --max-tasks-per-child=50 
+      --without-gossip 
+      --without-mingle 
+      --heartbeat-interval=30 
+      --loglevel=info
 
   celery-gpu:
     build:
@@ -86,6 +103,8 @@ services:
       - "${HOST_DIR}:/data"
       - ./cp_server:/app/cp_server
       - cellpose_models:/home/celeryuser/.cellpose
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     environment:
       CELERY_BROKER_URL: "${CELERY_BROKER_URL}"
       CELERY_BACKEND_URL: "${CELERY_BACKEND_URL}"
@@ -96,9 +115,21 @@ services:
       LOGFILE_NAME: "${LOGFILE_NAME:-task_servers.log}"
       SERVICE_NAME: celery
       RUNNING_AS_CELERY: "true"
+      TZ: "${TZ:-Europe/London}"
     depends_on:
       - redis
     restart: unless-stopped
+    command: >
+      celery -A cp_server.tasks_server.celery_app:celery_app worker 
+      -Q gpu_tasks 
+      --concurrency=3 
+      --prefetch-multiplier=1 
+      --max-tasks-per-child=20 
+      --pool=threads
+      --without-gossip 
+      --without-mingle 
+      --heartbeat-interval=30 
+      --loglevel=info
     deploy:
       resources:
         reservations:

@@ -11,6 +11,7 @@ from cp_server.utils.paths import get_root_path
 LOGFILE_NAME = os.getenv("LOGFILE_NAME", "task_servers.log")
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
 BASE_URL = os.getenv("BASE_URL", "localhost")
+TZ = os.getenv("TZ", "Europe/Berlin")
 
 TEMPLATE = """\
 BASE_URL="localhost"
@@ -33,6 +34,10 @@ USER_GID=1000
 # Control logging verbosity: DEBUG, INFO, WARNING, ERROR, CRITICAL
 LOG_LEVEL=INFO
 LOGFILE_NAME=task_servers.log
+
+#----------- TIMEZONE CONFIGURATION -----------
+# Timezone for Docker containers to match host system
+TZ=Europe/Berlin
 """
 
 
@@ -106,9 +111,11 @@ def sync_dotenv() -> None:
     logfile_name = os.getenv("LOGFILE_NAME") or lines.get("LOGFILE_NAME") or LOGFILE_NAME
     log_level = (os.getenv("LOG_LEVEL") or lines.get("LOG_LEVEL") or LOG_LEVEL).upper()
     base_url = os.getenv("BASE_URL") or lines.get("BASE_URL") or BASE_URL
+    tz = os.getenv("TZ") or lines.get("TZ") or TZ
     lines["LOGFILE_NAME"] = logfile_name
     lines["LOG_LEVEL"] = log_level
     lines["BASE_URL"] = base_url
+    lines["TZ"] = tz
     
     # Add the HOST_DIR: prefer OS env, then from existing .env
     host_dir = os.getenv("HOST_DIR") or lines.get("HOST_DIR")
