@@ -1,10 +1,9 @@
 import threading
-from typing import Dict, Any, Optional
-import numpy as np
+from typing import Dict, Any
 
 from cp_server.tasks_server import get_logger
 
-logger = get_logger('model_manager')
+logger = get_logger('cp_seg.model_manager')
 
 class ModelManager:
     """Singleton to manage persistent Cellpose models in worker processes using cellpose-kit"""
@@ -24,6 +23,8 @@ class ModelManager:
         Get or create configured settings using cellpose-kit.
         Caches models based on model settings only, recreates eval params each time.
         """
+        if not isinstance(cellpose_settings, dict):
+            raise TypeError("cellpose_settings must be a dict")
         # Separate model and eval settings
         model_settings = self._extract_model_settings(cellpose_settings)
         model_key = self._get_model_key(model_settings)
@@ -56,7 +57,7 @@ class ModelManager:
             # Our custom settings
             'do_denoise', 'use_nuclear_channel'  # These affect model choice
         }
-        
+
         return {k: v for k, v in settings.items() if k in model_keys}
     
     def _get_model_key(self, model_settings: dict) -> str:

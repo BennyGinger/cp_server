@@ -27,8 +27,7 @@ def cellpose_settings():
 @patch('cp_server.tasks_server.tasks.segementation.cp_seg.setup_cellpose')
 @patch('cp_server.tasks_server.tasks.segementation.cp_seg.run_cellpose')
 def test_run_seg_returns_masks(mock_run_cellpose, mock_setup_cellpose, sample_image, cellpose_settings):
-    """Test that run_seg returns single mask for single image input."""
-    
+    """run_seg returns single mask for single image input."""
     # Setup mocks
     mock_configured_settings = {'model': Mock(), 'eval_params': {}}
     mock_setup_cellpose.return_value = mock_configured_settings
@@ -62,8 +61,7 @@ def test_run_seg_returns_masks(mock_run_cellpose, mock_setup_cellpose, sample_im
 @patch('cp_server.tasks_server.tasks.segementation.cp_seg.setup_cellpose')
 @patch('cp_server.tasks_server.tasks.segementation.cp_seg.run_cellpose')
 def test_run_seg_handles_list_of_masks(mock_run_cellpose, mock_setup_cellpose, sample_image, cellpose_settings):
-    """Test that run_seg preserves list input/output relationship."""
-    
+    """run_seg preserves list input/output relationship."""
     # Setup mocks
     mock_configured_settings = {'model': Mock(), 'eval_params': {}}
     mock_setup_cellpose.return_value = mock_configured_settings
@@ -88,7 +86,7 @@ def test_run_seg_handles_list_of_masks(mock_run_cellpose, mock_setup_cellpose, s
 
 
 def test_run_seg_do_denoise_default(sample_image):
-    """Test that do_denoise defaults to True for backward compatibility."""
+    """do_denoise defaults to True for backward compatibility."""
     cellpose_settings = {"model_type": "cyto2", "gpu": False}
     
     with patch('cp_server.tasks_server.tasks.segementation.cp_seg.setup_cellpose') as mock_setup:
@@ -108,7 +106,7 @@ def test_run_seg_do_denoise_default(sample_image):
 
 
 def test_run_seg_explicit_do_denoise(sample_image):
-    """Test that explicit do_denoise setting is respected."""
+    """Explicit do_denoise setting is respected."""
     cellpose_settings = {"model_type": "cyto2", "gpu": False, "do_denoise": False}
     
     with patch('cp_server.tasks_server.tasks.segementation.cp_seg.setup_cellpose') as mock_setup:

@@ -6,14 +6,15 @@ from cp_server.tasks_server.tasks.celery_main_task import process_images
 
 
 def test_process_images(monkeypatch):
+    # cellpose settings structure
     settings = {
         "model": {"param": "value"},
-        "segmentation": {"thresh": 0.5},}
-    
+        "segmentation": {"thresh": 0.5},
+    }
+
     img_file = "dummy_process.tif"
     dst_folder = "dummy_folder"
     key_label = "refseg"
-    do_denoise = True
     dummy_img = np.ones((10, 10))
 
     # Patch tiff.imread to return a dummy image
@@ -29,20 +30,20 @@ def test_process_images(monkeypatch):
                 return "chain_applied"
         return DummyChain()
 
-    monkeypatch.setattr("cp_server.tasks_server.celery_tasks.chain", dummy_chain)
+    # Patch the `chain` symbol imported in the module under test
+    monkeypatch.setattr("cp_server.tasks_server.tasks.celery_main_task.chain", dummy_chain)
 
+    # Call process_images with current signature: img_path, cellpose_settings, dst_folder, well_id
     result = process_images(
-        settings,
         img_file,
+        settings,
         dst_folder,
         key_label,
-        do_denoise=do_denoise,
-        extra_kwarg="value",
     )
     assert result == f"Image {img_file} was sent to be segmented"
-    # Ensure that chain was called with two tasks (remove_bg and segment)
+    # Ensure that chain was called with three tasks (remove_bg, segment, counter)
     args = captured_args.get("args", ())
-    assert len(args) == 2
+    assert len(args) == 3
     # We check that both elements are celery signatures (they have a "name" attribute)
     assert hasattr(args[0], "name")
     assert hasattr(args[1], "name")
