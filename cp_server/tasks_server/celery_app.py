@@ -54,7 +54,6 @@ def create_celery_app(include_tasks: bool = False) -> Celery:
     if include_tasks:
         celery_app.conf.update(include=[
             "cp_server.tasks_server.tasks.celery_main_task",
-            "cp_server.tasks_server.tasks.saving.save_tasks",
             "cp_server.tasks_server.tasks.bg_sub.bg_sub_task",
             "cp_server.tasks_server.tasks.counter.counter_task_manager",
             "cp_server.tasks_server.tasks.track.track_task",
@@ -68,7 +67,14 @@ celery_app = create_celery_app(include_tasks=True)
 
 @worker_ready.connect
 def preload_models(sender, **kwargs):
-    """Preload commonly used models when worker starts using cellpose-kit"""
+    """
+    Preload commonly used models when worker starts using cellpose-kit.
+
+    Note:
+        The **kwargs argument is required because Celery's signal system may pass additional
+        keyword arguments to the handler. This ensures compatibility with Celery's signal API,
+        even though these extra arguments are not used in this function.
+    """
     # Only preload on GPU workers (they have cellpose)
     worker_name = getattr(sender, 'hostname', '')
     if 'gpu' not in worker_name.lower():
@@ -78,7 +84,7 @@ def preload_models(sender, **kwargs):
     logger.info("Preloading Cellpose models with cellpose-kit...")
     
     try:
-        from cp_server.tasks_server.tasks.segementation.model_manager import model_manager
+        from cp_server.tasks_server.tasks.segementation.cp_segmentation import model_manager
         
         # Preload common model configurations
         common_configs = [

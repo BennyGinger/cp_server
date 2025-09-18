@@ -19,51 +19,52 @@ def process_images(img_path: str,
                    size: int=7,
                    ) -> str:
     """
-    Process an image by removing the background, segmenting and tracking it using Cellpose and IoU tracking.
-    This task is designed to be run in a Celery worker, where background subtraction and segmentation are always performed.
-    Tracking is only triggered if round is 2 or above. The image is loaded from the provided file path, and the results are saved
-    in the specified destination folder. The function logs the process and returns a message indicating the status of the operation.
-    
-    Args:
-        img_path (str): Path to the image file to be processed.
-        cellpose_settings (dict): Model and segmentation settings for Cellpose.
-        dst_folder (str): Destination folder where the masks will be saved.
-        round (int): The current round of processing.
-        well_id (str): Unique identifier for the processing well.
-        track_stitch_threshold (float, optional): Threshold for stitching masks during tracking. Defaults to 0.75.
-        sigma (float, optional): Sigma value for background subtraction. Defaults to 0.0.
-        size (int, optional): Size parameter for background subtraction. Defaults to 7."""
-    
+    Process one or more images by removing the background, segmenting, and tracking using Cellpose and IoU tracking.
+    Accepts a single image path or a list of image paths. Handles batch operation for all downstream tasks.
+    """
+    from typing import Union, List
     # Starting point of the log
-    logger.info(f"Received image file: {img_path}")
-    
-    #### Create the workflows ####
-    chain(
-        celery_app.signature(
-            'cp_server.tasks_server.tasks.bg_sub.remove_bg',
-            kwargs=dict(
-                img_path=img_path, 
-                sigma=sigma, 
-                size=size
-            )
-        ),
-        celery_app.signature(
-            'cp_server.tasks_server.tasks.segementation.seg_task.segment',
-            kwargs=dict(
-                cellpose_settings=cellpose_settings, 
-                img_path=img_path, 
-                dst_folder=dst_folder, 
-                well_id=well_id
-            )
-        ),
-        celery_app.signature(
-            'cp_server.tasks_server.tasks.counter.counter_task_manager.check_and_track',
-            kwargs=dict(
-                track_stitch_threshold=track_stitch_threshold
-            )
-        ),
-    ).apply_async()
-    logger.info(f"Workflow created for {img_path}")
-    return f"Image {img_path} was sent to be segmented"
+    logger.info(f"Received image file(s): {img_path}")
+
+    # Helper to create the workflow chain for a single or batch
+    def create_chain(img_path_batch):
+        return chain(
+            celery_app.signature(
+                'cp_server.tasks_server.tasks.bg_sub.remove_bg',
+                kwargs=dict(
+                    img_path=img_path_batch, 
+                    sigma=sigma, 
+                    size=size
+                )
+            ),
+            celery_app.signature(
+                'cp_server.tasks_server.tasks.segementation.seg_task.segment',
+                kwargs=dict(
+                    cellpose_settings=cellpose_settings, 
+                    img_path=img_path_batch, 
+                    dst_folder=dst_folder, 
+                    well_id=well_id
+                )
+            ),
+            celery_app.signature(
+                'cp_server.tasks_server.tasks.counter.counter_task_manager.check_and_track',
+                kwargs=dict(
+                    track_stitch_threshold=track_stitch_threshold
+                )
+            ),
+        )
+
+    # Accept both str and list[str]
+    if isinstance(img_path, list):
+        logger.info(f"Batch workflow: {len(img_path)} images.")
+        # For batch, pass the list through the chain (all downstream tasks support batch)
+        create_chain(img_path).apply_async()
+        logger.info(f"Batch workflow created for {len(img_path)} images.")
+        return f"Batch of {len(img_path)} images sent to be segmented"
+    else:
+        # Single image
+        create_chain(img_path).apply_async()
+        logger.info(f"Workflow created for {img_path}")
+        return f"Image {img_path} was sent to be segmented"
 
     

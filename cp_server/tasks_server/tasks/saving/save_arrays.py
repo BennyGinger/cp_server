@@ -1,9 +1,11 @@
 from pathlib import Path
-import re
+from typing import TypeVar
 
+from numpy.typing import NDArray
 import numpy as np
 import tifffile as tiff
 
+T = TypeVar("T", bound=np.generic)
 
 IMG_MARKERS = ("refseg", "measure")
 MASK_NAME = 'mask'
@@ -62,7 +64,7 @@ def extract_fov_id(img_file: str) -> tuple[str, str]:
     
     raise ValueError(f"Could not extract FOV ID and timepoint from {img_path.name!r}")
 
-def save_mask(mask: np.ndarray, mask_path: str) -> None:
+def save_mask(mask: NDArray[T], mask_path: str) -> None:
     """
     Save the masks to a TIFF file. The masks are expected to be a 2D or 3D numpy array
     where each pixel value corresponds to a label of an object in the image.
@@ -86,7 +88,7 @@ def save_mask(mask: np.ndarray, mask_path: str) -> None:
     # Save the masks
     tiff.imwrite(mask_path, mask.astype(dtype), compression='zlib')
     
-def save_img(img: np.ndarray, img_file: str) -> None:
+def save_img(img: NDArray[T], img_file: str) -> None:
     """
     Save the image to a TIFF file. The image is expected to be a 2D or 3D numpy array.
     Files are automatically compressed using zlib.

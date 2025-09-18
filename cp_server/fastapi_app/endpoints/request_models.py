@@ -1,7 +1,7 @@
 from pathlib import Path
 import os
 import re
-from typing import Any
+from typing import Any, Union, List
 
 from pydantic import BaseModel, model_validator, Field
 
@@ -35,42 +35,50 @@ class BackgroundRequest(BaseModel):
     A Pydantic model for background removal requests.
     This model validates the input parameters for background removal tasks.
     Attributes:
-        img_path (str): Path to the image file.
+        img_path (str | list[str]): Path(s) to the image file(s).
         sigma (float): Sigma value for background subtraction.
         size (int): Size parameter for background subtraction.
     """
-    img_path: str
+    img_path: Union[str, List[str]]
     sigma: float = 0.0
     size: int = 7
+
     @model_validator(mode="before")
     def validate_img_path(cls, values: dict[str, Any]) -> dict[str, Any]:
         """
-        Validate that the file path provided in `img_path` is valid.
+        Validate that the file path(s) provided in `img_path` are valid.
         """
         input_file = values.get("img_path")
 
         if input_file is None:
             raise ValueError("img_path is required")
 
-        if not isinstance(input_file, (str, bytes, os.PathLike)):
-            raise ValueError(f"Provided img_path must be a string or PathLike, got {type(input_file)}")
+        def validate_one_path(p):
+            if not isinstance(p, (str, bytes, os.PathLike)):
+                raise ValueError(f"Provided img_path must be a string or PathLike, got {type(p)}")
+            fs_path = os.fsdecode(p)
+            input_path = Path(fs_path)
+            if not input_path.is_file():
+                raise ValueError(f"Provided img_path is not a valid file path: {fs_path}")
+            return str(input_path)
 
-        # Decode the input file path to a string if it is bytes or os.PathLike
-        fs_path = os.fsdecode(input_file)
-        input_path = Path(fs_path)
-        if not input_path.is_file():
-            raise ValueError(f"Provided img_path is not a valid file path: {fs_path}")
-
-        values["img_path"] = str(input_path)
+        if isinstance(input_file, list):
+            values["img_path"] = [validate_one_path(p) for p in input_file]
+        else:
+            values["img_path"] = validate_one_path(input_file)
         return values
-    
+
     @model_validator(mode="after")
     def validate_img_filename(self) -> 'BackgroundRequest':
         """
-        Validate that the image filename follows the expected naming convention.
+        Validate that the image filename(s) follow the expected naming convention.
         Expected format: <fov_id>_<category>_<round>.<ext>
         """
-        _validate_filename_pattern(self.img_path, FILENAME_PATTERN, EXPECTED_FORMAT)
+        if isinstance(self.img_path, list):
+            for p in self.img_path:
+                _validate_filename_pattern(p, FILENAME_PATTERN, EXPECTED_FORMAT)
+        else:
+            _validate_filename_pattern(self.img_path, FILENAME_PATTERN, EXPECTED_FORMAT)
         return self
 
 class ProcessRequest(BackgroundRequest):
@@ -79,13 +87,12 @@ class ProcessRequest(BackgroundRequest):
     This model validates the input parameters for image processing tasks.
     It ensures that the provided image paths are valid and that the necessary parameters
     for processing are included. Inherits from BackgroundRequest to include background removal parameters.
-    
+
     Attributes Inherited:
-        img_path (str): Path to the image file.
+        img_path (str | list[str]): Path(s) to the image file(s).
         sigma (float): Sigma value for background subtraction.
         size (int): Size parameter for background subtraction.
-        image_paths (list[str]): List of image paths to be processed, will not be included in the model dump.
-    
+
     Attributes:
         cellpose_settings (dict): Model and segmentation settings for Cellpose.
         dst_folder (str): Destination folder where processed images will be saved.
@@ -102,42 +109,42 @@ class ProcessRequest(BackgroundRequest):
     total_fovs: int = Field(exclude=True)
     track_stitch_threshold: float = 0.75
     round: int | None = Field(default=None, exclude=True)
-    
+
     @model_validator(mode="after")
     def set_round_from_img_path(self) -> 'ProcessRequest':
         # only compute if not provided
         if self.round is None:
-            stem = Path(self.img_path).stem
+            if isinstance(self.img_path, list):
+                # Use the first image to determine round
+                stem = Path(self.img_path[0]).stem
+            else:
+                stem = Path(self.img_path).stem
             try:
                 # filename format: <fovID>_<category>_<round>
                 self.round = int(stem.split("_")[-1])
             except Exception:
                 raise ValueError(f"Cannot parse round from img_path '{self.img_path}'")
         return self
-    
+
     @model_validator(mode="after")
     def validate_well_id(self) -> 'ProcessRequest':
         if not self.well_id:
             raise ValueError("well_id is required for processing")
-        
         return self
-    
+
     @model_validator(mode="after")
     def validate_dst_folder(self) -> 'ProcessRequest':
         if not self.dst_folder:
             raise ValueError("dst_folder is required for processing")
-        
         dst_folder_path = Path(self.dst_folder)
         if not dst_folder_path.exists():
             dst_folder_path.mkdir(parents=True, exist_ok=True)
-        
         return self
-    
+
     @model_validator(mode="after")
     def validate_total_fovs(self) -> 'ProcessRequest':
         if self.round == 2 and self.total_fovs is None:
             raise ValueError("total_fovs is required for round 2 processing")
-        
         return self
 
 class RegisterMaskRequest(BaseModel):

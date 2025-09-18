@@ -21,7 +21,7 @@ def process_images_endpoint(request: Request, payload: ProcessRequest) -> dict[s
     """
     Endpoint to process images using the provided payload.
     This endpoint accepts a payload containing:
-    - `img_path`: A string path to an image file.
+    - `img_path`: A string path or a list of string paths to image files.
     - `sigma`: Sigma value for background subtraction (default is 0.0).
     - `size`: Size parameter for background subtraction (default is 7).
     - `cellpose_settings`: Model and segmentation settings for Cellpose.
@@ -30,61 +30,62 @@ def process_images_endpoint(request: Request, payload: ProcessRequest) -> dict[s
     - `total_fovs`: Total number of fields of view, used to set the number of pending tracks in Redis. Not included in the model dump.
     - `track_stitch_threshold`: Threshold for stitching masks during tracking. Optional, default is 0.75.
     - `round`: The round number for processing, build from the image path if not provided. Defaults to None. Not included in the model dump.
-    This endpoint will send tasks to a Celery worker to process the images.
-    It returns a dictionary with the task IDs and the count of tasks sent.
-    
+    This endpoint will send tasks to a Celery worker to process the images (single or batch).
+    It returns a dictionary with the task ID and the count of images sent.
+
     :param request: The FastAPI request object.
     :param payload: The payload containing the image processing parameters.
-    
-    :return: A dictionary with task IDs and count of tasks sent.
-    
-"""
-    # Get the source and destination directories
+
+    :return: A dictionary with task ID and count of images sent.
+    """
     celery_app: Celery = request.app.state.celery_app
-    
+
     # Initialize the counter for pending tracks
     if payload.round == 2:
         redis_client.setnx(f"pending_tracks:{payload.well_id}", payload.total_fovs)
         redis_client.expire(f"pending_tracks:{payload.well_id}", 24 * 3600)
-    
-    logger.info(f"Sending {payload.img_path} for processing with well_id {payload.well_id}")
-    
+
+    img_count = len(payload.img_path) if isinstance(payload.img_path, list) else 1
+    logger.info(f"Sending {img_count} image(s) for processing with well_id {payload.well_id}")
+
     # Process the paths
     params = payload.model_dump()
     task = celery_app.send_task(
-            "cp_server.tasks_server.tasks.celery_main_task.process_images",
-            kwargs=params)
+        "cp_server.tasks_server.tasks.celery_main_task.process_images",
+        kwargs=params)
 
-    return {"well_id": payload.well_id, "task_ids": task.id}
+    # Determine number of images sent
+    return {"well_id": payload.well_id, "task_id": task.id, "images_sent": img_count}
 
 @router.post("/process_bg_sub")
-def process_bg_sub_endpoint(request: Request, payload: BackgroundRequest) -> str:
+def process_bg_sub_endpoint(request: Request, payload: BackgroundRequest) -> dict[str, Any]:
     """
     Endpoint to process background subtraction for images.
     This endpoint accepts a payload containing:
-    - `img_path`: A string path to an image file.
+    - `img_path`: A string path or a list of string paths to image files.
     - `sigma`: Sigma value for background subtraction (default is 0.0).
     - `size`: Size parameter for background subtraction (default is 7).
-    
-    This endpoint will send tasks to a Celery worker to process the images.
-    It returns a dictionary with the task IDs and the count of tasks sent.
-    
+
+    This endpoint will send tasks to a Celery worker to process the images (single or batch).
+    It returns a dictionary with the task ID and the count of images sent.
+
     :param request: The FastAPI request object.
     :param payload: The payload containing the background subtraction parameters.
-    
-    :return: Task ID of the background subtraction task.
+
+    :return: A dictionary with task ID and count of images sent.
     """
     celery_app: Celery = request.app.state.celery_app
-    
-    logger.info(f"Sending {payload.img_path} images for background subtraction")
-    
+
+    img_count = len(payload.img_path) if isinstance(payload.img_path, list) else 1
+    logger.info(f"Sending {img_count} image(s) for background subtraction")
+
     # Process the paths
     params = payload.model_dump()
     task = celery_app.send_task(
-            "cp_server.tasks_server.tasks.bg_sub.remove_bg",
-            kwargs=params)
+        "cp_server.tasks_server.tasks.bg_sub.remove_bg",
+        kwargs=params)
 
-    return task.id
+    return {"task_id": task.id, "images_sent": img_count}
 
 @router.get("/process/{well_id}/status")
 async def get_process_status(well_id: str) -> dict[str, Any]:
