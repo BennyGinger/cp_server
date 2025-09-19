@@ -62,8 +62,6 @@ dev = [
 [tool.uv.sources]
 torch       = [{ index = "pytorch-cu121" }]
 torchvision = [{ index = "pytorch-cu121" }]
-# Install cellpose-kit from GitHub in Docker builds (no local path available)
-# Use default branch to avoid resolving a non-existent tag named "main"
 cellpose-kit = { git = "https://github.com/BennyGinger/Cellpose-kit.git" }
 
 [[tool.uv.index]]
@@ -71,35 +69,3 @@ name     = "pytorch-cu121"
 url      = "https://download.pytorch.org/whl/cu121/"
 explicit = true
 
-
-#[tool.hatch.build.targets.sdist]
-# By default: pyproject.toml, LICENSE, README, and your package dir (cp_server) are included.
-# Add anything else you need in your source archive here:
-#include = [
-#  "docker-compose.yml",
-#  "Dockerfile_app",
-#  "Dockerfile_celery",
-#  "Dockerfile_celery_default",
-#  # if you had any JSON or YAML configs at the repo root or in a sub-dir, list them here:
-#  # "config/**/*.yml",
-#  # "config/**/*.json",
-  #  ]
-
-#[tool.hatch.build.targets.wheel]
-# Only ship exactly these paths into your wheel:
-#only-include = [
-#  "cp_server",               # your python code
-#  "docker-compose.yml",
-#  "Dockerfile_app",
-#  "Dockerfile_celery",
-#  "Dockerfile_celery_default",
-#]
-
-# Re-map paths so that cp_server/ becomes the top-level package and other files live
-# at the root of the wheel
-#[tool.hatch.build.targets.wheel.sources]
-#"cp_server"              = ""   # collapse cp_server/ → <root>/cp_server/
-#"docker-compose.yml"     = ""   # place at wheel root
-#"Dockerfile_app"         = ""
-#"Dockerfile_celery"      = ""
-#"Dockerfile_celery_default" = ""

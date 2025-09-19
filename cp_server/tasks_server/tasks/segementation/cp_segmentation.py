@@ -5,8 +5,11 @@ from typing import Any, Union, List, TypeVar, Dict
 
 from numpy.typing import NDArray
 import numpy as np
-from cellpose_kit.api import setup_cellpose, run_cellpose
+
 from cp_server.tasks_server import get_logger
+### Lazy import ### 
+# from cellpose_kit.api import run_cellpose, setup_cellpose
+
 
 T = TypeVar("T", bound=np.generic)
 DEFAULT_SEGMENT_THREADS = 4  # Default number of threads for batch segmentation
@@ -17,7 +20,9 @@ warnings.filterwarnings("ignore", category=FutureWarning, module="cellpose")
 logger = get_logger(__name__)
 
 class ModelManager:
-    """Singleton to manage persistent Cellpose models in worker processes using cellpose-kit"""
+    """
+    Singleton to manage persistent Cellpose models in worker processes using cellpose-kit
+    """
     _instance = None
     _lock = threading.Lock()
     _cached_models: Dict[str, Any] = {}  # Cache models only
@@ -34,6 +39,8 @@ class ModelManager:
         Get or create configured settings using cellpose-kit.
         Caches models based on model settings only, recreates eval params each time.
         """
+        from cellpose_kit.api import setup_cellpose  # Lazy import
+        
         if not isinstance(cellpose_settings, dict):
             raise TypeError("cellpose_settings must be a dict")
         # Separate model and eval settings
@@ -65,7 +72,9 @@ class ModelManager:
         return configured_settings
 
     def _extract_model_settings(self, settings: dict) -> dict:
-        """Extract only the settings that affect model initialization"""
+        """
+        Extract only the settings that affect model initialization
+        """
         # Model settings from v3 and v4 backends
         model_keys = {
             # Common model settings
@@ -82,7 +91,9 @@ class ModelManager:
         return {k: v for k, v in settings.items() if k in model_keys}
 
     def _get_model_key(self, model_settings: dict) -> str:
-        """Create a unique key based only on model settings"""
+        """
+        Create a unique key based only on model settings
+        """
         key_parts = [
             # Core model identity
             str(model_settings.get('pretrained_model', model_settings.get('model_type', 'cyto3'))),
@@ -102,7 +113,11 @@ class ModelManager:
         return "_".join(key_parts)
 
     def _setup_cellpose_model(self, cellpose_settings: dict) -> Any:
-        """Setup only the model part using cellpose-kit"""
+        """
+        Setup only the model part using cellpose-kit
+        """
+        from cellpose_kit.api import setup_cellpose  # Lazy import
+        
         # Create full configured settings to get the model
         threading_enabled = True
         use_nuclear_channel = cellpose_settings.get('use_nuclear_channel', False)
@@ -126,7 +141,9 @@ class ModelManager:
         }
 
     def clear_cache(self):
-        """Clear all cached models (useful for testing or memory management)"""
+        """
+        Clear all cached models (useful for testing or memory management)
+        """
         with self._lock:
             self._cached_models.clear()
             logger.info("Model cache cleared")
@@ -152,6 +169,8 @@ def segment_image(
     Returns:
         Segmentation mask(s) (same type/shape as input)
     """
+    from cellpose_kit.api import run_cellpose  # Lazy import
+    
     logger.info(f"Running segment_image with settings: {cellpose_settings}, threads={DEFAULT_SEGMENT_THREADS}")
     configured_settings = model_manager.get_configured_settings(cellpose_settings)
     if isinstance(img, list):
