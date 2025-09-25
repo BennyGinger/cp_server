@@ -52,7 +52,7 @@ def segment(
         for mask, p in zip(masks, img_path):
             mask_path = generate_mask_path(p, dst_folder)
             save_mask(mask, str(mask_path))
-            hkey = _register_mask_in_redis(mask_path, p, well_id)
+            hkey = _register_mask_in_redis(str(mask_path), p, well_id)
             hkeys.append(hkey)
         return hkeys
     else:
@@ -72,7 +72,7 @@ def segment(
         logger.debug(f"Created masks of {mask.shape=}")
         mask_path = generate_mask_path(img_path, dst_folder)
         save_mask(mask, str(mask_path))
-    hkey = _register_mask_in_redis(mask_path, img_path, well_id)
+    hkey = _register_mask_in_redis(str(mask_path), img_path, well_id)
     return hkey
 
 def _register_mask_in_redis(mask_path: str, img_path: str, well_id: str) -> str:

@@ -10,7 +10,7 @@ logger = get_logger('tasks')
 
 
 @shared_task(name="cp_server.tasks_server.tasks.celery_main_task.process_images")
-def process_images(img_path: str,
+def process_images(img_path: str | list[str],
                    cellpose_settings: dict[str, Any],
                    dst_folder: str, 
                    well_id: str,
@@ -22,7 +22,6 @@ def process_images(img_path: str,
     Process one or more images by removing the background, segmenting, and tracking using Cellpose and IoU tracking.
     Accepts a single image path or a list of image paths. Handles batch operation for all downstream tasks.
     """
-    from typing import Union, List
     # Starting point of the log
     logger.info(f"Received image file(s): {img_path}")
 
@@ -41,7 +40,6 @@ def process_images(img_path: str,
                 'cp_server.tasks_server.tasks.segementation.seg_task.segment',
                 kwargs=dict(
                     cellpose_settings=cellpose_settings, 
-                    img_path=img_path_batch, 
                     dst_folder=dst_folder, 
                     well_id=well_id
                 )

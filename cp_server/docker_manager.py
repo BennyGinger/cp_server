@@ -8,8 +8,10 @@ import threading
 import time
 import requests
 
+
 from cp_server.utils.env_managment import sync_dotenv, BASE_URL, LOGFILE_NAME
 from cp_server.utils.paths import get_root_path
+
 
 # Can't use `get_logger` from gem_screening.logger because there is no SERVICE_NAME defined in this module. Fallback to basic logging setup.
 logger = logging.getLogger("cp_server.compose_manager")
@@ -94,20 +96,24 @@ def _stream_compose_logs() -> None:
                 last_progress_line = None  # Reset progress tracking
     proc.wait()
 
-def _wait_for_services(timeout: int = 120, interval: int = 1) -> None:
+# Custom exception for service health timeout
+class ServiceHealthTimeout(Exception):
+    """Raised when services are not healthy after waiting."""
+    pass
+
+def _wait_for_services(timeout: int = 180, interval: int = 1) -> None:
     """Poll your health endpoints until they all return 200 or timeout."""
     endpoints = [
         "/health/redis",
         "/health",
         "/health/celery",
     ]
-    
     # Give services time to start up before first health check
     initial_delay = 5.0  # seconds
     logger.info(f"Waiting for services to start up before health checks...")
     time.sleep(initial_delay)
-    
     start = time.time()
+    failed_endpoints = []
     while time.time() - start < timeout:
         all_ok = True
         failed_endpoints = []
@@ -120,18 +126,15 @@ def _wait_for_services(timeout: int = 120, interval: int = 1) -> None:
             except requests.RequestException as e:
                 failed_endpoints.append(f"{url} (error: {e})")
                 all_ok = False
-        
         if all_ok:
             logger.info("All services healthy.")
             return
-        
         # Log which endpoints are failing every 10 seconds
         elapsed = time.time() - start
         if int(elapsed) % 10 == 0:
             logger.info(f"All Services still not healthy: {', '.join(failed_endpoints)}")
-        
         time.sleep(interval)
-    raise RuntimeError(f"Services are not healthy after {timeout}s. Failed endpoints: {', '.join(failed_endpoints)}")
+    raise ServiceHealthTimeout(f"Services are not healthy after {timeout}s. Failed endpoints: {', '.join(failed_endpoints)}")
 
 def compose_up(stream_log: bool) -> None:
     """
@@ -188,8 +191,14 @@ class ComposeManager:
         Enter the runtime context related to this object.
         This method is called when entering the context manager.
         It brings up the Docker Compose environment.
+        If services are not healthy after waiting, bring down compose and re-raise the error.
         """
-        compose_up(self.stream_log)
+        try:
+            compose_up(self.stream_log)
+        except ServiceHealthTimeout as e:
+            logger.error(f"Service health check failed: {e}. Bringing down Docker Compose.")
+            compose_down()
+            raise
 
     def __exit__(self, exc_type, exc_value, traceback) -> bool:
         """
