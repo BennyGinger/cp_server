@@ -152,12 +152,12 @@ class RegisterMaskRequest(BaseModel):
     A Pydantic model for registering multiple masks in batch.
     
     Attributes:
-        well_id (str): Unique identifier for the processing well.
+        run_id (str): Unique identifier for the processing run.
         mask_paths (list[str]): List of paths to mask files. File names should end with '_1.tif' or '_2.tif'.
         total_fovs (int): Total number of fields of view. It will not be included in the model dump.
         track_stitch_threshold (float, optional): Threshold for stitching masks during tracking. Default to 0.75.
     """
-    well_id: str
+    run_id: str
     mask_paths: list[str]
     total_fovs: int = Field(exclude=True)
     track_stitch_threshold: float = 0.75

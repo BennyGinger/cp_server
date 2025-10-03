@@ -1,3 +1,4 @@
+from collections import defaultdict
 from typing import Any, cast
 from pathlib import Path
 
@@ -130,50 +131,58 @@ def register_mask_endpoint(request: Request, payload: RegisterMaskRequest) -> li
     
     tracking_task_ids = []
     
-    logger.info(f"Processing batch registration of {len(payload.mask_paths)} masks for well {payload.well_id}")
+    logger.info(f"Processing batch registration of {len(payload.mask_paths)} masks for well {payload.run_id}")
     
     # Early return for empty list
     if not payload.mask_paths:
         return []
     
-    # Check if there are any R2 masks to process
-    r2_masks = [path for path in payload.mask_paths if Path(path).stem.split('_')[-1] == '2']
-    has_r2_masks = len(r2_masks) > 0
+    # Group masks by well_id
+    masks_by_well_id = defaultdict(list)
+    for mask_path in payload.mask_paths:
+        path_obj = Path(mask_path)
+        # Extract well from filename: e.g. A1P1_mask_2.tif → A1
+        stem = path_obj.stem
+        well = stem.split('P')[0]
+        well_id = f"{payload.run_id}_{well}"
+        masks_by_well_id[well_id].append(mask_path)
     
-    # Only initialize pending_tracks if we have R2 masks to track
-    if has_r2_masks:
-        # Clear any existing finished flag (in case R1 was registered first)
-        redis_client.delete(f"finished:{payload.well_id}")
-        # Set counter to total FOVs - this accounts for both registered R2 masks AND future R2 masks from imaging
-        redis_client.setnx(f"pending_tracks:{payload.well_id}", payload.total_fovs)
-        redis_client.expire(f"pending_tracks:{payload.well_id}", 24 * 3600)
-    
-    # Process all masks, but sort to ensure R1 masks are registered before R2 masks
-    sorted_masks = sorted(payload.mask_paths, key=lambda path: Path(path).stem.split('_')[-1])
-    
-    for mask_path in sorted_masks:
-        try:
-            fov_id, time_id, hkey = _register_single_mask(payload.well_id, mask_path)
-            
-            # Only trigger tracking for R2 masks
-            if time_id == '2':
-                # Trigger tracking for R2 mask
-                task = celery_app.send_task(
-                    'cp_server.tasks_server.tasks.counter.counter_task_manager.check_and_track',
-                    kwargs={
-                        'hkey': hkey,
-                        'track_stitch_threshold': payload.track_stitch_threshold
-                    }
-                )
-                tracking_task_ids.append(task.id)
-                logger.debug(f"Triggered tracking task {task.id} for {fov_id} (well {payload.well_id})")
+    for well_id, mask_paths in masks_by_well_id.items():
+        # Check if there are any R2 masks to process
+        r2_masks = [path for path in mask_paths if Path(path).stem.split('_')[-1] == '2']
+        has_r2_masks = len(r2_masks) > 0
+        
+        # Only initialize pending_tracks if we have R2 masks to track
+        if has_r2_masks:
+            # Clear any existing finished flag (in case R1 was registered first)
+            redis_client.delete(f"finished:{well_id}")
+            # Set counter to total FOVs - this accounts for both registered R2 masks AND future R2 masks from imaging
+            redis_client.setnx(f"pending_tracks:{well_id}", payload.total_fovs)
+            redis_client.expire(f"pending_tracks:{well_id}", 24 * 3600)
+        
+        # Process all masks, but sort to ensure R1 masks are registered before R2 masks
+        sorted_masks = sorted(mask_paths, key=lambda path: Path(path).stem.split('_')[-1])
+        
+        for mask_path in sorted_masks:
+            try:
+                fov_id, time_id, hkey = _register_single_mask(payload.run_id, mask_path)
+                
+                # Only trigger tracking for R2 masks
+                if time_id == '2':
+                    # Trigger tracking for R2 mask
+                    task = celery_app.send_task(
+                        'cp_server.tasks_server.tasks.counter.counter_task_manager.check_and_track',
+                        kwargs={
+                            'hkey': hkey,
+                            'track_stitch_threshold': payload.track_stitch_threshold
+                        }
+                    )
+                    tracking_task_ids.append(task.id)
+                    logger.debug(f"Triggered tracking task {task.id} for {fov_id} (well {payload.run_id})")
 
-        except Exception as e:
-            logger.error(f"Failed to register mask {mask_path}: {e}")
-            # Continue with other masks rather than failing entire batch
-    
-    # If no R2 masks were processed, do not mark as finished here.
-    # Completion should be set by the tracking workflow once all pending tasks are done.
+            except Exception as e:
+                logger.error(f"Failed to register mask {mask_path}: {e}")
+                # Continue with other masks rather than failing entire batch
     
     logger.info(f"Batch registration completed: {len(payload.mask_paths)} masks processed, {len(tracking_task_ids)} tracking tasks")
     
