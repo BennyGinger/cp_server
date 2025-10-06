@@ -204,13 +204,20 @@ class RegisterMaskRequest(BaseModel):
             _validate_filename_pattern(mask_path, FILENAME_PATTERN, EXPECTED_FORMAT)
         return self
 
-class InitializePendingCounterRequest(BaseModel):
+class NDArrayPayload(BaseModel):
     """
-    A Pydantic model for initializing pending counter.
-    
+    A Pydantic model for processing NDArray payloads. This model is used to encapsulate a NumPy ndarray that has been serialized into a JSON-compatible format (e.g., list or nested lists).
     Attributes:
-        well_id (str): Unique identifier for the processing well.
-        total_fovs (int): Total number of FOVs that will have tracking triggered.
+        array (Any): The serialized NumPy ndarray.
+        cellpose_settings (dict[str, Any]): Settings for the Cellpose model and segmentation.
     """
-    well_id: str
-    total_fovs: int
+    array: str  # base64-encoded JSON string
+    cellpose_settings: dict[str, Any]
+
+class NDArrayResult(BaseModel):
+    """
+    A Pydantic model for returning NDArray results. This model is used to encapsulate a NumPy ndarray that has been serialized into a JSON-compatible format (e.g., list or nested lists).
+    Attributes:
+        array (Any): The serialized NumPy ndarray.
+    """
+    array: dict[str, Any]  # dict produced by NumpyJSONEncoder (not double-encoded string)

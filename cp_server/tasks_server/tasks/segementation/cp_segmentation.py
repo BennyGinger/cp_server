@@ -1,7 +1,8 @@
 from __future__ import annotations
 import threading
 import warnings
-from typing import Any, Union, List, TypeVar, Dict
+from typing import Any, TypeVar
+from concurrent.futures import ThreadPoolExecutor
 
 from numpy.typing import NDArray
 import numpy as np
@@ -25,16 +26,16 @@ class ModelManager:
     """
     _instance = None
     _lock = threading.Lock()
-    _cached_models: Dict[str, Any] = {}  # Cache models only
+    _cached_models: dict[str, Any] = {}  # Cache models only
 
-    def __new__(cls):
+    def __new__(cls) -> ModelManager:
         if cls._instance is None:
             with cls._lock:
                 if cls._instance is None:
                     cls._instance = super().__new__(cls)
         return cls._instance
 
-    def get_configured_settings(self, cellpose_settings: dict) -> Any:
+    def get_configured_settings(self, cellpose_settings: dict[str, Any]) -> dict[str, Any]:
         """
         Get or create configured settings using cellpose-kit.
         Caches models based on model settings only, recreates eval params each time.
@@ -64,14 +65,14 @@ class ModelManager:
             threading=True,
             use_nuclear_channel=use_nuclear_channel,
             do_denoise=do_denoise,
-            model=cached['model']
-        )
+            model=cached['model'])
+        
         # Add lock if present in cache (for thread safety)
         if cached.get('lock') is not None:
             configured_settings['lock'] = cached['lock']
         return configured_settings
 
-    def _extract_model_settings(self, settings: dict) -> dict:
+    def _extract_model_settings(self, settings: dict[str, Any]) -> dict[str, Any]:
         """
         Extract only the settings that affect model initialization
         """
@@ -85,12 +86,11 @@ class ModelManager:
             # v4 specific  
             'use_bfloat16',
             # Our custom settings
-            'do_denoise', 'use_nuclear_channel'  # These affect model choice
-        }
-
+            'do_denoise', 'use_nuclear_channel'}  # These affect model choice
+        
         return {k: v for k, v in settings.items() if k in model_keys}
 
-    def _get_model_key(self, model_settings: dict) -> str:
+    def _get_model_key(self, model_settings: dict[str, Any]) -> str:
         """
         Create a unique key based only on model settings
         """
@@ -108,11 +108,10 @@ class ModelManager:
             str(model_settings.get('nchan', 2)),
             str(model_settings.get('backbone', 'default')),
             # v4 specific
-            str(model_settings.get('use_bfloat16', True)),
-        ]
+            str(model_settings.get('use_bfloat16', True)),]
         return "_".join(key_parts)
 
-    def _setup_cellpose_model(self, cellpose_settings: dict) -> Any:
+    def _setup_cellpose_model(self, cellpose_settings: dict[str, Any]) -> dict[str, Any]:
         """
         Setup only the model part using cellpose-kit
         """
@@ -127,8 +126,7 @@ class ModelManager:
             cellpose_settings=cellpose_settings,
             threading=threading_enabled,
             use_nuclear_channel=use_nuclear_channel,
-            do_denoise=do_denoise
-        )
+            do_denoise=do_denoise)
 
         # Extract and return only the model and lock (not eval_params)
         return {
@@ -136,11 +134,9 @@ class ModelManager:
             'lock': full_config.get('lock'),
             'model_metadata': {
                 'use_nuclear_channel': use_nuclear_channel,
-                'do_denoise': do_denoise
-            }
-        }
+                'do_denoise': do_denoise}}
 
-    def clear_cache(self):
+    def clear_cache(self) -> None:
         """
         Clear all cached models (useful for testing or memory management)
         """
@@ -154,10 +150,7 @@ model_manager = ModelManager()
 #########################################################################
 ########################## Main Function ################################
 #########################################################################
-def segment_image(
-    img: Union[NDArray[T], List[NDArray[T]]],
-    cellpose_settings: dict[str, Any]
-) -> Union[NDArray[T], List[NDArray[T]]]:
+def segment_image(img: NDArray[T] | list[NDArray[T]], cellpose_settings: dict[str, Any]) -> NDArray[T] | list[NDArray[T]]:
     """
     Generic segmentation interface for Cellpose using persistent model management.
     Uses model_manager to cache and reuse models for efficiency.
@@ -171,10 +164,9 @@ def segment_image(
     """
     from cellpose_kit.api import run_cellpose  # Lazy import
     
-    logger.info(f"Running segment_image with settings: {cellpose_settings}, threads={DEFAULT_SEGMENT_THREADS}")
     configured_settings = model_manager.get_configured_settings(cellpose_settings)
     if isinstance(img, list):
-        from concurrent.futures import ThreadPoolExecutor
+        logger.info(f"Running segment_image on batch with settings: {cellpose_settings}, threads={DEFAULT_SEGMENT_THREADS}")
         def _seg_single(im: NDArray[T]) -> NDArray[T]:
             masks, *_ = run_cellpose(im, configured_settings)
             assert isinstance(masks, np.ndarray), f"Expected NDArray but got {type(masks)}"
@@ -183,5 +175,6 @@ def segment_image(
             results = list(executor.map(_seg_single, img))
         return results 
     else:
+        logger.info(f"Running segment_image on single image with settings: {cellpose_settings}")
         masks, *_ = run_cellpose(img, configured_settings)
         return masks

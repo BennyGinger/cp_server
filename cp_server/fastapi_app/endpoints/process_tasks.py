@@ -1,13 +1,15 @@
 from collections import defaultdict
 from typing import Any, cast
 from pathlib import Path
+import json
 
 from fastapi import APIRouter, Request, HTTPException
 from celery import Celery
 
-from cp_server.fastapi_app.endpoints.request_models import ProcessRequest, BackgroundRequest, RegisterMaskRequest
+from cp_server.fastapi_app.endpoints.request_models import NDArrayPayload, NDArrayResult, ProcessRequest, BackgroundRequest, RegisterMaskRequest
 from cp_server.fastapi_app import get_logger
 from cp_server.fastapi_app.endpoints import redis_client
+from cp_server.tasks_server.utils.serialization_utils import custom_decoder, custom_encoder
 
 
 # Setup logging
@@ -212,3 +214,43 @@ def _register_single_mask(well_id: str, mask_path: str) -> tuple[str, str, str]:
     logger.debug(f"Registered R{time_id} mask for {fov_id}: {mask_path}")
     return fov_id, time_id, hkey
 
+@router.post("/segment_ndarray")
+def segment_ndarray_endpoint(request: Request, payload: NDArrayPayload) -> NDArrayResult:
+    """
+    Endpoint to segment an image provided as a NumPy ndarray.
+    This endpoint accepts a payload containing:
+    - `array`: A serialized NumPy ndarray (base64-encoded string).
+    - `cellpose_settings`: Model and segmentation settings for Cellpose.
+    
+    This endpoint will send a task to a Celery worker to segment the image.
+    It returns the segmented mask as a serialized NumPy ndarray.
+    """
+    celery_app: Celery = request.app.state.celery_app
+    
+    # Decode the ndarray from the payload
+    try:
+        ndarray = custom_decoder(payload.array)
+    except Exception as e:
+        logger.error(f"Failed to decode ndarray: {e}")
+        raise HTTPException(status_code=400, detail="Invalid ndarray format")
+
+    # Send task to Celery worker and wait for result
+    try: 
+        result = celery_app.send_task(
+        "cp_server.tasks_server.tasks.segementation.seg_task.optimize_cellpose_settings",
+        kwargs={
+            "img": ndarray,
+            "cellpose_settings": payload.cellpose_settings
+        }).get(timeout=180)  # Blocking call to get result with timeout of 3 minutes
+    except Exception as e:
+        logger.error(f"Failed to process segmentation task: {e}")
+        raise HTTPException(status_code=500, detail="Segmentation task failed")
+    
+    # Encode the result back to a JSON-compatible format
+    try:
+        # custom_encoder returns a JSON string; load to dict to avoid double-encoding in API response
+        encoded = json.loads(custom_encoder(result))
+    except Exception as e:
+        logger.error(f"Failed to encode result: {e}")
+        raise HTTPException(status_code=500, detail="Result encoding failed")
+    return NDArrayResult(array=encoded)

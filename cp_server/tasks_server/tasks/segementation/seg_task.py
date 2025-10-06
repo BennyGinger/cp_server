@@ -1,5 +1,7 @@
-from typing import Any, TypeVar, Union, List
+from typing import Any, TypeVar
+
 from celery import shared_task
+from numpy.typing import NDArray
 import numpy as np
 from tifffile import imread
 
@@ -15,12 +17,7 @@ T = TypeVar("T", bound=np.generic)
 logger = get_logger(__name__)
 
 @shared_task(name="cp_server.tasks_server.tasks.segementation.seg_task.segment")
-def segment(
-    img_path: Union[str, List[str]],
-    cellpose_settings: dict[str, Any],
-    dst_folder: str,
-    well_id: str,
-) -> Union[str, List[str]]:
+def segment(img_path: str | list[str], cellpose_settings: dict[str, Any], dst_folder: str, well_id: str,) -> str | list[str]:
     """
     Segment one or more images using Cellpose with persistent model loading via cellpose-kit.
     Args:
@@ -74,6 +71,26 @@ def segment(
         save_mask(mask, str(mask_path))
     hkey = _register_mask_in_redis(str(mask_path), img_path, well_id)
     return hkey
+
+@shared_task(name="cp_server.tasks_server.tasks.segementation.seg_task.optimize_cellpose_settings")
+def optimize_cellpose_settings(img: NDArray[T], cellpose_settings: dict[str, Any]) -> NDArray[T]:
+    """
+    Optimize Cellpose settings for a given image.
+    Args:
+        img (np.ndarray): The input image array.
+        cellpose_settings (dict): Initial settings for the Cellpose model.
+    Returns:
+        np.ndarray: The segmented mask array.
+    """
+    logger.info(f"Optimizing Cellpose settings for image with shape {img.shape} and dtype {img.dtype}")
+    try:
+        mask = segment_image(img, cellpose_settings)
+        assert not isinstance(mask, list), f"Expected single mask but got list of {len(mask)} masks"
+        logger.debug(f"Optimized mask created with shape {mask.shape}")
+        return mask
+    except Exception as e:
+        logger.error(f"Optimization failed: {e}")
+        raise
 
 def _register_mask_in_redis(mask_path: str, img_path: str, well_id: str) -> str:
     fov_id, time_id = extract_fov_id(img_path)
