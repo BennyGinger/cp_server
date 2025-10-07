@@ -62,7 +62,9 @@ def create_celery_app(include_tasks: bool = False) -> Celery:
         celery_app.conf.task_default_queue = "celery"
         celery_app.conf.task_routes = {
             "cp_server.tasks_server.tasks.segementation.seg_task.segment": {"queue": "gpu_tasks"},
-            "cp_server.tasks_server.tasks.segementation.seg_task.optimize_cellpose_settings": {"queue": "gpu_tasks"}}
+            "cp_server.tasks_server.tasks.segementation.seg_task.optimize_cellpose_settings": {"queue": "gpu_tasks"},
+            "cp_server.tasks_server.tasks.segementation.seg_task.cellpose_metadata": {"queue": "gpu_tasks"},
+        }
     return celery_app
 
 celery_app = create_celery_app(include_tasks=True)

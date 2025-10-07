@@ -4,6 +4,7 @@ from celery import shared_task
 from numpy.typing import NDArray
 import numpy as np
 from tifffile import imread
+from cellpose_kit import MODEL_NAMES, cp_version
 
 from cp_server.tasks_server import get_logger
 from cp_server.tasks_server.tasks.saving.save_arrays import generate_mask_path, save_mask, extract_fov_id
@@ -91,6 +92,12 @@ def optimize_cellpose_settings(img: NDArray[T], cellpose_settings: dict[str, Any
     except Exception as e:
         logger.error(f"Optimization failed: {e}")
         raise
+
+@shared_task(name="cp_server.tasks_server.tasks.segementation.seg_task.cellpose_metadata")
+def cellpose_metadata() -> dict[str, Any]:
+    return {
+        "model_names": MODEL_NAMES,
+        "version": cp_version,}
 
 def _register_mask_in_redis(mask_path: str, img_path: str, well_id: str) -> str:
     fov_id, time_id = extract_fov_id(img_path)

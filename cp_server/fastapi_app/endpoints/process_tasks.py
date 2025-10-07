@@ -254,3 +254,19 @@ def segment_ndarray_endpoint(request: Request, payload: NDArrayPayload) -> NDArr
         logger.error(f"Failed to encode result: {e}")
         raise HTTPException(status_code=500, detail="Result encoding failed")
     return NDArrayResult(array=encoded)
+
+@router.get("/cellpose_metadata")
+def cellpose_metadata_endpoint(request: Request) -> dict[str, Any]:
+    """
+    Endpoint to retrieve Cellpose model metadata, including available model names and version.
+    """
+    celery_app: Celery = request.app.state.celery_app
+    
+    try:
+        result = celery_app.send_task(
+            "cp_server.tasks_server.tasks.segementation.seg_task.cellpose_metadata"
+        ).get(timeout=60)  # Blocking call to get result with timeout of 60 seconds
+        return result
+    except Exception as e:
+        logger.error(f"Failed to retrieve Cellpose metadata: {e}")
+        raise HTTPException(status_code=500, detail="Failed to retrieve Cellpose metadata")
