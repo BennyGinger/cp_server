@@ -4,14 +4,15 @@ from celery import shared_task
 from numpy.typing import NDArray
 import numpy as np
 from tifffile import imread
-from cellpose_kit import MODEL_NAMES, cp_version
 
 from cp_server.tasks_server import get_logger
 from cp_server.tasks_server.tasks.saving.save_arrays import generate_mask_path, save_mask, extract_fov_id
 from cp_server.tasks_server.utils.redis_com import redis_client
-
-# Import the segmentation backend interface (can be swapped for other algorithms)
 from cp_server.tasks_server.tasks.segementation.cp_segmentation import segment_image
+
+##### Lazy imports #######
+# from cellpose_kit import MODEL_NAMES, cp_version
+##########################
 
 T = TypeVar("T", bound=np.generic)
 
@@ -95,6 +96,7 @@ def optimize_cellpose_settings(img: NDArray[T], cellpose_settings: dict[str, Any
 
 @shared_task(name="cp_server.tasks_server.tasks.segementation.seg_task.cellpose_metadata")
 def cellpose_metadata() -> dict[str, Any]:
+    from cellpose_kit import MODEL_NAMES, cp_version
     return {
         "model_names": MODEL_NAMES,
         "version": cp_version,}
