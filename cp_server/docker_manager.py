@@ -109,9 +109,9 @@ def _wait_for_services(timeout: int = 180, interval: int = 1) -> None:
         "/health/celery",
     ]
     # Give services time to start up before first health check
-    initial_delay = 5.0  # seconds
+    # initial_delay = 5.0  # seconds
     logger.info(f"Waiting for services to start up before health checks...")
-    time.sleep(initial_delay)
+    # time.sleep(initial_delay)
     start = time.time()
     failed_endpoints = []
     while time.time() - start < timeout:
@@ -129,10 +129,9 @@ def _wait_for_services(timeout: int = 180, interval: int = 1) -> None:
         if all_ok:
             logger.info("All services healthy.")
             return
-        # Log which endpoints are failing every 10 seconds
-        elapsed = time.time() - start
-        if int(elapsed) % 10 == 0:
-            logger.info(f"All Services still not healthy: {', '.join(failed_endpoints)}")
+        
+        
+            
         time.sleep(interval)
     raise ServiceHealthTimeout(f"Services are not healthy after {timeout}s. Failed endpoints: {', '.join(failed_endpoints)}")
 
@@ -174,17 +173,20 @@ class ComposeManager:
     Args:
         stream_log (bool): If True, stream the logs of the Docker Compose services.
                            Default is True.
+        dev_mode (bool): If True, skip teardown to keep services running between runs.
+                        Default is False.
     Examples:
     ```python
     from cp_server import ComposeManager
     # Use the context manager to manage Docker Compose lifecycle
-    with ComposeManager(stream_log=True):
-        # Your code here
+    with ComposeManager(stream_log=True, dev_mode=True):
+        # Your code here - services stay up after this block
         ...
     ```
     """
-    def __init__(self, stream_log: bool = True) -> None:
+    def __init__(self, stream_log: bool = True, dev_mode: bool = False) -> None:
         self.stream_log = stream_log
+        self.dev_mode = dev_mode
     
     def __enter__(self) -> None:
         """
@@ -192,8 +194,18 @@ class ComposeManager:
         This method is called when entering the context manager.
         It brings up the Docker Compose environment.
         If services are not healthy after waiting, bring down compose and re-raise the error.
+        In dev_mode, it will only start services if they're not already running.
         """
         try:
+            if self.dev_mode:
+                # In dev mode, check if services are already healthy
+                try:
+                    _wait_for_services(timeout=30)  # Quick check
+                    logger.info("Services already running and healthy (dev mode)")
+                    return
+                except ServiceHealthTimeout:
+                    logger.info("Services not healthy, starting them (dev mode)")
+            
             compose_up(self.stream_log)
         except ServiceHealthTimeout as e:
             logger.error(f"Service health check failed: {e}. Bringing down Docker Compose.")
@@ -204,7 +216,7 @@ class ComposeManager:
         """
         Exit the runtime context related to this object.
         This method is called when exiting the context manager.
-        It tears down the Docker Compose environment.
+        It tears down the Docker Compose environment unless in dev_mode.
         If an exception occurred, log it before tearing down.
         
         Returns:
@@ -213,9 +225,13 @@ class ComposeManager:
         if exc_type is not None:
             # Exception occurred - log it before tearing down
             logger.error(f"Pipeline failed with exception: {exc_type.__name__}: {exc_value}")
-            logger.error(f"Exception traceback will be shown after Docker cleanup")
+            if not self.dev_mode:
+                logger.error(f"Exception traceback will be shown after Docker cleanup")
         
-        compose_down()
+        if not self.dev_mode:
+            compose_down()
+        else:
+            logger.info("Dev mode: keeping services running")
         
         # Don't suppress the exception - let it propagate
         return False
