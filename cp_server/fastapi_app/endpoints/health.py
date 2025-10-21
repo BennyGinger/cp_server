@@ -26,7 +26,7 @@ def celery_health(request: Request):
     celery_app = request.app.state.celery_app
     try:
         # ping returns a list of dicts, e.g. [{"worker1@example.com": {"ok": "pong"}}]
-        replies = celery_app.control.ping(timeout=1.0)
+        replies = celery_app.control.ping(timeout=5.0)
         if replies:
             return {"celery": "ok", "workers": [list(r.keys())[0] for r in replies]}
         raise HTTPException(status_code=503, detail="No Celery workers responded")

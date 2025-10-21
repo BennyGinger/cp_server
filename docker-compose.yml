@@ -40,7 +40,12 @@ services:
       RUNNING_AS_CELERY: "false"
       TZ: "${TZ:-Europe/London}"
     depends_on:
-      - redis
+      redis:
+        condition: service_healthy
+      celery-default:
+        condition: service_healthy
+      celery-gpu:
+        condition: service_healthy
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
@@ -91,6 +96,12 @@ services:
       --without-mingle 
       --heartbeat-interval=30 
       --loglevel=info
+    healthcheck:
+      test: ["CMD", "celery", "-A", "cp_server.tasks_server.celery_app:celery_app", "inspect", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
 
   celery-gpu:
     build:
@@ -137,6 +148,12 @@ services:
             - driver: "nvidia"
               count: all
               capabilities: ["gpu"]
+    healthcheck:
+      test: ["CMD", "celery", "-A", "cp_server.tasks_server.celery_app:celery_app", "inspect", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
 
 volumes:
   cellpose_models:

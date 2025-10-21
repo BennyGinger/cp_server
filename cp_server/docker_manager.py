@@ -17,7 +17,10 @@ from cp_server.utils.paths import get_root_path
 logger = logging.getLogger("cp_server.compose_manager")
 
 # 'Grab' the env vars if any, and propagate them to the .env file
-sync_dotenv()
+# Only sync dotenv if we're not running as Celery
+if os.getenv("RUNNING_AS_CELERY", "false").lower() != "true":
+    sync_dotenv()
+
 FASTAPI_URL = f"http://{BASE_URL}:8000"
 host_dir = os.getenv("HOST_DIR", ".")
 HOST_LOG_FOLDER = Path(host_dir).joinpath("logs")
@@ -104,9 +107,9 @@ class ServiceHealthTimeout(Exception):
 def _wait_for_services(timeout: int = 180, interval: int = 1) -> None:
     """Poll your health endpoints until they all return 200 or timeout."""
     endpoints = [
-        "/health/redis",
+        # "/health/redis",
         "/health",
-        "/health/celery",
+        # "/health/celery",
     ]
     # Give services time to start up before first health check
     # initial_delay = 5.0  # seconds
