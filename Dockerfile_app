@@ -1,8 +1,9 @@
 FROM python:3.12-slim
 
-# To reduce the security risk
+# To reduce the security risk and install curl for health checks
 RUN apt-get update \
     && apt-get upgrade -y \
+    && apt-get install -y --no-install-recommends curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Define build arguments with default fallback values
