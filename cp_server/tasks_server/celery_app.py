@@ -88,7 +88,7 @@ def preload_models(sender, **kwargs):
     logger.info("Preloading Cellpose models with cellpose-kit...")
     
     try:
-        from cp_server.tasks_server.tasks.segementation.cp_segmentation import model_manager
+        from cp_server.tasks_server.tasks.segementation.model_manager import model_manager
         
         # Preload common model configurations
         common_configs = [

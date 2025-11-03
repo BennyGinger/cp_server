@@ -26,8 +26,8 @@ services:
     volumes:
       - "${HOST_DIR}:/data"
       - ./cp_server:/app/cp_server
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
+      # - /etc/timezone:/etc/timezone:ro
+      # - /etc/localtime:/etc/localtime:ro
     environment:
       CELERY_BROKER_URL: "${CELERY_BROKER_URL}"
       CELERY_BACKEND_URL: "${CELERY_BACKEND_URL}"
@@ -70,8 +70,8 @@ services:
     volumes:
       - "${HOST_DIR}:/data"
       - ./cp_server:/app/cp_server
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
+      # - /etc/timezone:/etc/timezone:ro
+      # - /etc/localtime:/etc/localtime:ro
     environment:
       CELERY_BROKER_URL: "${CELERY_BROKER_URL}"
       CELERY_BACKEND_URL: "${CELERY_BACKEND_URL}"
@@ -110,12 +110,15 @@ services:
       args:
         USER_UID: "${USER_UID:-1000}"
         USER_GID: "${USER_GID:-1000}"
+      additional_contexts:
+        cellpose: ../Cellpose-kit
     volumes:
       - "${HOST_DIR}:/data"
       - ./cp_server:/app/cp_server
+      - ../Cellpose-kit/src:/Cellpose-kit/src
       - cellpose_models:/home/celeryuser/.cellpose
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
+      # - /etc/timezone:/etc/timezone:ro
+      # - /etc/localtime:/etc/localtime:ro
     environment:
       CELERY_BROKER_URL: "${CELERY_BROKER_URL}"
       CELERY_BACKEND_URL: "${CELERY_BACKEND_URL}"

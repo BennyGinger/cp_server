@@ -237,14 +237,14 @@ def segment_ndarray_endpoint(request: Request, payload: NDArrayPayload) -> NDArr
     # Send task to Celery worker and wait for result
     try: 
         result = celery_app.send_task(
-        "cp_server.tasks_server.tasks.segementation.seg_task.optimize_cellpose_settings",
+        "cp_server.tasks_server.tasks.segementation.seg_task.optimize_cellpose_settings",queue="gpu_tasks",
         kwargs={
             "img": ndarray,
             "cellpose_settings": payload.cellpose_settings
         }).get(timeout=180)  # Blocking call to get result with timeout of 3 minutes
     except Exception as e:
         logger.error(f"Failed to process segmentation task: {e}")
-        raise HTTPException(status_code=500, detail="Segmentation task failed")
+        raise HTTPException(status_code=500, detail=f"Segmentation task failed {e}")
     
     # Encode the result back to a JSON-compatible format
     try:
@@ -252,7 +252,7 @@ def segment_ndarray_endpoint(request: Request, payload: NDArrayPayload) -> NDArr
         encoded = json.loads(custom_encoder(result))
     except Exception as e:
         logger.error(f"Failed to encode result: {e}")
-        raise HTTPException(status_code=500, detail="Result encoding failed")
+        raise HTTPException(status_code=500, detail=f"Result encoding failed {e}")
     return NDArrayResult(array=encoded)
 
 @router.get("/cellpose_metadata")
@@ -264,9 +264,9 @@ def cellpose_metadata_endpoint(request: Request) -> dict[str, Any]:
     
     try:
         result = celery_app.send_task(
-            "cp_server.tasks_server.tasks.segementation.seg_task.cellpose_metadata"
+            "cp_server.tasks_server.tasks.segementation.seg_task.cellpose_metadata",queue="gpu_tasks"
         ).get(timeout=60)  # Blocking call to get result with timeout of 60 seconds
         return result
     except Exception as e:
         logger.error(f"Failed to retrieve Cellpose metadata: {e}")
-        raise HTTPException(status_code=500, detail="Failed to retrieve Cellpose metadata")
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve Cellpose metadata {e}")

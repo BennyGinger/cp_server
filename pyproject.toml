@@ -62,7 +62,7 @@ dev = [
 [tool.uv.sources]
 torch       = [{ index = "pytorch-cu121" }]
 torchvision = [{ index = "pytorch-cu121" }]
-cellpose-kit = { git = "https://github.com/BennyGinger/Cellpose-kit.git" }
+cellpose-kit = { path = "../Cellpose-kit", editable = true }
 
 [[tool.uv.index]]
 name     = "pytorch-cu121"

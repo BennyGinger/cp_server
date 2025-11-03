@@ -38,6 +38,9 @@ WORKDIR /app
 # Copy the project files into the container
 COPY --chown=celeryuser:celerygroup . /app
 
+# Copy the Cellpose-kit project into the image (required for file:///Cellpose-kit)
+COPY --from=cellpose --chown=celeryuser:celerygroup / /Cellpose-kit
+
 # Upgrade pip and install the "uv" tool which manages the project
 RUN pip install --upgrade pip && pip install uv
 
@@ -49,7 +52,7 @@ RUN uv venv --python 3.12
 ENV PATH="/app/.venv/bin:$PATH"
 
 # Install only the "celery" extra dependencies defined in pyproject file
-RUN uv pip install -r pyproject.toml --extra celery
+RUN uv sync --extra celery --no-dev
 
 # Set the folder structure and permissions - ensure /app directory itself is owned by celeryuser
 RUN chown celeryuser:celerygroup /app \

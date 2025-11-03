@@ -24,8 +24,7 @@ if os.getenv("RUNNING_AS_CELERY", "false").lower() != "true":
 FASTAPI_URL = f"http://{BASE_URL}:8000"
 host_dir = os.getenv("HOST_DIR", ".")
 HOST_LOG_FOLDER = Path(host_dir).joinpath("logs")
-if not HOST_LOG_FOLDER.exists():
-    HOST_LOG_FOLDER.mkdir(parents=True, exist_ok=True)
+
 
 def _get_base_cmd() -> list[str]:
     """
@@ -64,6 +63,8 @@ def _stream_compose_logs() -> None:
     It will create a log file in the HOST_LOG_FOLDER with the name LOGFILE_NAME.
     """
     base_cmd = _get_base_cmd()
+    if not HOST_LOG_FOLDER.exists():
+        HOST_LOG_FOLDER.mkdir(parents=True, exist_ok=True)
     log_path = HOST_LOG_FOLDER.joinpath(LOGFILE_NAME)
     proc = subprocess.Popen(
         [*base_cmd, "logs", "-f"],
