@@ -20,6 +20,10 @@ WORKDIR /app
 # Copy the project files into the container
 COPY --chown=fastapiuser:fastapigroup . /app
 
+# Remove the workspace parameter and cellpose-kit
+# RUN sed -i '/cellpose-kit = { workspace = true }/d' pyproject.toml \
+#     && sed -i '/"cellpose-kit>=0.1.0",/d' pyproject.toml
+
 # Upgrade pip and install the "uv" tool which manages the project
 RUN pip install --upgrade pip \
         && pip install uv
@@ -32,7 +36,7 @@ RUN uv venv --python 3.12
 ENV PATH="/app/.venv/bin:$PATH"
 
 # Install only the "api" extra dependencies defined in your pyproject file
-RUN uv pip install -r pyproject.toml --extra api
+RUN uv sync --package cp-server --extra api --no-dev
 
 # Set the folder structure and permissions - ensure /app directory itself is owned by fastapiuser
 RUN chown fastapiuser:fastapigroup /app \

@@ -115,7 +115,7 @@ services:
     volumes:
       - "${HOST_DIR}:/data"
       - ./cp_server:/app/cp_server
-      - ../Cellpose-kit/src:/Cellpose-kit/src
+      - ../Cellpose-kit/src:/app/Cellpose-kit/src
       - cellpose_models:/home/celeryuser/.cellpose
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
