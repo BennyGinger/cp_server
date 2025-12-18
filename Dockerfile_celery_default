@@ -19,9 +19,8 @@ WORKDIR /app
 # Copy the project files into the container
 COPY --chown=celeryuser:celerygroup . /app
 
-# Remove the workspace parameter and cellpose-kit mention
-# RUN sed -i '/cellpose-kit = { workspace = true }/d' pyproject.toml \
-#     && sed -i '/"cellpose-kit>=0.1.0",/d' pyproject.toml
+# Remove cellpose-kit dependency from pyproject.toml
+RUN sed -i '/"cellpose-kit>=0.1.0",/d' pyproject.toml
 
 # Upgrade pip and install the "uv" tool which manages the project
 RUN pip install --upgrade pip && pip install uv

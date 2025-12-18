@@ -42,7 +42,8 @@ COPY --chown=celeryuser:celerygroup . /app
 COPY --from=cellpose --chown=celeryuser:celerygroup / /app/Cellpose-kit
 
 # Append mini-workspace to cp_server pyproject.toml
-RUN printf '\n[tool.uv.workspace]\nmembers=[".","Cellpose-kit"]\n' >> /app/pyproject.toml
+RUN sed -i '/^\[tool\.uv\.sources\]$/a cellpose-kit = { workspace = true }' /app/pyproject.toml \
+    && printf '\n[tool.uv.workspace]\nmembers=[".","Cellpose-kit"]\n' >> /app/pyproject.toml
 
 # Upgrade pip and install the "uv" tool which manages the project
 RUN pip install --upgrade pip && pip install uv
