@@ -3,14 +3,14 @@ import numpy as np
 import tifffile as tiff
 from pathlib import Path
 
-from cp_server.tasks_server import get_logger
-from cp_server.tasks_server.tasks.saving.save_arrays import save_mask
-from cp_server.tasks_server.tasks.track.track import track_masks
+from fits_server.tasks_server import get_logger
+from fits_server.tasks_server.tasks.saving.save_arrays import save_mask
+from fits_server.tasks_server.tasks.track.track import track_masks
 
 
 logger = get_logger(__name__)
 
-@shared_task(name="cp_server.tasks_server.tasks.track.track_cells")
+@shared_task(name="fits_server.tasks_server.tasks.track.track_cells")
 def track_cells(mask_paths: list[str], 
                 track_stitch_threshold: float,
                 ) -> None:

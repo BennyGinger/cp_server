@@ -4,8 +4,8 @@ from kombu.serialization import register
 from celery import Celery
 from celery.signals import worker_ready
 
-from cp_server.tasks_server import get_logger
-from cp_server.tasks_server.utils.serialization_utils import custom_encoder, custom_decoder
+from fits_server.tasks_server import get_logger
+from fits_server.tasks_server.utils.serialization_utils import custom_encoder, custom_decoder
 
 
 CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
@@ -35,7 +35,7 @@ def create_celery_app(include_tasks: bool = False) -> Celery:
     """
     # Instantiate Celery
     celery_app = Celery(
-        "cp_server-tasks",
+        "fits_server-tasks",
         broker=CELERY_BROKER_URL,
         backend=CELERY_BACKEND_URL,
         broker_connection_retry_on_startup=True)
@@ -53,17 +53,17 @@ def create_celery_app(include_tasks: bool = False) -> Celery:
     # Only load tasks if we're running as a worker
     if include_tasks:
         celery_app.conf.update(include=[
-            "cp_server.tasks_server.tasks.celery_main_task",
-            "cp_server.tasks_server.tasks.bg_sub.bg_sub_task",
-            "cp_server.tasks_server.tasks.counter.counter_task_manager",
-            "cp_server.tasks_server.tasks.track.track_task",
-            "cp_server.tasks_server.tasks.segementation.seg_task",
+            "fits_server.tasks_server.tasks.celery_main_task",
+            "fits_server.tasks_server.tasks.bg_sub.bg_sub_task",
+            "fits_server.tasks_server.tasks.counter.counter_task_manager",
+            "fits_server.tasks_server.tasks.track.track_task",
+            "fits_server.tasks_server.tasks.segementation.seg_task",
         ])
         celery_app.conf.task_default_queue = "celery"
         celery_app.conf.task_routes = {
-            "cp_server.tasks_server.tasks.segementation.seg_task.segment": {"queue": "gpu_tasks"},
-            "cp_server.tasks_server.tasks.segementation.seg_task.optimize_cellpose_settings": {"queue": "gpu_tasks"},
-            "cp_server.tasks_server.tasks.segementation.seg_task.cellpose_metadata": {"queue": "gpu_tasks"},
+            "fits_server.tasks_server.tasks.segementation.seg_task.segment": {"queue": "gpu_tasks"},
+            "fits_server.tasks_server.tasks.segementation.seg_task.optimize_cellpose_settings": {"queue": "gpu_tasks"},
+            "fits_server.tasks_server.tasks.segementation.seg_task.cellpose_metadata": {"queue": "gpu_tasks"},
         }
     return celery_app
 
@@ -88,7 +88,7 @@ def preload_models(sender, **kwargs):
     logger.info("Preloading Cellpose models with cellpose-kit...")
     
     try:
-        from cp_server.tasks_server.tasks.segementation.model_manager import model_manager
+        from fits_server.tasks_server.tasks.segementation.model_manager import model_manager
         
         # Preload common model configurations
         common_configs = [

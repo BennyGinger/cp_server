@@ -2,7 +2,7 @@ from __future__ import annotations
 import threading
 from typing import Any
 
-from cp_server.tasks_server import get_logger
+from fits_server.tasks_server import get_logger
 ### Lazy import ### 
 # from cellpose_kit.api import setup_cellpose
 

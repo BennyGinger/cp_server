@@ -2,14 +2,14 @@ from typing import Any
 
 from celery import chain, shared_task
 
-from cp_server.tasks_server import get_logger
-from cp_server.tasks_server.celery_app import celery_app
+from fits_server.tasks_server import get_logger
+from fits_server.tasks_server.celery_app import celery_app
 
 # Setup logging
 logger = get_logger('tasks')
 
 
-@shared_task(name="cp_server.tasks_server.tasks.celery_main_task.process_images")
+@shared_task(name="fits_server.tasks_server.tasks.celery_main_task.process_images")
 def process_images(img_path: str | list[str],
                    cellpose_settings: dict[str, Any],
                    dst_folder: str, 
@@ -29,7 +29,7 @@ def process_images(img_path: str | list[str],
     def create_chain(img_path_batch):
         return chain(
             celery_app.signature(
-                'cp_server.tasks_server.tasks.bg_sub.remove_bg',
+                'fits_server.tasks_server.tasks.bg_sub.remove_bg',
                 kwargs=dict(
                     img_path=img_path_batch, 
                     sigma=sigma, 
@@ -37,7 +37,7 @@ def process_images(img_path: str | list[str],
                 )
             ),
             celery_app.signature(
-                'cp_server.tasks_server.tasks.segementation.seg_task.segment',
+                'fits_server.tasks_server.tasks.segementation.seg_task.segment',
                 kwargs=dict(
                     cellpose_settings=cellpose_settings, 
                     dst_folder=dst_folder, 
@@ -45,7 +45,7 @@ def process_images(img_path: str | list[str],
                 )
             ),
             celery_app.signature(
-                'cp_server.tasks_server.tasks.counter.counter_task_manager.check_and_track',
+                'fits_server.tasks_server.tasks.counter.counter_task_manager.check_and_track',
                 kwargs=dict(
                     track_stitch_threshold=track_stitch_threshold
                 )

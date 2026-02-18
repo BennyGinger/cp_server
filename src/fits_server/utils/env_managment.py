@@ -1,11 +1,10 @@
-# cp_server/utils/env_managment.py
 import os
 import sys
 from pathlib import Path
 
 from dotenv import load_dotenv, dotenv_values
 
-from cp_server.utils.paths import get_root_path
+from fits_server.utils.paths import get_root_path
 
 
 LOGFILE_NAME = os.getenv("LOGFILE_NAME", "task_servers.log")

@@ -5,9 +5,9 @@ from tifffile import imread
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial
 
-from cp_server.tasks_server import get_logger
-from cp_server.tasks_server.tasks.bg_sub.bg_sub import apply_bg_sub
-from cp_server.tasks_server.tasks.saving.save_arrays import save_img
+from fits_server.tasks_server import get_logger
+from fits_server.tasks_server.tasks.bg_sub.bg_sub import apply_bg_sub
+from fits_server.tasks_server.tasks.saving.save_arrays import save_img
 
 logger = get_logger(__name__)
 
@@ -20,7 +20,7 @@ def _process_single_bg(img_path: str, sigma: float, size: int) -> str:
     logger.info(f"Background-subtracted image overwritten at {img_path}")
     return str(img_path)
 
-@shared_task(name="cp_server.tasks_server.tasks.bg_sub.remove_bg")
+@shared_task(name="fits_server.tasks_server.tasks.bg_sub.remove_bg")
 def remove_bg(img_path: Union[str, List[str]], sigma: float, size: int) -> Union[str, List[str]]:
     """
     Apply background subtraction to one or more images, save the result(s), and return the file path(s).

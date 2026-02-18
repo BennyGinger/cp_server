@@ -1,5 +1,5 @@
 [project]
-name = "cp-server"
+name = "fits-server"
 version = "0.5.1"
 description = "A FastAPI-based server for running different tasks via Celery in the background. These tasks include running Cellpose on images, removing background and simple masks tracking (iou). The server is equipped with a file watcher to automatically process new images and track subsequent masks."
 readme = "README.md"
@@ -20,7 +20,7 @@ dependencies = [
 ]
 
 [project.scripts]
-cp-server = "cp_server.fastapi_app:main"
+fits-server = "fits_server.fastapi_app:main"
 
 [project.optional-dependencies]
 celery = [

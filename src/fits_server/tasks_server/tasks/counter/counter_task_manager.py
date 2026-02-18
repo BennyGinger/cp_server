@@ -2,15 +2,15 @@ from typing import Optional, List, Union
 
 from celery import shared_task
 
-from cp_server.tasks_server import get_logger
-from cp_server.tasks_server.utils.redis_com import redis_client
-from cp_server.tasks_server.celery_app import celery_app
+from fits_server.tasks_server import get_logger
+from fits_server.tasks_server.utils.redis_com import redis_client
+from fits_server.tasks_server.celery_app import celery_app
 from redis import RedisError
 
 
 logger = get_logger('counter_tasks')
 
-@shared_task(name="cp_server.tasks_server.tasks.counter.counter_task_manager.mark_one_done")
+@shared_task(name="fits_server.tasks_server.tasks.counter.counter_task_manager.mark_one_done")
 def mark_one_done(track_result, well_id: str) -> Optional[str]:
     """
     Celery callback: decrement the pending counter; if zero, fire final task.
@@ -23,11 +23,11 @@ def mark_one_done(track_result, well_id: str) -> Optional[str]:
     logger.info(f"Tracks remaining: {remaining}")
     if remaining == 0:
         celery_app.send_task(
-            'cp_server.tasks_server.tasks.counter.counter_task_manager.all_tracks_finished',
+            'fits_server.tasks_server.tasks.counter.counter_task_manager.all_tracks_finished',
             args=[well_id]
         )
 
-@shared_task(name="cp_server.tasks_server.tasks.counter.counter_task_manager.all_tracks_finished")
+@shared_task(name="fits_server.tasks_server.tasks.counter.counter_task_manager.all_tracks_finished")
 def all_tracks_finished(well_id: str) -> str:
     """
     Runs once when the last track_cells completes for this well_id.
@@ -50,7 +50,7 @@ def all_tracks_finished(well_id: str) -> str:
     return f"Run {well_id} completed successfully. All tracks finished."  
 
 
-@shared_task(name="cp_server.tasks_server.tasks.counter.counter_task_manager.check_and_track")
+@shared_task(name="fits_server.tasks_server.tasks.counter.counter_task_manager.check_and_track")
 def check_and_track(hkey: Union[str, List[str]], track_stitch_threshold: float) -> None:
     """
     Check if there are two masks for the same FOV in Redis. If so, trigger the tracking task.
@@ -78,10 +78,10 @@ def check_and_track(hkey: Union[str, List[str]], track_stitch_threshold: float) 
 
                 # 5) Fire off tracking, with a safe callback
                 celery_app.send_task(
-                    'cp_server.tasks_server.tasks.track.track_cells',
+                    'fits_server.tasks_server.tasks.track.track_cells',
                     args=[paths, track_stitch_threshold],
                     link=celery_app.signature(
-                        'cp_server.tasks_server.tasks.counter.counter_task_manager.mark_one_done',
+                        'fits_server.tasks_server.tasks.counter.counter_task_manager.mark_one_done',
                         args=[well_id]))
 
         except RedisError as e:

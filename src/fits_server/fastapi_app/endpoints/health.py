@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Request
 
-from cp_server.fastapi_app.endpoints import redis_client
+from fits_server.fastapi_app.endpoints import redis_client
 
 router = APIRouter()
 

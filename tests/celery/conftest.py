@@ -1,5 +1,5 @@
 import pytest
-from cp_server.tasks_server.celery_app import celery_app
+from fits_server.tasks_server.celery_app import celery_app
 
 
 @pytest.fixture(scope="session", autouse=True)

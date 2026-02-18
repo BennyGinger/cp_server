@@ -1,7 +1,7 @@
 # Test for segment task
 import numpy as np
 
-from cp_server.tasks_server.tasks.celery_main_task import save_masks_task, segment
+from fits_server.tasks_server.tasks.celery_main_task import save_masks_task, segment
 
 
 def test_save_masks_task(monkeypatch):

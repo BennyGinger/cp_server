@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from cp_server.fastapi_app import get_logger
-from cp_server.fastapi_app.endpoints import redis_client
+from fits_server.fastapi_app import get_logger
+from fits_server.fastapi_app.endpoints import redis_client
 
 
 logger = get_logger(__name__)

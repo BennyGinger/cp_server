@@ -9,12 +9,12 @@ import time
 import requests
 
 
-from cp_server.utils.env_managment import sync_dotenv, BASE_URL, LOGFILE_NAME
-from cp_server.utils.paths import get_root_path
+from fits_server.utils.env_managment import sync_dotenv, BASE_URL, LOGFILE_NAME
+from fits_server.utils.paths import get_root_path
 
 
 # Can't use `get_logger` from gem_screening.logger because there is no SERVICE_NAME defined in this module. Fallback to basic logging setup.
-logger = logging.getLogger("cp_server.compose_manager")
+logger = logging.getLogger("fits_server.compose_manager")
 
 # 'Grab' the env vars if any, and propagate them to the .env file
 # Only sync dotenv if we're not running as Celery
@@ -181,7 +181,7 @@ class ComposeManager:
                         Default is False.
     Examples:
     ```python
-    from cp_server import ComposeManager
+    from fits_server import ComposeManager
     # Use the context manager to manage Docker Compose lifecycle
     with ComposeManager(stream_log=True, dev_mode=True):
         # Your code here - services stay up after this block

@@ -7,10 +7,10 @@ from concurrent.futures import ThreadPoolExecutor
 from numpy.typing import NDArray
 import numpy as np
 
-from cp_server.tasks_server import get_logger
+from fits_server.tasks_server import get_logger
 ### Lazy import ### 
 # from cellpose_kit.api import run_cellpose
-# from cp_server.tasks_server.tasks.segementation.model_manager import model_manager
+# from fits_server.tasks_server.tasks.segementation.model_manager import model_manager
 
 
 T = TypeVar("T", bound=np.generic)
@@ -38,7 +38,7 @@ def segment_image(img: NDArray[T] | list[NDArray[T]], cellpose_settings: dict[st
         Segmentation mask(s) (same type/shape as input)
     """
     from cellpose_kit.api import run_cellpose  # Lazy import
-    from cp_server.tasks_server.tasks.segementation.model_manager import model_manager
+    from fits_server.tasks_server.tasks.segementation.model_manager import model_manager
     
     configured_settings = model_manager.get_configured_settings(cellpose_settings)
     if isinstance(img, list):

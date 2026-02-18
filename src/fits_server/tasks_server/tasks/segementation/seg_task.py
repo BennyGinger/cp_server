@@ -5,10 +5,10 @@ from numpy.typing import NDArray
 import numpy as np
 from tifffile import imread
 
-from cp_server.tasks_server import get_logger
-from cp_server.tasks_server.tasks.saving.save_arrays import generate_mask_path, save_mask, extract_fov_id
-from cp_server.tasks_server.utils.redis_com import redis_client
-from cp_server.tasks_server.tasks.segementation.cp_segmentation import segment_image
+from fits_server.tasks_server import get_logger
+from fits_server.tasks_server.tasks.saving.save_arrays import generate_mask_path, save_mask, extract_fov_id
+from fits_server.tasks_server.utils.redis_com import redis_client
+from fits_server.tasks_server.tasks.segementation.cp_segmentation import segment_image
 
 ##### Lazy imports #######
 # from cellpose_kit import MODEL_NAMES, cp_version
@@ -18,7 +18,7 @@ T = TypeVar("T", bound=np.generic)
 
 logger = get_logger(__name__)
 
-@shared_task(name="cp_server.tasks_server.tasks.segementation.seg_task.segment")
+@shared_task(name="fits_server.tasks_server.tasks.segementation.seg_task.segment")
 def segment(img_path: str | list[str], cellpose_settings: dict[str, Any], dst_folder: str, well_id: str,) -> str | list[str]:
     """
     Segment one or more images using Cellpose with persistent model loading via cellpose-kit.
@@ -74,7 +74,7 @@ def segment(img_path: str | list[str], cellpose_settings: dict[str, Any], dst_fo
     hkey = _register_mask_in_redis(str(mask_path), img_path, well_id)
     return hkey
 
-@shared_task(name="cp_server.tasks_server.tasks.segementation.seg_task.optimize_cellpose_settings")
+@shared_task(name="fits_server.tasks_server.tasks.segementation.seg_task.optimize_cellpose_settings")
 def optimize_cellpose_settings(img: NDArray[T], cellpose_settings: dict[str, Any]) -> NDArray[T]:
     """
     Optimize Cellpose settings for a given image.
@@ -94,7 +94,7 @@ def optimize_cellpose_settings(img: NDArray[T], cellpose_settings: dict[str, Any
         logger.error(f"Optimization failed: {e}")
         raise
 
-@shared_task(name="cp_server.tasks_server.tasks.segementation.seg_task.cellpose_metadata")
+@shared_task(name="fits_server.tasks_server.tasks.segementation.seg_task.cellpose_metadata")
 def cellpose_metadata() -> dict[str, Any]:
     from cellpose_kit import MODEL_NAMES, cp_version
     return {

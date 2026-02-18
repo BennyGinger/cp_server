@@ -6,10 +6,10 @@ import json
 from fastapi import APIRouter, Request, HTTPException
 from celery import Celery
 
-from cp_server.fastapi_app.endpoints.request_models import NDArrayPayload, NDArrayResult, ProcessRequest, BackgroundRequest, RegisterMaskRequest
-from cp_server.fastapi_app import get_logger
-from cp_server.fastapi_app.endpoints import redis_client
-from cp_server.tasks_server.utils.serialization_utils import custom_decoder, custom_encoder
+from fits_server.fastapi_app.endpoints.request_models import NDArrayPayload, NDArrayResult, ProcessRequest, BackgroundRequest, RegisterMaskRequest
+from fits_server.fastapi_app import get_logger
+from fits_server.fastapi_app.endpoints import redis_client
+from fits_server.tasks_server.utils.serialization_utils import custom_decoder, custom_encoder
 
 
 # Setup logging
@@ -54,7 +54,7 @@ def process_images_endpoint(request: Request, payload: ProcessRequest) -> dict[s
     # Process the paths
     params = payload.model_dump()
     task = celery_app.send_task(
-        "cp_server.tasks_server.tasks.celery_main_task.process_images",
+        "fits_server.tasks_server.tasks.celery_main_task.process_images",
         kwargs=params)
 
     # Determine number of images sent
@@ -85,7 +85,7 @@ def process_bg_sub_endpoint(request: Request, payload: BackgroundRequest) -> dic
     # Process the paths
     params = payload.model_dump()
     task = celery_app.send_task(
-        "cp_server.tasks_server.tasks.bg_sub.remove_bg",
+        "fits_server.tasks_server.tasks.bg_sub.remove_bg",
         kwargs=params)
 
     return {"task_id": task.id, "images_sent": img_count}
@@ -173,7 +173,7 @@ def register_mask_endpoint(request: Request, payload: RegisterMaskRequest) -> li
                 if time_id == '2':
                     # Trigger tracking for R2 mask
                     task = celery_app.send_task(
-                        'cp_server.tasks_server.tasks.counter.counter_task_manager.check_and_track',
+                        'fits_server.tasks_server.tasks.counter.counter_task_manager.check_and_track',
                         kwargs={
                             'hkey': hkey,
                             'track_stitch_threshold': payload.track_stitch_threshold
@@ -237,7 +237,7 @@ def segment_ndarray_endpoint(request: Request, payload: NDArrayPayload) -> NDArr
     # Send task to Celery worker and wait for result
     try: 
         result = celery_app.send_task(
-        "cp_server.tasks_server.tasks.segementation.seg_task.optimize_cellpose_settings",queue="gpu_tasks",
+        "fits_server.tasks_server.tasks.segementation.seg_task.optimize_cellpose_settings",queue="gpu_tasks",
         kwargs={
             "img": ndarray,
             "cellpose_settings": payload.cellpose_settings
@@ -264,7 +264,7 @@ def cellpose_metadata_endpoint(request: Request) -> dict[str, Any]:
     
     try:
         result = celery_app.send_task(
-            "cp_server.tasks_server.tasks.segementation.seg_task.cellpose_metadata",queue="gpu_tasks"
+            "fits_server.tasks_server.tasks.segementation.seg_task.cellpose_metadata",queue="gpu_tasks"
         ).get(timeout=60)  # Blocking call to get result with timeout of 60 seconds
         return result
     except Exception as e:
