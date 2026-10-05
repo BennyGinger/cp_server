@@ -44,48 +44,54 @@ def _configure_logging(logger: logging.Logger, *args, **kwargs) -> None:
                     "filename": LOGFILE_PATH,
                     "mode": "a",
                 },
+                "console": {
+                    "class": "logging.StreamHandler",
+                    "formatter": "default",
+                    "level": LOG_LEVEL,
+                    "stream": "ext://sys.stdout",
+                },
             },
 
             "loggers": {
                 # Celery’s own logger hierarchy:
                 "celery": {
-                    "handlers": ["file"],
+                    "handlers": ["file", "console"],
                     "level": LOG_LEVEL,
                     "propagate": False,
                 },
                 # Include this if you want task‐trace logs too:
                 "celery.app.trace": {
-                    "handlers": ["file"],
+                    "handlers": ["file", "console"],
                     "level": LOG_LEVEL,
                     "propagate": False,
                 },
                 # Kombu / amqp noise control
                 "kombu": {
-                    "handlers": ["file"],
+                    "handlers": ["file", "console"],
                     "level": "WARNING",
                     "propagate": False,
                 },
                 
                 # Quiet down MODULES to INFO (or WARNING) instead of DEBUG
                 "celery.bootsteps": {
-                    "handlers": ["file"],
+                    "handlers": ["file", "console"],
                     "level": "INFO",
                     "propagate": False,
                 },
                 
                 "celery.worker.consumer": {
-                    "handlers": ["file"],
+                    "handlers": ["file", "console"],
                     "level": "WARNING",
                     "propagate": False,
                 },
                 "celery.concurrency": {
-                    "handlers": ["file"],
+                    "handlers": ["file", "console"],
                     "level": "INFO",
                     "propagate": False,
                 },
                 
                 "mmpycorex.launcher": {
-                    "handlers": ["file"],
+                    "handlers": ["file", "console"],
                     "level": "WARNING",
                     "propagate": False,
                 },
@@ -96,7 +102,7 @@ def _configure_logging(logger: logging.Logger, *args, **kwargs) -> None:
         # Optional: a quick sanity‐check message
         _celery_logger = logging.getLogger(f"{SERVICE_NAME}.logging")
         _celery_logger.info(
-            "Celery logging configured (file only → %s) at level %s",
+            "Celery logging configured (file and stdout → %s) at level %s",
             LOGFILE_PATH, LOG_LEVEL)
 
 # Provide a wrapper to fetch a named logger under our “tasks_server” umbrella.

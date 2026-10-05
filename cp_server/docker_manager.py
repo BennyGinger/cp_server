@@ -1,7 +1,5 @@
 import logging
 import os
-from pathlib import Path
-import re
 import subprocess
 import shutil
 import threading
@@ -9,22 +7,12 @@ import time
 import requests
 
 
-from cp_server.utils.env_managment import sync_dotenv, BASE_URL, LOGFILE_NAME
+from cp_server.utils.env_managment import sync_dotenv
 from cp_server.utils.paths import get_root_path
 
 
 # Can't use `get_logger` from gem_screening.logger because there is no SERVICE_NAME defined in this module. Fallback to basic logging setup.
 logger = logging.getLogger("cp_server.compose_manager")
-
-# 'Grab' the env vars if any, and propagate them to the .env file
-# Only sync dotenv if we're not running as Celery
-if os.getenv("RUNNING_AS_CELERY", "false").lower() != "true":
-    sync_dotenv()
-
-FASTAPI_URL = f"http://{BASE_URL}:8000"
-host_dir = os.getenv("HOST_DIR", ".")
-HOST_LOG_FOLDER = Path(host_dir).joinpath("logs")
-
 
 def _get_base_cmd() -> list[str]:
     """
@@ -45,60 +33,84 @@ def _get_base_cmd() -> list[str]:
     # Raise an error if neither command is found
     raise RuntimeError("Neither 'docker-compose' nor 'docker' (with compose) found in PATH")
 
+def _run_compose_command(args: list[str], *, check: bool) -> None:
+    """Relay Docker output live through Python logging and the GUI handler."""
+    command = [*_get_base_cmd(), *args]
+    env = {**os.environ, "COMPOSE_PROGRESS": "plain", "BUILDKIT_PROGRESS": "plain"}
+    with subprocess.Popen(
+        command,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        env=env,
+    ) as proc:
+        assert proc.stdout is not None
+        for line in proc.stdout:
+            line = line.strip()
+            if line:
+                logger.info("[Docker] %s", line)
+        returncode = proc.wait()
+    if returncode != 0:
+        logger.error("Docker Compose %s exited with code %s", args[0], returncode)
+        if check:
+            raise subprocess.CalledProcessError(returncode, command)
+
+
 def compose_down() -> None:
     """
     Tear down the Docker Compose environment.
     This function will stop and remove all containers defined in the Docker Compose file.
     """
     logger.info("Tearing down Docker Compose…")
-    base_cmd = _get_base_cmd()
-    subprocess.run([*base_cmd, "down"], check=False)
+    _run_compose_command(["down"], check=False)
     logger.info("Compose is down.")
 
-def _stream_compose_logs() -> None:
-    """
-    Stream the logs of the Docker Compose services.
-    This function will run `docker-compose logs -f` and write the logs to a file
-    while also printing them to the console.
-    It will create a log file in the HOST_LOG_FOLDER with the name LOGFILE_NAME.
-    """
-    base_cmd = _get_base_cmd()
-    if not HOST_LOG_FOLDER.exists():
-        HOST_LOG_FOLDER.mkdir(parents=True, exist_ok=True)
-    log_path = HOST_LOG_FOLDER.joinpath(LOGFILE_NAME)
-    proc = subprocess.Popen(
-        [*base_cmd, "logs", "-f"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-    )
-    
-    # Pattern to match progress bar lines (percentage, bar, size info)
-    progress_pattern = re.compile(r'^\s*\d+%\|.*?\|\s*[\d.]+[kMG]?/?[\d.]+[kMG]?\s*\[.*?\]')
-    last_progress_line = None
-    
-    with log_path.open("a", encoding="utf-8") as f:
-        assert proc.stdout is not None, "Failed to capture logs: stdout is None"
-        for line in proc.stdout:
-            # Check if this is a progress bar line
-            if progress_pattern.search(line.strip()):
-                # Only print/log if it's different from the last progress line
-                # or if it's a completion (100%)
-                if (last_progress_line != line.strip() and 
-                    (line.strip() != last_progress_line or "100%" in line)):
-                    # Keep progress feedback visible locally
-                    print(line, end="")
-                    f.write(line)
-                    f.flush()
-                    last_progress_line = line.strip()
-            else:
-                # Non-progress lines from remote services: write to file only
-                f.write(line)
-                f.flush()
-                last_progress_line = None  # Reset progress tracking
-    proc.wait()
+class ComposeLogFollower:
+    """Follow service logs for one experiment and stop cleanly after its run."""
+
+    def __init__(self) -> None:
+        self.process: subprocess.Popen[str] | None = None
+        self.thread: threading.Thread | None = None
+
+    def start(self) -> None:
+        self.process = subprocess.Popen(
+            [*_get_base_cmd(), "logs", "-f", "--tail=100", "--no-color"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+
+        def relay() -> None:
+            try:
+                assert self.process is not None and self.process.stdout is not None
+                for line in self.process.stdout:
+                    message = line.strip()
+                    if message:
+                        logger.info("[Server] %s", message)
+            except Exception:
+                logger.exception("Server log stream stopped unexpectedly")
+
+        self.thread = threading.Thread(target=relay, name="compose-log-follower", daemon=True)
+        self.thread.start()
+
+    def stop(self) -> None:
+        if self.process is not None and self.process.poll() is None:
+            self.process.terminate()
+            try:
+                self.process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                self.process.kill()
+                self.process.wait()
+        if self.thread is not None:
+            self.thread.join(timeout=5)
+        if self.process is not None and self.process.stdout is not None:
+            self.process.stdout.close()
+        self.process = None
+        self.thread = None
 
 # Custom exception for service health timeout
 class ServiceHealthTimeout(Exception):
@@ -123,7 +135,7 @@ def _wait_for_services(timeout: int = 180, interval: int = 1) -> None:
         failed_endpoints = []
         for url in endpoints:
             try:
-                r = requests.get(f"{FASTAPI_URL}{url}", timeout=1)
+                r = requests.get(f"http://{os.getenv('BASE_URL', 'localhost')}:8000{url}", timeout=1)
                 if r.status_code != 200:
                     failed_endpoints.append(f"{url} (status: {r.status_code})")
                     all_ok = False
@@ -139,7 +151,7 @@ def _wait_for_services(timeout: int = 180, interval: int = 1) -> None:
         time.sleep(interval)
     raise ServiceHealthTimeout(f"Services are not healthy after {timeout}s. Failed endpoints: {', '.join(failed_endpoints)}")
 
-def compose_up(stream_log: bool) -> None:
+def compose_up(stream_log: bool) -> ComposeLogFollower | None:
     """
     Bring up the Docker Compose environment.
     This function will tear down any stale state first and then bring up the Docker Compose services.
@@ -147,25 +159,27 @@ def compose_up(stream_log: bool) -> None:
     """
     logger.info("Bringing up Docker Compose…")
     
+    sync_dotenv()
     # always tear down stale state first
     compose_down()
-    
-    base_cmd = _get_base_cmd()
     try:
-        subprocess.run([*base_cmd, "up", "-d", "--remove-orphans"], check=True)
+        _run_compose_command(["up", "-d", "--remove-orphans"], check=True)
     except subprocess.CalledProcessError as e:
         logger.error("Compose up failed (exit code %s)", e.returncode)
         raise
-    
-    _wait_for_services()
-    
+
+    follower = None
     if stream_log:
-        # Start a daemon thread that follows `docker-compose logs -f`
-        t = threading.Thread(target=_stream_compose_logs, daemon=True)
-        t.start()
-        logger.info("Compose is up. Now streaming logs…")
-        return
-    logger.info("Compose is up.")
+        follower = ComposeLogFollower()
+        follower.start()
+    try:
+        _wait_for_services()
+    except Exception:
+        if follower is not None:
+            follower.stop()
+        raise
+    logger.info("Compose is up%s.", "; streaming server logs" if follower else "")
+    return follower
 
 class ComposeManager:
     """
@@ -191,6 +205,7 @@ class ComposeManager:
     def __init__(self, stream_log: bool = True, dev_mode: bool = False) -> None:
         self.stream_log = stream_log
         self.dev_mode = dev_mode
+        self._follower: ComposeLogFollower | None = None
     
     def __enter__(self) -> None:
         """
@@ -202,15 +217,19 @@ class ComposeManager:
         """
         try:
             if self.dev_mode:
+                sync_dotenv()
                 # In dev mode, check if services are already healthy
                 try:
                     _wait_for_services(timeout=30)  # Quick check
                     logger.info("Services already running and healthy (dev mode)")
+                    if self.stream_log:
+                        self._follower = ComposeLogFollower()
+                        self._follower.start()
                     return
                 except ServiceHealthTimeout:
                     logger.info("Services not healthy, starting them (dev mode)")
             
-            compose_up(self.stream_log)
+            self._follower = compose_up(self.stream_log)
         except ServiceHealthTimeout as e:
             logger.error(f"Service health check failed: {e}. Bringing down Docker Compose.")
             compose_down()
@@ -232,10 +251,15 @@ class ComposeManager:
             if not self.dev_mode:
                 logger.error(f"Exception traceback will be shown after Docker cleanup")
         
-        if not self.dev_mode:
-            compose_down()
-        else:
-            logger.info("Dev mode: keeping services running")
+        try:
+            if not self.dev_mode:
+                compose_down()
+            else:
+                logger.info("Dev mode: keeping services running")
+        finally:
+            if self._follower is not None:
+                self._follower.stop()
+                self._follower = None
         
         # Don't suppress the exception - let it propagate
         return False

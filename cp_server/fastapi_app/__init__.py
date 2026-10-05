@@ -14,7 +14,7 @@ if not log_folder.exists():
     log_folder.mkdir(parents=True, exist_ok=True)
 LOGFILE_PATH  = log_folder.joinpath(LOGFILE_NAME)
 
-# 1) Build a dictConfig that attaches only a file handler (no console)
+# Preserve the server log file while also exposing messages to Docker logs.
 logging.config.dictConfig({
     "version": 1,
     "disable_existing_loggers": False,
@@ -34,32 +34,38 @@ logging.config.dictConfig({
             "filename": LOGFILE_PATH,
             "mode": "a",
         },
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "default",
+            "level": LOG_LEVEL,
+            "stream": "ext://sys.stdout",
+        },
     },
     # 2) Apply to the root logger
     "root": {
-        "handlers": ["file"],
+        "handlers": ["file", "console"],
         "level": LOG_LEVEL,
     },
-    # 3) Silence uvicorn's default console handlers and route to file only
+    # Use the same destinations for Uvicorn's own startup and error messages.
     "loggers": {
         "uvicorn": {
-            "handlers": ["file"],
+            "handlers": ["file", "console"],
             "level": LOG_LEVEL,
             "propagate": False,
         },
         "uvicorn.error": {
-            "handlers": ["file"],
+            "handlers": ["file", "console"],
             "level": LOG_LEVEL,
             "propagate": False,
         },
         "uvicorn.access": {
-            "handlers": ["file"],
+            "handlers": ["file", "console"],
             "level": LOG_LEVEL,
             "propagate": False,
         },
         # Optional: FastAPI logger namespace as well
         "fastapi": {
-            "handlers": ["file"],
+            "handlers": ["file", "console"],
             "level": LOG_LEVEL,
             "propagate": False,
         },
@@ -71,7 +77,7 @@ def get_logger(name: str | None = None) -> logging.Logger:
     Get a logger with the name of the service with/without a specific name.
     If `name` is provided, it will be prefixed with the service name.
     If `name` is None, it returns the root logger for the service.
-    This logger will log to both stdout and a file at /logs/<combined_server.log>.
+    This logger will log to both stdout and a file at /data/logs/<combined_server.log>.
     The log file is stored in the HOST_LOG_FOLDER, which should be mounted as a volume
     in the Docker container.
     The log file will be created if it does not exist, and it will append to the file
@@ -86,6 +92,6 @@ def get_logger(name: str | None = None) -> logging.Logger:
     base = SERVICE_NAME
     return logging.getLogger(f"{base}.{name}") if name else logging.getLogger(base)
 
-# At this point, uvicorn/fastapi logs go only to the file (no console in container)
+# Uvicorn/FastAPI logs are also visible to `docker compose logs`.
 logger = get_logger('logger')
-logger.info("FastAPI logging set up (file only → %s)", LOGFILE_PATH)
+logger.info("FastAPI logging set up (file and stdout → %s)", LOGFILE_PATH)
